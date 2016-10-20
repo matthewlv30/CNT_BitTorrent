@@ -37,8 +37,8 @@ public class peerProcess {
 			for (i = 0; i < peersToConnect.size(); i++) {
 				if (peersToConnect.get(i).getPeerId() != peerID) {
 					// create a socket to connect to the server
-					//clientList[i] = new Client(peersToConnect.get(i).getPeerId(),peersToConnect.get(i).getPeerAddress(),peersToConnect.get(i).getPort());
-					clientList[i] = new Client(peerID,"localhost",peersToConnect.get(i).getPort(), peersToConnect.get(i).getPeerId());
+					clientList[i] = new Client(peersToConnect.get(i).getPeerId(),"localhost",peersToConnect.get(i).getPort(), peersToConnect.get(i).getPeerId());
+					//clientList[i] = new Client(peerID,peersToConnect.get(i).getPeerAddress(),peersToConnect.get(i).getPort(), peersToConnect.get(i).getPeerId());
 				} else {
 					break;
 				}
