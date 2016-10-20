@@ -6,7 +6,6 @@
  * - And whether or not it has the complete file
  */
 
-
 public class RemotePeerInfo {
     public final String peerId;
     public final String peerAddress;

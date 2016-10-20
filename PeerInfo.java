@@ -1,6 +1,6 @@
 /**
  * This class is for retrieving peer-specific information from the PeerInfo.cfg file
- * 
+ *
  */
 
 import java.io.BufferedReader;
@@ -17,7 +17,6 @@ public class PeerInfo {
     /**
      * Read in the peer info fields and store the info for each peer into a linked list
      * @param reader: a Reader, a simple example can be seen in the Driver.java class
-     * 
      */
     public void read (Reader reader) throws FileNotFoundException, IOException, ParseException {
         BufferedReader in = new BufferedReader(reader);
@@ -41,5 +40,4 @@ public class PeerInfo {
     public LinkedList<RemotePeerInfo> getPeerInfo () {
         return peerInfo;
     }
-
 }
