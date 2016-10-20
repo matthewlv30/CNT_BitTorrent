@@ -1,22 +1,29 @@
 import java.net.*;
 import java.io.*;
 
-public class Client {
+public class Client extends Thread{
 	private Socket requestSocket; // socket connect to the server
 	private ObjectOutputStream out; // stream write to the socket
 	private ObjectInputStream in; // stream read from the socket
+	
 	private int peerID;
+	private int peerServerID;
+	private String host;
+	private int port;
 	// private int peerIndex = 1;
 	private Message mg; // message stream
 
-	public Client(int peerID) {
+	public Client(int peerID, String host, int port, int peerServerID) {
 		this.peerID = peerID;
+		this.peerServerID = peerServerID;
+		this.host = host;
+		this.port = port;
 	}
 
-	void run() {
+	public void run() {
 		try {
 			// create a socket to connect to the server
-			requestSocket = new Socket("localhost", 8000);
+			requestSocket = new Socket(host, port);
 			System.out.println("Connected to localhost");
 
 			// initialize inputStream and outputStream
@@ -71,22 +78,11 @@ public class Client {
 		// receive the message sent from the client
 		HandShake_Message hand_msg = (HandShake_Message) obj;
 		
-		int exPeerID = 1002; // To be removed
-		
 		final String header = "P2PFILESHARINGPROJ";
 		//Cheking if handshake is the Expected One
-		if (hand_msg.peerID == exPeerID && header.equals(hand_msg.header)) {
+		if (hand_msg.peerID == peerServerID && header.equals(hand_msg.header)) {
 			// show the message to the user
 			System.out.println("Receive HandShake message -> " + hand_msg.header + " from Server " + hand_msg.peerID);
 		}
 	}
-
-
-	// main method
-	public static void main(String args[]) {
-		int peerID = 1001;
-		Client client = new Client(peerID);
-		client.run();
-	}
-
 }
