@@ -1,4 +1,5 @@
 import java.nio.ByteBuffer;
+import java.util.BitSet;
 
 /**
  * This class consists of useful functions related to messages, including conversions and parsing
@@ -24,10 +25,19 @@ public class MessageUtil {
 		int i = wrapped.getInt();
 		return i;
 	}
-
-	// TODO: Implement Convert int to Byte/Bytes
 	
-	// TODO: Does the bitset contain pieces I don't have?
-	
-	// TODO: Extract piece from file
+	/**
+	 * Convert byte array to a bit set
+	 * @param bytes:	byte array
+	 * @return 			bitset
+	 */
+    public static BitSet convertToBitSet(byte[] bytes) {
+        BitSet bitset = new BitSet();
+        for (int i = 0; i < bytes.length * 8; i++) {
+            if ((bytes[bytes.length - i / 8 - 1] & (1 << (i % 8))) > 0) {
+                bitset.set(i);
+            }
+        }
+        return bitset;
+    }
 }
