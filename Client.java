@@ -1,10 +1,20 @@
 import java.net.*;
+import java.util.HashMap;
 import java.io.*;
 
 public class Client extends Thread{
 	private Socket requestSocket; // socket connect to the server
 	private ObjectOutputStream out; // stream write to the socket
 	private ObjectInputStream in; // stream read from the socket
+	
+	/**
+	 * Note on handlers: handlers contains mappings from types to handler objects, e.g. handlers.put(1, new ChokeHandler(this));
+	 * handlers HashMap usage example:
+	 * handlers.get(messageType).handleMessage(message, peer);
+	 */
+	private HashMap<Integer, MessageHandler> handlers; // Integer: message type, MessageHandler: the message-handling implementation
+	private HashMap<Integer, Boolean> unchokedPeers; // Integer: peerID, Boolean: 1 unchoked 0 choked
+	private HashMap<Integer, Boolean> interestedPeers; // Integer: peerID, Boolean: 1 interested 0 uninterested
 	
 	private int peerID;
 	private int peerServerID;
