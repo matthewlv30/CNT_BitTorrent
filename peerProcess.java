@@ -9,10 +9,7 @@ public class peerProcess {
 	// Connect to previous servers
 	public static void main(String[] args) throws Exception {
 		peerID = Integer.parseInt(args[0]); // taking in argument peerID
-
-        Reader cReader = null;
-        Properties cProp = null;
-
+        
 		// Peer Configuration File Read and Store all Info
 		LinkedList<RemotePeerInfo> peersToConnect = new LinkedList<RemotePeerInfo>();
 		Reader pReader = null;

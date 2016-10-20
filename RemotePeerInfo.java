@@ -4,12 +4,7 @@
  * - Peer ID
  * - Port # that it listens at
  * - And whether or not it has the complete file
-<<<<<<< HEAD
- *
-=======
->>>>>>> b680ce0a1874431190d6a85a0f3aaa5498e654ec
  */
-
 
 public class RemotePeerInfo {
     public final String peerId;
