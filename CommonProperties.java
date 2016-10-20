@@ -4,6 +4,11 @@ import java.io.Reader;
 import java.text.ParseException;
 import java.util.Properties;
 
+/**
+ * Class for retrieving common properties from the Common.cfg file
+ * Common.cfg acts as metainfo file 
+ */
+
 public enum CommonProperties {
 
     NumberOfPreferredNeighbors,
