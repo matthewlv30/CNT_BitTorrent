@@ -25,9 +25,9 @@ public class MessageUtil {
 		int i = wrapped.getInt();
 		return i;
 	}
-
+	
 	/**
-	 * Convert byter array to a bit set
+	 * Convert byte array to a bit set
 	 * @param bytes:	byte array
 	 * @return 			bitset
 	 */
@@ -40,10 +40,5 @@ public class MessageUtil {
         }
         return bitset;
     }
-
-	// TODO: Implement Convert int to Byte/Bytes
-
-	// TODO: Does the bitset contain pieces I don't have?
-
-	// TODO: Extract piece from file
 }
+

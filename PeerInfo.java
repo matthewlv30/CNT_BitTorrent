@@ -17,8 +17,10 @@ public class PeerInfo {
     /**
      * Read in the peer info fields and store the info for each peer into a linked list
      * @param reader: a Reader, a simple example can be seen in the Driver.java class
+     * @throws Exception 
+     * 
      */
-    public void read (Reader reader) throws FileNotFoundException, IOException, ParseException {
+    public void read (Reader reader) throws Exception {
         BufferedReader in = new BufferedReader(reader);
         int i = 0;
         for (String line; (line = in.readLine()) != null;) {

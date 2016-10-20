@@ -6,7 +6,7 @@ import java.util.LinkedList;
 
 public class Driver {
 
-	public static void main(String[] args) throws IOException, ParseException {
+	public static void main(String[] args) throws Exception {
         //Read Peer Info File and Get All info
 		LinkedList<RemotePeerInfo> peersToConnect = new LinkedList<RemotePeerInfo>();
 		Reader pReader = null;
