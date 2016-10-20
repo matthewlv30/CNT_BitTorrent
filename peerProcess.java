@@ -1,6 +1,7 @@
 import java.io.FileReader;
 import java.io.Reader;
 import java.util.LinkedList;
+import java.util.Properties;
 
 public class peerProcess {
 
@@ -8,15 +9,26 @@ public class peerProcess {
 
 	// Connect to previous servers
 	public static void main(String[] args) throws Exception {
+		
+		//input args peerId
+        if (args.length != 1) {
+            System.out.println("Invalid number of arguments.");
+        }
 		peerID = Integer.parseInt(args[0]); // taking in argument peerID
 
 		// Peer Configuration File Read and Store all Info
 		LinkedList<RemotePeerInfo> peersToConnect = new LinkedList<RemotePeerInfo>();
-		Reader pReader = null;
 		PeerInfo peerInfo = new PeerInfo();
-		pReader = new FileReader(PeerInfo.CONFIG_FILE);
+		Reader pReader = new FileReader(PeerInfo.CONFIG_FILE);
 		peerInfo.read(pReader);
 		peersToConnect = peerInfo.getPeerInfo();
+		
+		
+		//Configuration File Read 
+		Reader cReader = new FileReader(CommonProperties.CONFIG_FILE);
+        Properties cProp = CommonProperties.read(cReader);
+        pReader = new FileReader(PeerInfo.CONFIG_FILE);
+        peerInfo.read(pReader);
 
 		System.out.println(peersToConnect.get(0).toString());
 
