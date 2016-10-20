@@ -6,7 +6,6 @@ import java.util.BitSet;
  *
  */
 public class MessageUtil {
-
 	/**
 	 * Convert a single byte to an Integer
 	 * @param b:	the byte to be converted

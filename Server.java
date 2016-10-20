@@ -2,26 +2,39 @@ import java.net.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.io.*;
 
-public class Server {
+public class Server extends Thread{
 
-	private static final int sPort = 8000; // The server will be listening on
-											// this port number
-	private static int peerID = 1002;
+	private int sPort; // The server will be listening on this port
+	private int peerID;
 	private static int peerIndex = 1;		// index for peers
 	private static ConcurrentHashMap<Integer,Socket> clientList  = new ConcurrentHashMap<Integer,Socket>(); 
 	//list of clients connected to server
+	
+	Server(int sPort, int peerID) {
+		this.sPort = sPort;
+		this.peerID = peerID;
+	}
 
-	public static void main(String[] args) throws Exception {
+	public void run() {
 		System.out.println("The server is running.");
-		ServerSocket listener = new ServerSocket(sPort);
+		ServerSocket listener = null;
 		try {
+			listener = new ServerSocket(sPort);
 			while (true) {
-				new Handler(listener.accept()).start();
+				new Handler(listener.accept(), peerID).start();
 				System.out.println("Client " + peerIndex + " is connected!");
 				peerIndex++;
 			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		} finally {
-			listener.close();
+			try {
+				listener.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -34,10 +47,12 @@ public class Server {
 		private Socket connection;
 		private ObjectInputStream in; 	// stream read from the socket
 		private ObjectOutputStream out; // stream write to the socket
-		private int no; 				// The peerID of the server
+		
+		private int no;					//peerID of the corresponding server connection
 
-		public Handler(Socket connection) {
+		public Handler(Socket connection, int peerID) {
 			this.connection = connection;
+			this.no = peerID;
 		}
 
 		public void run() {
@@ -61,7 +76,7 @@ public class Server {
 					System.err.println("Data received in unknown format");
 				}
 			} catch (IOException ioException) {
-				System.out.println("Disconnect with Client " + no);
+				System.out.println("Disconnect with Client " + peerIndex);
 			} finally {
 				// Close connections
 				try {
@@ -69,7 +84,7 @@ public class Server {
 					out.close();
 					connection.close();
 				} catch (IOException ioException) {
-					System.out.println("Disconnect with Client " + no);
+					System.out.println("Disconnect with Client " + peerIndex);
 				}
 			}
 		}
@@ -85,7 +100,7 @@ public class Server {
 				System.out.println("Receive HandShake message ->" + hand_msg.header + " from Client " + hand_msg.peerID);
 				
 				// send MESSAGE back to the client
-				hand_msg = new HandShake_Message(peerID);
+				hand_msg = new HandShake_Message(no);
 				message.sendMessage(hand_msg);
 				
 		}

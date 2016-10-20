@@ -4,7 +4,10 @@
  * - Peer ID
  * - Port # that it listens at
  * - And whether or not it has the complete file
- * 
+<<<<<<< HEAD
+ *
+=======
+>>>>>>> b680ce0a1874431190d6a85a0f3aaa5498e654ec
  */
 
 
@@ -15,7 +18,7 @@ public class RemotePeerInfo {
     public final boolean hasFile;
 
     public RemotePeerInfo (int peerId) {
-        this (Integer.toString(peerId), "127.0.0.1", "0", false);
+        this (Integer.toString(peerId), "127.0.0.1", "8000", false);
     }
 
     public RemotePeerInfo(String peerId, String peerAddress, String peerPort, boolean hasFile) {
