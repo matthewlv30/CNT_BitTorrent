@@ -1,8 +1,11 @@
+
 import java.io.IOException;
+import java.util.HashMap;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.HashMap;
 import java.util.LinkedList;
 
 /**
@@ -17,6 +20,15 @@ public class Node {
 	private ObjectInputStream requestIn;	//stream read from the socket
 	private ObjectOutputStream requestOut;    //stream write to the socket
 	
+	/**
+	 * Note on handlers: handlers contains mappings from types to handler objects, e.g. handlers.put(1, new ChokeHandler(this));
+	 * handlers HashMap usage example:
+	 * handlers.get(messageType).handleMessage(message, peer);
+	 */
+	private HashMap<Integer, MessageHandler> handlers; // Integer: message type, MessageHandler: the message-handling implementation
+	private HashMap<Integer, Boolean> isUnchoked; // Integer: peerID, Boolean: 1 unchoked 0 choked
+	private HashMap<Integer, Boolean> isInterested; // Integer: peerID, Boolean: 1 interested 0 uninterested
+	
 	RemotePeerInfo myInfo;
 	LinkedList<RemotePeerInfo> peersInfo;
 	
@@ -28,6 +40,15 @@ public class Node {
 	public Node(RemotePeerInfo _myInfo, LinkedList<RemotePeerInfo> _peersInfo) {
 		myInfo = _myInfo;
 		peersInfo = _peersInfo;
+		
+		handlers.put(1, new ChokeHandler());
+		handlers.put(2, new UnchokeHandler());
+		handlers.put(3, new InterestedHandler());
+		handlers.put(4, new UninterestedHandler());
+	}
+	
+	public RemotePeerInfo getInfo() {
+		return myInfo;
 	}
 	
 	/**
@@ -58,5 +79,70 @@ public class Node {
         } finally {
             listener.close();
         }
+	}
+	
+	/**
+	 * Note: The message handler classes below are implemented as inner classes so they can easily access the state of its Node
+	 */
+	
+	/**
+	 * The message handler classes are implemented as inner classes so they can easily access the state of its Node
+	 * Class to handle choke message
+	 */
+	public class ChokeHandler implements MessageHandler {
+		
+		/**
+		 * When you receive a choke message, set isUnchoked to false
+		 * @param m:	this is the message received
+		 * @param n:	this is the Node that is choking the current peer
+		 */
+		public void handleMessage(ActualMessage m, Node n) {
+			isUnchoked.put(n.getInfo().getPeerId(), false);
+		}
+	}
+	
+	/**
+	 * Class to handle unchoke message
+	 */
+	public class UnchokeHandler implements MessageHandler {
+		
+		/**
+		 * When you receive an unchoke message, set isUnchoked to true
+		 * @param m:	this is the message received
+		 * @param n:	this is the Node that is choking the current peer
+		 */
+		public void handleMessage(ActualMessage m, Node n) {
+			isUnchoked.put(n.getInfo().getPeerId(), true);
+		}
+	}
+	
+	/**
+	 * Class to handle "interested" message
+	 */
+	public class InterestedHandler implements MessageHandler {
+		
+		/**
+		 * When you receive an "interested" message, signify in HashMap that the peer is interested
+		 * @param m:	this is the message received
+		 * @param n:	this is the Node that is interested in the current peer
+		 */
+		public void handleMessage(ActualMessage m, Node n) {
+			isInterested.put(n.getInfo().getPeerId(), true);
+		}
+	}
+	
+	/**
+	 * Class to handle "uninterested" message
+	 */
+	public class UninterestedHandler implements MessageHandler {
+		
+		/**
+		 * When you receive an "uninterested" message, signify in HashMap that the peer is not interested
+		 * @param m:	this is the message received
+		 * @param n:	this is the Node that is not interested in the current peer
+		 */
+		public void handleMessage(ActualMessage m, Node n) {
+			isInterested.put(n.getInfo().getPeerId(), false);
+		}
 	}
 }
