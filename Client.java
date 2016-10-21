@@ -1,54 +1,52 @@
 import java.net.*;
+import java.util.BitSet;
 import java.io.*;
 
 public class Client extends Thread{
-	private Socket requestSocket; // socket connect to the server
+	//Communication Instance Variables
+	private Socket requestSocket; 	// socket connect to the server
 	private ObjectOutputStream out; // stream write to the socket
-	private ObjectInputStream in; // stream read from the socket
+	private ObjectInputStream in; 	// stream read from the socket
+	private Message mg;				// message stream	
 	
-	private int peerID;
-	private int peerServerID;
-	private String host;
-	private int port;
-	// private int peerIndex = 1;
-	private Message mg; // message stream
-
-	public Client(int peerID, String host, int port, int peerServerID) {
-		this.peerID = peerID;
+	//Info about the Client Variables 
+	private RemotePeerInfo myInfo;		// To get the file info for the configuration file and Info about the Client
+	private int peerServerID;       	// peerID of the Server that this client is coneected to 
+	
+	//Messages Instances Variables
+	@SuppressWarnings("unused")
+	private BitSet myBitfield;
+	
+	public Client(RemotePeerInfo p, int peerServerID) {
 		this.peerServerID = peerServerID;
-		this.host = host;
-		this.port = port;
+		this.myInfo = p;
 	}
 
 	public void run() {
 		try {
 			// create a socket to connect to the server
-			requestSocket = new Socket(host, port);
-			System.out.println("Connected to localhost");
+			requestSocket = new Socket(myInfo.getPeerAddress(), myInfo.getPort());
 
-			// initialize inputStream and outputStream
+			// initialize inputStream and outputStream and a Message object
 			out = new ObjectOutputStream(requestSocket.getOutputStream());
 			out.flush();
 			in = new ObjectInputStream(requestSocket.getInputStream());
-
-			// get Input from standard input
-			// BufferedReader bufferedReader = new BufferedReader(new
-			// InputStreamReader(System.in));
-			// read a sentence from the file input
-			// peerID = Integer.parseInt(bufferedReader.readLine());
-
+			mg = new Message(in, out);
+			
 			// SEND HANDSHAKE MESSAGE
 			System.out.println("************** Starting Handshake **************");
-			mg = new Message(in, out);
-			HandShake_Message hand_msg = new HandShake_Message(peerID);
+			HandShake_Message hand_msg = new HandShake_Message(myInfo.getPeerId());
 			mg.sendMessage(hand_msg);
 
-			// RECIEVE HANDSHAKE BACK
+			// RECIEVE HANDSHAKE BACK AND CHECK IF RIGHT MEESAGE
 			HandShake_check(in.readObject());
 
+			
+			// Send Bitfiled Message with Pieces
+			System.out.println("************** BITFIELD **************");
+			//message_type(5);
 			while (true) {
-				//System.out.println("************** BITFIELD **************");
-				//message_type(5);
+				
 			}
 		} catch (ConnectException e) {
 			System.err.println("Connection refused. You need to initiate a server first.");
@@ -68,10 +66,6 @@ public class Client extends Thread{
 				ioException.printStackTrace();
 			}
 		}
-	}
-
-	public int getPeerID() {
-		return peerID;
 	}
 
 	public void HandShake_check(Object obj) {

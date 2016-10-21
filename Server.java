@@ -6,14 +6,12 @@ import java.io.*;
 
 public class Server extends Thread{
 
-	private int sPort; // The server will be listening on this port
-	private int peerID;
-	private static int peerIndex = 1;		// index for peers
-	RemotePeerInfo myInfo;
-	BitSet myBitfield;
+	private int peerID;					// The peerID for the specific Node
+	private static int peerIndex = 1;	// index for peers
+	private RemotePeerInfo myInfo;		// To get the file info for the configuration file
+	private BitSet myBitfield;
 	private static ConcurrentHashMap<Integer,Socket> clientList  = new ConcurrentHashMap<Integer,Socket>(); 
-	//list of clients connected to server
-	
+	//list of clients connected to server this server
 	/**
 	 * Note on handlers: handlers contains mappings from types to handler objects, e.g. handlers.put(1, new ChokeHandler(this));
 	 * handlers HashMap usage example:
@@ -23,8 +21,13 @@ public class Server extends Thread{
 	private HashMap<Socket, Boolean> unchokedPeers = new HashMap<Socket, Boolean>(); // Socket: peer Socket, Boolean: 1 unchoked 0 choked
 	private HashMap<Socket, Boolean> interestedPeers = new HashMap<Socket, Boolean>(); // Socket: peer Socket, Boolean: 1 interested 0 uninterested
 	
-	Server(int sPort, int peerID, RemotePeerInfo p) {
-		this.sPort = sPort;
+	/**
+	 * 
+	 * @param sPort port that the server is going to be listening from
+	 * @param peerID the peerID for the specific Node or Machine
+	 * @param p	Object to get the Configiruation information
+	 */
+	Server(int peerID, RemotePeerInfo p) {				
 		this.peerID = peerID;
 		this.myInfo = p;
 		
@@ -52,7 +55,7 @@ public class Server extends Thread{
 		System.out.println("The server is running.");
 		ServerSocket listener = null;
 		try {
-			listener = new ServerSocket(sPort);
+			listener = new ServerSocket(myInfo.getPort());
 			while (true) {
 				new Handler(listener.accept(), peerID).start();
 				System.out.println("Client " + peerIndex + " is connected!");
