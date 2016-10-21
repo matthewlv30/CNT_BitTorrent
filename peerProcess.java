@@ -1,7 +1,7 @@
 import java.io.FileReader;
 import java.io.Reader;
 import java.util.LinkedList;
-import java.util.Properties;
+
 
 public class peerProcess {
 
@@ -23,11 +23,6 @@ public class peerProcess {
 		peerInfo.read(pReader);
 		peersToConnect = peerInfo.getPeerInfo();
 		
-		
-		//Configuration File Read 
-		Reader cReader = new FileReader(CommonProperties.CONFIG_FILE);
-        Properties cProp = CommonProperties.read(cReader);
-
 		// ==========================================================
 		// Start Server && Clients
 		Server s;

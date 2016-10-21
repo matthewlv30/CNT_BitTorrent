@@ -22,7 +22,12 @@ public enum CommonProperties {
 
     public static Properties read (Reader reader) throws Exception {
         final Properties config = new Properties () {
-            @Override
+            /**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+
+			@Override
             public void load(Reader reader) throws IOException {
                 BufferedReader in = new BufferedReader(reader);
                 int i = 0;

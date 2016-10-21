@@ -1,5 +1,4 @@
 import java.net.*;
-import java.util.HashMap;
 import java.io.*;
 
 public class Client extends Thread{

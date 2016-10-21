@@ -1,5 +1,3 @@
-import java.nio.ByteBuffer;
-import java.nio.charset.StandardCharsets;
 
 /**
  * This class is for messages that a peer can send (not including handshake message)

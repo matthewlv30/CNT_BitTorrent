@@ -313,10 +313,10 @@ public class Server extends Thread{
 				indexTemp[i] = payload[i];
 			}
 			
-			int index = MessageUtil.convertBytesToInt(indexTemp);
+			//int index = MessageUtil.convertBytesToInt(indexTemp);
 			
 			// Retrieve the rest of the payload
-			byte pieceContent[] = new byte[myInfo.getPieceSize()];
+			//byte pieceContent[] = new byte[myInfo.getPieceSize()];
 			// TODO: store rest of payload into pieceContent
 		}
 	}
