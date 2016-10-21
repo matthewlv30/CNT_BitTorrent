@@ -27,17 +27,13 @@ public class peerProcess {
 		//Configuration File Read 
 		Reader cReader = new FileReader(CommonProperties.CONFIG_FILE);
         Properties cProp = CommonProperties.read(cReader);
-        pReader = new FileReader(PeerInfo.CONFIG_FILE);
-        peerInfo.read(pReader);
-
-		System.out.println(peersToConnect.get(0).toString());
 
 		// ==========================================================
 		// Start Server && Clients
 		Server s;
 
 		if (peerID == peersToConnect.get(0).getPeerId()) {
-			s = new Server(peersToConnect.get(0).getPort(),peerID);
+			s = new Server(peersToConnect.get(0).getPort(),peerID, peersToConnect.get(0));
 			s.start();
 		} else {
 			//Start Server
@@ -55,7 +51,7 @@ public class peerProcess {
 					break;
 				}
 			}
-			s = new Server(peersToConnect.get(i).getPort(), peerID);
+			s = new Server(peersToConnect.get(i).getPort(), peerID, peersToConnect.get(i));
 			s.start();
 			for(int j = 0; j != clientList.length; ++j) {
 				if(clientList[j] == null) {

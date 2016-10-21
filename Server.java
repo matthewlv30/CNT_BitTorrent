@@ -19,13 +19,14 @@ public class Server extends Thread{
 	 * handlers HashMap usage example:
 	 * handlers.get(messageType).handleMessage(message, peer);
 	 */
-	private static HashMap<Integer, MessageHandler> handlers; // Integer: message type, MessageHandler: the message-handling implementation
-	private HashMap<Socket, Boolean> unchokedPeers; // Socket: peer Socket, Boolean: 1 unchoked 0 choked
-	private HashMap<Socket, Boolean> interestedPeers; // Socket: peer Socket, Boolean: 1 interested 0 uninterested
+	private static HashMap<Integer, MessageHandler> handlers = new HashMap<Integer, MessageHandler>(); // Integer: message type, MessageHandler: the message-handling implementation
+	private HashMap<Socket, Boolean> unchokedPeers = new HashMap<Socket, Boolean>(); // Socket: peer Socket, Boolean: 1 unchoked 0 choked
+	private HashMap<Socket, Boolean> interestedPeers = new HashMap<Socket, Boolean>(); // Socket: peer Socket, Boolean: 1 interested 0 uninterested
 	
-	Server(int sPort, int peerID) {
+	Server(int sPort, int peerID, RemotePeerInfo p) {
 		this.sPort = sPort;
 		this.peerID = peerID;
+		this.myInfo = p;
 		
 		int bitFieldSize = (int) Math.ceil((double)myInfo.getFileSize()/myInfo.getPieceSize());
 		myBitfield = new BitSet(bitFieldSize);
