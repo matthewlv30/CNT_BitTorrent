@@ -1,5 +1,9 @@
 import java.net.*;
-import java.util.BitSet;
+
+import ActualMessages.ActualMessage;
+import ActualMessages.MessageHandler;
+import fileHandlers.RemotePeerInfo;
+
 import java.io.*;
 
 public class Client extends Thread{
@@ -13,13 +17,27 @@ public class Client extends Thread{
 	private RemotePeerInfo myInfo;		// To get the file info for the configuration file and Info about the Client
 	private int peerServerID;       	// peerID of the Server that this client is coneected to 
 	
-	//Messages Instances Variables
-	@SuppressWarnings("unused")
-	private BitSet myBitfield;
+	
+	/**
+	 * Note on handlers: handlers contains mappings from types to handler
+	 * objects, e.g. handlers.put(1, new ChokeHandler(this)); handlers HashMap
+	 * usage example: handlers.get(messageType).handleMessage(message, peer);
+	 */
+	// Integer: message type, MessageHandler: the message-handling implementation
+	//private static HashMap<Integer, MessageHandler> handlers = new HashMap<Integer, MessageHandler>();
+	// Socket: peer Socket, Boolean: 1 unchoked 0 choked
+	//private HashMap<Socket, Boolean> unchokedPeers = new HashMap<Socket, Boolean>();
+	// Socket: peer Socket, Boolean: 1 interested 0 uninterested
+	//private HashMap<Socket, Boolean> interestedPeers = new HashMap<Socket, Boolean>();
 	
 	public Client(RemotePeerInfo p, int peerServerID) {
 		this.peerServerID = peerServerID;
 		this.myInfo = p;
+		
+	}
+	
+	public RemotePeerInfo getPeerInfo() {
+		return this.myInfo;
 	}
 
 	public void run() {
@@ -39,12 +57,16 @@ public class Client extends Thread{
 			mg.sendMessage(hand_msg);
 
 			// RECIEVE HANDSHAKE BACK AND CHECK IF RIGHT MEESAGE
-			HandShake_check(in.readObject());
+			mg.HandShake_check(in.readObject(),peerServerID);
 
 			
 			// Send Bitfiled Message with Pieces
 			System.out.println("************** BITFIELD **************");
-			//message_type(5);
+			MessageHandler clonedHandler = (MessageHandler) HandlerCached.getHandler(6,myInfo);
+			ActualMessage bitList = clonedHandler.creatingMessage();
+			System.out.println("BITFIELD SENT: " + bitList.getTypeField());
+			mg.sendMessage(bitList);
+			
 			while (true) {
 				
 			}
@@ -65,18 +87,6 @@ public class Client extends Thread{
 			} catch (IOException ioException) {
 				ioException.printStackTrace();
 			}
-		}
-	}
-
-	public void HandShake_check(Object obj) {
-		// receive the message sent from the client
-		HandShake_Message hand_msg = (HandShake_Message) obj;
-		
-		final String header = "P2PFILESHARINGPROJ";
-		//Cheking if handshake is the Expected One
-		if (hand_msg.peerID == peerServerID && header.equals(hand_msg.header)) {
-			// show the message to the user
-			System.out.println("Receive HandShake message -> " + hand_msg.header + " from Server " + hand_msg.peerID);
 		}
 	}
 }

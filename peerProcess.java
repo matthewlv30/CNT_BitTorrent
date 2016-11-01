@@ -2,6 +2,9 @@ import java.io.FileReader;
 import java.io.Reader;
 import java.util.LinkedList;
 
+import fileHandlers.PeerInfo;
+import fileHandlers.RemotePeerInfo;
+
 
 public class peerProcess {
 
@@ -28,7 +31,7 @@ public class peerProcess {
 		Server s;
 
 		if (peerID == peersToConnect.get(0).getPeerId()) {
-			s = new Server(peerID, peersToConnect.get(0));
+			s = new Server(peersToConnect.get(0));
 			s.start();
 		} else {
 			//Start Server
@@ -50,7 +53,7 @@ public class peerProcess {
 					break;
 				}
 			}
-			s = new Server(peerID, peersToConnect.get(i));
+			s = new Server(peersToConnect.get(i));
 			s.start();
 			for(int j = 0; j != clientList.length; ++j) {
 				if(clientList[j] == null) {

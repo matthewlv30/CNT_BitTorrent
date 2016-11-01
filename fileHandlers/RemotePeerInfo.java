@@ -1,6 +1,4 @@
-import java.io.FileReader;
-import java.io.Reader;
-import java.util.Properties;
+package fileHandlers;
 
 /**
  * This class is for keeping track of information specific to peers including
@@ -16,33 +14,15 @@ public class RemotePeerInfo {
     public final String peerPort;
     public final boolean hasFile;
     
-
-    public final int numberOfPreferredNeighbors;
-    public final int unchokingInterval;
-    public final int optimisticUnchokingInterval;
-    public final String fileName;
-    public final int fileSize;
-    public final int pieceSize;
-
     public RemotePeerInfo (int peerId) throws Exception {
         this (Integer.toString(peerId), "127.0.0.1", "8000", false);
     }
 
-    public RemotePeerInfo(String peerId, String peerAddress, String peerPort, boolean hasFile) throws Exception {
+    public RemotePeerInfo(String peerId, String peerAddress, String peerPort, boolean hasFile)  {
         this.peerId = peerId;
         this.peerAddress = peerAddress;
         this.peerPort = peerPort;
         this.hasFile = hasFile;
-        
-		Reader cReader = new FileReader(CommonProperties.CONFIG_FILE);
-		Properties cProp = CommonProperties.read(cReader);
-		
-		numberOfPreferredNeighbors = Integer.parseInt(cProp.getProperty("NumberOfPreferredNeighbors"));
-		unchokingInterval = Integer.parseInt(cProp.getProperty("UnchokingInterval"));
-		optimisticUnchokingInterval = Integer.parseInt(cProp.getProperty("OptimisticUnchokingInterval"));
-		fileName = cProp.getProperty("FileName");
-		fileSize = Integer.parseInt(cProp.getProperty("FileSize"));
-		pieceSize = Integer.parseInt(cProp.getProperty("PieceSize"));
     }
 
     public int getPeerId() {
@@ -59,30 +39,6 @@ public class RemotePeerInfo {
 
     public boolean hasFile() {
         return hasFile;
-    }
-    
-    public int getPreferredNeighborsNum() {
-    	return numberOfPreferredNeighbors;
-    }
-    
-    public int getUnchokingInterval() {
-    	return unchokingInterval;
-    }
-    
-    public int getOptimisticUncokingInterval() {
-    	return optimisticUnchokingInterval;
-    }
-    
-    public String getFileName() {
-    	return fileName;
-    }
-    
-    public int getFileSize() {
-    	return fileSize;
-    }
-    
-    public int getPieceSize() {
-    	return pieceSize;
     }
 
     public String toString() {
