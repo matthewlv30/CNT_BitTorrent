@@ -61,19 +61,20 @@ public class MessageUtil {
 	/**
 	 * Convert byte array to a bit set
 	 * 
-	 * @param bytes:
-	 *            byte array
+	 * @param bytes: byte array
 	 * @return bitset
 	 */
 	public static BitSet convertToBitSet(byte[] bytes) {
 		BitSet bitset = new BitSet();
 		for (int i = 0; i < bytes.length * 8; i++) {
-			if ((bytes[bytes.length - i / 8 - 1] & (1 << (i % 8))) > 0) {
-				bitset.set(i);
-			}
+		    if ((bytes[i / 8] & (1 << (i % 8))) > 0) {
+		        bitset.set(i);
+		    }
 		}
 		return bitset;
 	}
+	
+	
 
 	/**
 	 * This is for Loading the common properties file The other methods are

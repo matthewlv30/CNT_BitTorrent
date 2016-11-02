@@ -27,7 +27,7 @@ public class RequestHandler extends MessageHandler {
 	 * @param n:
 	 *            this is the Node sending the message
 	 */
-	public void handleMessage(ActualMessage m, Socket n) {
+	public int handleMessage(ActualMessage m, Socket n) {
 		byte payload[] = m.getPayloadField();
 
 		if (payload.length != 4) {
@@ -43,6 +43,7 @@ public class RequestHandler extends MessageHandler {
 				// TODO: work on retrieving "piece" bytes from a file
 			}
 		}
+		return 0;
 	}
 
 	@Override

@@ -2,6 +2,7 @@ import java.net.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 import ActualMessages.ActualMessage;
+import ActualMessages.MessageHandler;
 import fileHandlers.RemotePeerInfo;
 
 import java.io.*;
@@ -16,12 +17,10 @@ public class Server extends Thread {
 	private static ConcurrentHashMap<Integer, Socket> clientList = new ConcurrentHashMap<Integer, Socket>();
 
 	// Socket: peer Socket, Boolean: 1 unchoked 0 choked
-	// private HashMap<Socket, Boolean> unchokedPeers = new HashMap<Socket,
-	// Boolean>();
+	// private HashMap<Socket, Boolean> unchokedPeers = new HashMap<Socket,Boolean>();
 
-	// Socket: peer Socket, Boolean: 1 interested 0 uninterested
-	// private HashMap<Socket, Boolean> interestedPeers = new HashMap<Socket,
-	// Boolean>();
+	
+	// private HashMap<Socket, Boolean> interestedPeers = new HashMap<Socket,Boolean>();
 	
 	//private BitSet myBitfield;
 	/**
@@ -95,21 +94,26 @@ public class Server extends Thread {
 					message.HandShake(hd, myServerInfo.getPeerId());
 					
 					
-					// Recieve Bitfiled Message with Pieces
-					ActualMessage bitList = (ActualMessage) in.readObject();
-					System.out.println("BITFIELD RECIEVED: " + bitList.getTypeField());
+					// Recieve Bitfield Message with list of Pieces
+					ActualMessage bitList = (ActualMessage) in.readObject();			
+					//Sending Servers bitlist  back
+					MessageHandler clonedHandler = (MessageHandler) HandlerCached.getHandler(bitList.getTypeField(),myServerInfo);
+					bitList = clonedHandler.creatingMessage();
+					System.out.println("Bitfield sent(server): " + bitList.getTypeField());
+					message.sendMessage(bitList);
 					
 					
-					//Sending BitList back
-					//MessageHandler clonedHandler = (MessageHandler) HandlerCached.getHandler(bitList.getTypeField(),myServerInfo);
-					//bitList = clonedHandler.creatingMessage();
-					//System.out.println("BITFIELD: " + bitList.getTypeField());
-					//message.sendMessage(bitList);
+					// Recieve Interested or Not from Client
+					bitList = (ActualMessage) in.readObject();
+					System.out.println("Message recieved (server): " + bitList.getTypeField());
+					// If interested or not signified in the Interested (HashMap) 
+					clonedHandler = (MessageHandler) HandlerCached.getHandler(bitList.getTypeField(),myServerInfo);
+					clonedHandler.handleMessage(bitList, connection);
 					
 					
-					while (true) {
+					//while (true) {
 						
-					}
+					//}
 				} catch (ClassNotFoundException classnot) {
 					System.err.println("Data received in unknown format");
 				}

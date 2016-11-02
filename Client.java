@@ -51,6 +51,9 @@ public class Client extends Thread{
 			in = new ObjectInputStream(requestSocket.getInputStream());
 			mg = new Message(in, out);
 			
+			// Loading the Handlers
+			HandlerCached.loadCache();
+			
 			// SEND HANDSHAKE MESSAGE
 			System.out.println("************** Starting Handshake **************");
 			HandShake_Message hand_msg = new HandShake_Message(myInfo.getPeerId());
@@ -62,14 +65,25 @@ public class Client extends Thread{
 			
 			// Send Bitfiled Message with Pieces
 			System.out.println("************** BITFIELD **************");
-			MessageHandler clonedHandler = (MessageHandler) HandlerCached.getHandler(6,myInfo);
+			MessageHandler clonedHandler = (MessageHandler) HandlerCached.getHandler(5,myInfo);
 			ActualMessage bitList = clonedHandler.creatingMessage();
-			System.out.println("BITFIELD SENT: " + bitList.getTypeField());
+			System.out.println("Bitfield sent (client): " + bitList.getTypeField());
 			mg.sendMessage(bitList);
 			
-			while (true) {
+			//Recive Back BitField and Determine Interested or Not
+			bitList = (ActualMessage) in.readObject();
+			int type  = clonedHandler.handleMessage(bitList, requestSocket);
+			
+			//Send Interested or Not of the list of pieces recieved
+			System.out.println("************** INTERESTED OR NOT **************");
+			clonedHandler = (MessageHandler) HandlerCached.getHandler(type,myInfo);
+			bitList = clonedHandler.creatingMessage();
+			System.out.println("Interested(2)/Uninterested(3)(client): " + bitList.getTypeField());
+			mg.sendMessage(bitList);
+
+			//while (true) {
 				
-			}
+			//}
 		} catch (ConnectException e) {
 			System.err.println("Connection refused. You need to initiate a server first.");
 		} catch (ClassNotFoundException e) {

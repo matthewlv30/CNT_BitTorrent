@@ -22,8 +22,9 @@ public class UnchokeHandler extends MessageHandler {
 	 * @param n:
 	 *            this is the Node that is choking the current peer
 	 */
-	public void handleMessage(ActualMessage m, Socket n) {
+	public int handleMessage(ActualMessage m, Socket n) {
 		unchokedPeers.put(n, true);
+		return 0;
 	}
 	@Override
 	public ActualMessage creatingMessage() {

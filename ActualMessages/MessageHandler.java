@@ -2,6 +2,7 @@ package ActualMessages;
 
 import java.net.Socket;
 import java.util.BitSet;
+import java.util.HashMap;
 
 import fileHandlers.RemotePeerInfo;
 
@@ -18,9 +19,11 @@ public abstract class MessageHandler implements Cloneable {
 	protected RemotePeerInfo peerInfo;
 	// Bitfiled the each peer contain which entails a list of pieces of the file
 	protected static BitSet myBitfield;
+	// Socket: peer Socket, Boolean: 1 interested 0 uninterested
+	protected static HashMap<Socket, Boolean> interestedPeers = new HashMap<Socket,Boolean>();
 	
 	
-	public abstract void handleMessage(ActualMessage m, Socket n);
+	public abstract int handleMessage(ActualMessage m, Socket n);
 	public abstract ActualMessage creatingMessage();
 
 	public void setPeerInfo(RemotePeerInfo p) {

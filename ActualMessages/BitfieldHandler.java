@@ -8,15 +8,12 @@ import java.util.BitSet;
  */
 public class BitfieldHandler extends MessageHandler {
 
-	// Type of Meessage
-	private final byte messageType = 5;
-
 	public BitfieldHandler() {
 		// Loading the common Properties
 		try {
 			MessageUtil.loadCommonProperties();
 
-			int bitFieldSize = (int) Math.ceil((double) MessageUtil.getFileSize() / MessageUtil.getPieceSize());
+			int bitFieldSize = (int) Math.ceil((double) MessageUtil.getFileSize() / MessageUtil.getPieceSize());  // 306
 			myBitfield = new BitSet(bitFieldSize);
 
 		} catch (Exception e) {
@@ -39,7 +36,7 @@ public class BitfieldHandler extends MessageHandler {
 	 * @param n:
 	 *            this is the Node sending the message
 	 */
-	public void handleMessage(ActualMessage m, Socket n) {
+	public int handleMessage(ActualMessage m, Socket n) {
 		byte payload[] = m.getPayloadField();
 
 		// First byte of the payload corresponds to piece indices 0-7,
@@ -54,24 +51,34 @@ public class BitfieldHandler extends MessageHandler {
 				// interested message
 				// Note: special operations are used on myBitField to obtain
 				// proper "byte" location
-				if ((bit == 1) && (myBitfield.get(j + (i * 8)) == false)) {
-					// TODO: send "interested" message to peer node n
-					break;
+				///////////////////////////////////////////////////////////////////////////////////////////////////////FIX to false
+				if ((bit == 1) && (myBitfield.get(j + (i * 8)) == true)) {
+					return 2;
 				}
 			}
-		} // send "uninterested" message
+		} 
+		return 3;
 	}
-
+	
+	@Override
 	public ActualMessage creatingMessage() {
+		// Type of Meessage
+		final byte messageType = 5;
 		// Each index of a bit field indicates whether or not the piece is
 		// with the peer.
+		int bitFieldSize = (int) Math.ceil((double) MessageUtil.getFileSize() / MessageUtil.getPieceSize());
+		//BitSet Bitfield = new BitSet(bitFieldSize);
+		
 		if (peerInfo.hasFile) {
-			myBitfield.set(0, myBitfield.length(), true);
+			myBitfield.set(0, bitFieldSize, true);
+			myBitfield.set(bitFieldSize + 1, myBitfield.size(), false);
+			
 		} else {
-			myBitfield.set(0, myBitfield.length(), false);
+			myBitfield.set(0, myBitfield.size(), false);
 		}
 		// setting up the payload with the list of pieces
 		byte payload[] = myBitfield.toByteArray();
+		
 		// Get the length of the message by payload + type
 		int payloadSize = myBitfield.length() + MessageUtil.convertByteToInt((byte) 1);
 		byte[] length = MessageUtil.convertIntToBytes(payloadSize);

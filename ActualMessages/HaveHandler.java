@@ -23,7 +23,7 @@ public class HaveHandler extends MessageHandler {
 	 * @param n:
 	 *            this is the Node sending the message
 	 */
-	public void handleMessage(ActualMessage m, Socket n) {
+	public int handleMessage(ActualMessage m, Socket n) {
 		int index;
 		byte payload[] = m.getPayloadField();
 		if (payload.length != 4) {
@@ -32,9 +32,9 @@ public class HaveHandler extends MessageHandler {
 			index = MessageUtil.convertBytesToInt(payload);
 
 			if (myBitfield.get(index) == true) {
-				// TODO: send not interested message to Peer Node n
+				return 3;
 			} else {
-				// TODO: send interested message to Peer Node n
+				return 2;
 			}
 		}
 	}

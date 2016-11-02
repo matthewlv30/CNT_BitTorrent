@@ -29,7 +29,6 @@ public class peerProcess {
 		// ==========================================================
 		// Start Server && Clients
 		Server s;
-
 		if (peerID == peersToConnect.get(0).getPeerId()) {
 			s = new Server(peersToConnect.get(0));
 			s.start();
@@ -53,7 +52,9 @@ public class peerProcess {
 					break;
 				}
 			}
-			s = new Server(peersToConnect.get(i));
+			//s = new Server(peersToConnect.get(i));
+			//FIX THIS/////////////////////////////////////////////////
+			s = new Server(peersToConnect.get(0));
 			s.start();
 			for(int j = 0; j != clientList.length; ++j) {
 				if(clientList[j] == null) {

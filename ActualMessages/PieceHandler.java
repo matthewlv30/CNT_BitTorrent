@@ -15,7 +15,7 @@ public class PieceHandler extends MessageHandler {
 	 * @param n:
 	 *            this is the Node sending the message
 	 */
-	public void handleMessage(ActualMessage m, Socket n) {
+	public int handleMessage(ActualMessage m, Socket n) {
 		byte payload[] = m.getPayloadField();
 
 		// Retrieve the 4-byte index
@@ -24,6 +24,7 @@ public class PieceHandler extends MessageHandler {
 		for (int i = 0; i < 4; i++) {
 			indexTemp[i] = payload[i];
 		}
+		return 0;
 
 		// int index = MessageUtil.convertBytesToInt(indexTemp);
 

@@ -45,7 +45,6 @@ public class Message {
 		
 		final String header = "P2PFILESHARINGPROJ";
 		//Cheking if handshake is the Expected One
-		peerServerID = 1002;
 		if (hand_msg.peerID == peerServerID && header.equals(hand_msg.header)) {
 			// show the message to the user
 			System.out.println("Receive HandShake message -> " + hand_msg.header + " from Server " + hand_msg.peerID);
