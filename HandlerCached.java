@@ -1,6 +1,7 @@
 import java.util.HashMap;
 
 import ActualMessages.BitfieldHandler;
+import ActualMessages.HaveHandler;
 import ActualMessages.InterestedHandler;
 import ActualMessages.MessageHandler;
 import ActualMessages.UninterestedHandler;
@@ -29,7 +30,7 @@ public class HandlerCached {
 		//handlers.put(1, new UnchokeHandler(unchokedPeers));
 		handlers.put(2, new InterestedHandler());
 		handlers.put(3, new UninterestedHandler());
-		//handlers.put(4, new HaveHandler(myBitfield));
+		handlers.put(4, new HaveHandler());
 		handlers.put(5, new BitfieldHandler());
 		//handlers.put(6, new RequestHandler(myBitfield, clientList));
 		//handlers.put(7, new PieceHandler());*/

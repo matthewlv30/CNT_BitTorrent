@@ -2,6 +2,7 @@ import java.net.*;
 
 import ActualMessages.ActualMessage;
 import ActualMessages.MessageHandler;
+import ActualMessages.MessageUtil;
 import fileHandlers.RemotePeerInfo;
 
 import java.io.*;
@@ -72,6 +73,8 @@ public class Client extends Thread{
 			
 			//Recive Back BitField and Determine Interested or Not
 			bitList = (ActualMessage) in.readObject();
+			//Adding bitset to list
+			clonedHandler.addPeerBitSet(peerServerID, MessageUtil.convertToBitSet(bitList.getPayloadField()));
 			int type  = clonedHandler.handleMessage(bitList, requestSocket);
 			
 			//Send Interested or Not of the list of pieces recieved

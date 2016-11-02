@@ -1,18 +1,13 @@
 package ActualMessages;
 
 import java.net.Socket;
-import java.util.BitSet;
+
 
 /**
  * Class to handle "have" message
  */
 public class HaveHandler extends MessageHandler {
-	
-	private BitSet myBitfield;
-	
-	public HaveHandler(BitSet b) {
-		this.myBitfield = b;
-	}
+		
 	/**
 	 * When you receive a "have" message, determine whether or not to send
 	 * an interested message. The payload of the "have" message contains a
@@ -41,6 +36,7 @@ public class HaveHandler extends MessageHandler {
 	@Override
 	public ActualMessage creatingMessage() {
 		// TODO Auto-generated method stub
+		
 		return null;
 	}
 }

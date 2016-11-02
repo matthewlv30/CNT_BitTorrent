@@ -38,7 +38,6 @@ public class BitfieldHandler extends MessageHandler {
 	 */
 	public int handleMessage(ActualMessage m, Socket n) {
 		byte payload[] = m.getPayloadField();
-
 		// First byte of the payload corresponds to piece indices 0-7,
 		// second bit is 8-15 etc.
 		for (int i = 0; i < payload.length; i++) {

@@ -19,6 +19,8 @@ public abstract class MessageHandler implements Cloneable {
 	protected RemotePeerInfo peerInfo;
 	// Bitfiled the each peer contain which entails a list of pieces of the file
 	protected static BitSet myBitfield;
+	// HashMap that contains the bitfields of connected neightboors
+	protected static HashMap<Integer,BitSet> PeersBitField = new HashMap<Integer,BitSet>();
 	// Socket: peer Socket, Boolean: 1 interested 0 uninterested
 	protected static HashMap<Socket, Boolean> interestedPeers = new HashMap<Socket,Boolean>();
 	
@@ -28,6 +30,14 @@ public abstract class MessageHandler implements Cloneable {
 
 	public void setPeerInfo(RemotePeerInfo p) {
 		this.peerInfo = p;
+	}
+	/**
+	 * 
+	 * @param peerID adding specific peer to the list
+	 * @param b add this peers bitset
+	 */
+	public void addPeerBitSet(int peerID, BitSet b) {
+		PeersBitField.put(peerID, b);
 	}
 
 	public Object clone() {

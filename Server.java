@@ -3,6 +3,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import ActualMessages.ActualMessage;
 import ActualMessages.MessageHandler;
+import ActualMessages.MessageUtil;
 import fileHandlers.RemotePeerInfo;
 
 import java.io.*;
@@ -95,9 +96,11 @@ public class Server extends Thread {
 					
 					
 					// Recieve Bitfield Message with list of Pieces
-					ActualMessage bitList = (ActualMessage) in.readObject();			
+					ActualMessage bitList = (ActualMessage) in.readObject();	
 					//Sending Servers bitlist  back
 					MessageHandler clonedHandler = (MessageHandler) HandlerCached.getHandler(bitList.getTypeField(),myServerInfo);
+					//Adding bitfield
+					clonedHandler.addPeerBitSet(hd.peerID, MessageUtil.convertToBitSet(bitList.getPayloadField()));
 					bitList = clonedHandler.creatingMessage();
 					System.out.println("Bitfield sent(server): " + bitList.getTypeField());
 					message.sendMessage(bitList);
@@ -110,6 +113,13 @@ public class Server extends Thread {
 					clonedHandler = (MessageHandler) HandlerCached.getHandler(bitList.getTypeField(),myServerInfo);
 					clonedHandler.handleMessage(bitList, connection);
 					
+					
+					//Send Have Message
+					System.out.println("************** HAVE **************");
+					clonedHandler = (MessageHandler) HandlerCached.getHandler(4,myServerInfo);
+					bitList = clonedHandler.creatingMessage();
+					System.out.println("Have (server): " + bitList.getTypeField());
+					message.sendMessage(bitList);
 					
 					//while (true) {
 						
