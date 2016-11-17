@@ -90,7 +90,7 @@ public class FileHandler {
     synchronized public boolean hasPart(int pieceIndex) {
         return receivedParts.get(pieceIndex);
     }
-
+    
     public synchronized void setAllParts()
     {
         for (int i = 0; i < bitsetSize; i++) {
