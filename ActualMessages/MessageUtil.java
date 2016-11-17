@@ -25,7 +25,7 @@ public class MessageUtil {
 
 	/**
 	 * Convert an Integer to an Array of Bytes of lenght 4
-	 * 
+	 *
 	 * @param b:
 	 *            the int to be converted
 	 * @return the converted integer as array bytes
@@ -36,7 +36,7 @@ public class MessageUtil {
 
 	/**
 	 * Convert a single byte to an Integer
-	 * 
+	 *
 	 * @param b:
 	 *            the byte to be converted
 	 * @return the converted byte as an Integer
@@ -47,7 +47,7 @@ public class MessageUtil {
 
 	/**
 	 * Convert a sequence of bytes to an Integer
-	 * 
+	 *
 	 * @param bytes:
 	 *            the sequence of bytes to be converted
 	 * @return the converted byte sequence as an Integer
@@ -60,7 +60,7 @@ public class MessageUtil {
 
 	/**
 	 * Convert byte array to a bit set
-	 * 
+	 *
 	 * @param bytes: byte array
 	 * @return bitset
 	 */
@@ -73,8 +73,8 @@ public class MessageUtil {
 		}
 		return bitset;
 	}
-	
-	
+
+
 
 	/**
 	 * This is for Loading the common properties file The other methods are
