@@ -30,10 +30,10 @@ public abstract class MessageHandler implements Cloneable {
 	public abstract int handleMessage(ActualMessage m, Socket n);
 	public abstract ActualMessage creatingMessage();
 
-	public void setPeerInfo(RemotePeerInfo p) {
+	public synchronized void setPeerInfo(RemotePeerInfo p) {
 		this.peerInfo = p;
 	}
-	public void setPeerIdNeighboor(int p) {
+	public synchronized void setPeerIdNeighboor(int p) {
 		this.neighborID = p;
 	}
 	/**
@@ -41,7 +41,7 @@ public abstract class MessageHandler implements Cloneable {
 	 * @param peerID adding specific peer to the list
 	 * @param b add this peers bitset
 	 */
-	public void addPeerBitSet(int peerID, BitSet b) {
+	public synchronized void addPeerBitSet(int peerID, BitSet b) {
 		PeersBitField.put(peerID, b);
 	}
 

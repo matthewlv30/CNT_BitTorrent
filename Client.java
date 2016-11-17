@@ -78,6 +78,13 @@ public class Client extends Thread{
 			clonedHandler.addPeerBitSet(peerServerID, MessageUtil.convertToBitSet(bitList.getPayloadField()));
 			int type  = clonedHandler.handleMessage(bitList, requestSocket);
 			
+			
+			
+			
+			
+			
+			
+			
 			//Send Interested or Not of the list of pieces recieved
 			System.out.println("************** INTERESTED OR NOT **************");
 			clonedHandler = (MessageHandler) HandlerCached.getHandler(type,myInfo);

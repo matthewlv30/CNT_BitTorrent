@@ -39,7 +39,7 @@ public class BitfieldHandler extends MessageHandler {
 	public int handleMessage(ActualMessage m, Socket n) {
 		byte payload[] = m.getPayloadField();
 		// First byte of the payload corresponds to piece indices 0-7,
-		// second bit is 8-15 etc.
+		// second bit is 8-15 etc.										/////////////////////////////////CHEKING PIECES MAYBE KRYSTAL
 		for (int i = 0; i < payload.length; i++) {
 			for (int j = 0; j < 8; j++) {
 				// Get the bit j at this byte i. If this bit is true AND
@@ -73,8 +73,8 @@ public class BitfieldHandler extends MessageHandler {
 			myBitfield.set(bitFieldSize + 1, myBitfield.size(), false);
 			
 		} else {
-			myBitfield.set(0, myBitfield.size(), false);
-		}
+			myBitfield.set(0, myBitfield.size(), false);					///////////////////////////////// FIX THIS
+		} 													
 		// setting up the payload with the list of pieces
 		byte payload[] = myBitfield.toByteArray();
 		
