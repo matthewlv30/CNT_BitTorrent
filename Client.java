@@ -74,6 +74,7 @@ public class Client extends Thread{
 			//Recive Back BitField and Determine Interested or Not
 			bitList = (ActualMessage) in.readObject();
 			//Adding bitset to list
+			clonedHandler.setPeerIdNeighboor(peerServerID);
 			clonedHandler.addPeerBitSet(peerServerID, MessageUtil.convertToBitSet(bitList.getPayloadField()));
 			int type  = clonedHandler.handleMessage(bitList, requestSocket);
 			

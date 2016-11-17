@@ -1,6 +1,7 @@
 package ActualMessages;
 
 import java.net.Socket;
+import java.util.BitSet;
 
 
 /**
@@ -36,6 +37,17 @@ public class HaveHandler extends MessageHandler {
 	@Override
 	public ActualMessage creatingMessage() {
 		// TODO Auto-generated method stub
+		BitSet b = PeersBitField.get(neighborID);
+		byte[] negpayload = b.toByteArray();
+		byte[] mypayload = myBitfield.toByteArray();
+		byte[] payload = new byte[4];
+		for(int i = 0; i != mypayload.length; ++i) {
+			for(int j = 0; j != negpayload.length; ++j) {
+				if(mypayload[i] != negpayload[j]) {
+					payload = MessageUtil.convertIntToBytes(i);
+				}
+			}
+		}
 		
 		return null;
 	}

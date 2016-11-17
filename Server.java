@@ -99,7 +99,8 @@ public class Server extends Thread {
 					ActualMessage bitList = (ActualMessage) in.readObject();	
 					//Sending Servers bitlist  back
 					MessageHandler clonedHandler = (MessageHandler) HandlerCached.getHandler(bitList.getTypeField(),myServerInfo);
-					//Adding bitfield
+					//Adding bitfield and setting PeerID of client neigtbor
+					clonedHandler.setPeerIdNeighboor(hd.peerID);
 					clonedHandler.addPeerBitSet(hd.peerID, MessageUtil.convertToBitSet(bitList.getPayloadField()));
 					bitList = clonedHandler.creatingMessage();
 					System.out.println("Bitfield sent(server): " + bitList.getTypeField());
