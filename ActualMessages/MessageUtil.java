@@ -7,6 +7,7 @@ import java.util.BitSet;
 import java.util.Properties;
 
 import fileHandlers.CommonProperties;
+import fileHandlers.FileHandler;
 
 /**
  * This class consists of useful functions related to messages, including
@@ -61,20 +62,19 @@ public class MessageUtil {
 	/**
 	 * Convert byte array to a bit set
 	 *
-	 * @param bytes: byte array
+	 * @param bytes:
+	 *            byte array
 	 * @return bitset
 	 */
 	public static BitSet convertToBitSet(byte[] bytes) {
 		BitSet bitset = new BitSet();
 		for (int i = 0; i < bytes.length * 8; i++) {
-		    if ((bytes[i / 8] & (1 << (i % 8))) > 0) {
-		        bitset.set(i);
-		    }
+			if ((bytes[i / 8] & (1 << (i % 8))) > 0) {
+				bitset.set(i);
+			}
 		}
 		return bitset;
 	}
-
-
 
 	/**
 	 * This is for Loading the common properties file The other methods are
@@ -115,5 +115,16 @@ public class MessageUtil {
 
 	public static int getPieceSize() {
 		return pieceSize;
+	}
+
+	public static BitSet loadPieces(int peerId) throws Exception {
+		Reader cReader = new FileReader(CommonProperties.CONFIG_FILE);
+		Properties cProp = CommonProperties.read(cReader);
+		// for each peer, create its file handler by passing its id and common
+		// properties
+		FileHandler fh = new FileHandler(peerId, cProp);
+		// split the file
+		fh.splitFile();
+		return fh.listPieces();
 	}
 }

@@ -36,7 +36,8 @@ public class HaveHandler extends MessageHandler {
 	}
 	@Override
 	public ActualMessage creatingMessage() {
-		// TODO Auto-generated method stub
+		// Type of Meessage
+		final byte messageType = 4;
 		BitSet b = PeersBitField.get(neighborID);
 		byte[] negpayload = b.toByteArray();
 		byte[] mypayload = myBitfield.toByteArray();
@@ -45,10 +46,15 @@ public class HaveHandler extends MessageHandler {
 			for(int j = 0; j != negpayload.length; ++j) {
 				if(mypayload[i] != negpayload[j]) {
 					payload = MessageUtil.convertIntToBytes(i);
+					negpayload[j] = mypayload[i];
 				}
 			}
 		}
 		
-		return null;
+		// Get the length of the message by payload + type
+		int payloadSize = payload.length + MessageUtil.convertByteToInt((byte) 1);
+		byte[] length = MessageUtil.convertIntToBytes(payloadSize);
+		ActualMessage m = new ActualMessage(length, messageType, payload);
+		return m;
 	}
 }

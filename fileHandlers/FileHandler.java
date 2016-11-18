@@ -1,8 +1,6 @@
 package fileHandlers;
 
 import java.util.BitSet;
-import java.util.Collection;
-import java.util.LinkedList;
 import java.util.Properties;
 
 public class FileHandler {
@@ -14,7 +12,7 @@ public class FileHandler {
     private FileDirectoryHandler location;
     private final long timeout;
 
-    FileHandler (int peerId, Properties config) {
+    public FileHandler (int peerId, Properties config) {
         this (peerId, config.getProperty(CommonProperties.FileName.toString()),
             Integer.parseInt(config.getProperty(CommonProperties.FileSize.toString())),
             Integer.parseInt(config.getProperty(CommonProperties.PieceSize.toString())),
@@ -102,7 +100,7 @@ public class FileHandler {
         return receivedParts.cardinality();
     }
 
-    byte[] getPiece(int partId) {
+    public byte[] getPiece(int partId) {
         return location.getPartAsByteArray(partId);
     }
 
@@ -117,6 +115,21 @@ public class FileHandler {
     public int getBitmapSize() {
         return bitsetSize;
     }
+    
+    public BitSet listPieces() {
+		BitSet b = new BitSet();
+    	for(int i = 0; i != bitsetSize; ++i) {
+			if(getPiece(i) != null) {
+				b.set(i * 8, (i + 1) * 8, true);
+			}
+			else {
+				b.set(i * 8, (i + 1) * 8, false);
+			}
+		}
+    	return b;
+    	
+    }
+    
 
     private boolean isFileCompleted() {
         for (int i = 0; i < bitsetSize; i++) {
@@ -126,4 +139,6 @@ public class FileHandler {
         }
         return true;
     }
+    
+    
 }

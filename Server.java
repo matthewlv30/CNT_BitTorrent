@@ -97,12 +97,13 @@ public class Server extends Thread {
 					
 					// Recieve Bitfield Message with list of Pieces
 					ActualMessage bitList = (ActualMessage) in.readObject();	
+					
 					//Sending Servers bitlist  back
 					MessageHandler clonedHandler = (MessageHandler) HandlerCached.getHandler(bitList.getTypeField(),myServerInfo);
+					
 					//Adding bitfield and setting PeerID of client neigtbor
 					clonedHandler.setPeerIdNeighboor(hd.peerID);
 					clonedHandler.addPeerBitSet(hd.peerID, MessageUtil.convertToBitSet(bitList.getPayloadField()));
-					
 					bitList = clonedHandler.creatingMessage();
 					System.out.println("Bitfield sent(server): " + bitList.getTypeField());
 					message.sendMessage(bitList);
@@ -118,9 +119,10 @@ public class Server extends Thread {
 					
 					//Send Have Message
 					System.out.println("************** HAVE **************");
+					clonedHandler.setPeerIdNeighboor(hd.peerID);
 					clonedHandler = (MessageHandler) HandlerCached.getHandler(4,myServerInfo);
 					bitList = clonedHandler.creatingMessage();
-					System.out.println("Have (server): " + bitList.getTypeField());
+					System.out.println("Have (server): " + bitList.getPayloadField().toString());
 					message.sendMessage(bitList);
 					
 					//while (true) {

@@ -18,7 +18,7 @@ public class Driver {
         System.out.println(peersToConnect.get(0).getPeerId());
         int peerId = peersToConnect.get(0).getPeerId();
 
-        /file manager sample
+        //file manager sample
         //import common properties
         Reader cReader = new FileReader(CommonProperties.CONFIG_FILE);
 		Properties cProp = CommonProperties.read(cReader);
@@ -28,7 +28,8 @@ public class Driver {
 
 		//split the file
 		fh.splitFile();
-
+		
+		System.out.println(fh.getBitmapSize());	
 	}
 
 }

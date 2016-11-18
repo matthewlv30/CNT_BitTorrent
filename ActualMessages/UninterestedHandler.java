@@ -16,7 +16,6 @@ public class UninterestedHandler extends MessageHandler {
 	 */
 	public int handleMessage(ActualMessage m, Socket n) {
 		interestedPeers.put(n, false);
-		
 		return 0;
 	}
 

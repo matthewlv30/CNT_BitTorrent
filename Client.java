@@ -73,18 +73,12 @@ public class Client extends Thread{
 			
 			//Recive Back BitField and Determine Interested or Not
 			bitList = (ActualMessage) in.readObject();
-			//Adding bitset to list
+			//Adding bitset to list of bitlists
 			clonedHandler.setPeerIdNeighboor(peerServerID);
 			clonedHandler.addPeerBitSet(peerServerID, MessageUtil.convertToBitSet(bitList.getPayloadField()));
+			//Get If Interested in Piece from server or not
 			int type  = clonedHandler.handleMessage(bitList, requestSocket);
-			
-			
-			
-			
-			
-			
-			
-			
+
 			//Send Interested or Not of the list of pieces recieved
 			System.out.println("************** INTERESTED OR NOT **************");
 			clonedHandler = (MessageHandler) HandlerCached.getHandler(type,myInfo);
@@ -92,6 +86,12 @@ public class Client extends Thread{
 			System.out.println("Interested(2)/Uninterested(3)(client): " + bitList.getTypeField());
 			mg.sendMessage(bitList);
 
+			
+			//Get Have Message
+			bitList = (ActualMessage) in.readObject();
+			System.out.println("Message recieved (client): " + bitList.getTypeField());
+			clonedHandler = (MessageHandler) HandlerCached.getHandler(type,myInfo);
+			clonedHandler.handleMessage(bitList, requestSocket);
 			//while (true) {
 				
 			//}

@@ -30,7 +30,7 @@ public abstract class MessageHandler implements Cloneable {
 	public abstract int handleMessage(ActualMessage m, Socket n);
 	public abstract ActualMessage creatingMessage();
 
-	public synchronized void setPeerInfo(RemotePeerInfo p) {
+	public void setPeerInfo(RemotePeerInfo p) {
 		this.peerInfo = p;
 	}
 	public synchronized void setPeerIdNeighboor(int p) {

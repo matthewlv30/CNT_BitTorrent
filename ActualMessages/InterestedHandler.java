@@ -14,8 +14,7 @@ public class InterestedHandler extends MessageHandler {
 	 * @param n:  this is the Node that is interested in the current peer
 	 */
 	public int handleMessage(ActualMessage m, Socket n) {
-		interestedPeers.put(n, true);
-		
+		interestedPeers.put(n, true); 
 		return 0;
 	}
 
