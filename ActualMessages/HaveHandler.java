@@ -27,15 +27,16 @@ public class HaveHandler extends MessageHandler {
 			// get the index of interest
 			index = MessageUtil.convertBytesToInt(payload);
 			byte[] myByte = myBitfield.toByteArray();
-
+			//check if the neigtboor list is empty
+			myByte = MessageUtil.setPayload(myByte);	
 			// update neightboor bitlist
 			BitSet b = PeersBitField.get(neighborID);
 			b.set(index * 8, (index * 8) + 8, true);
 			// compare if interested or not
 			if (myByte[index] < 0) {
-				return 3; // uninterested
+				return 3; // Uninterested
 			} else {
-				return 2; // interested
+				return 2; // Interested
 			}
 		}
 	}
@@ -46,10 +47,8 @@ public class HaveHandler extends MessageHandler {
 		final byte messageType = 4;
 		BitSet b = PeersBitField.get(neighborID);
 		byte[] negpayload = b.toByteArray();
-		if (negpayload.length == 0) {
-			int pay = (int) Math.ceil((double) MessageUtil.getFileSize() / MessageUtil.getPieceSize());
-			negpayload = new byte[pay];
-		}
+		//check if the neigtboor list is empty
+		negpayload = MessageUtil.setPayload(negpayload);		
 
 		byte[] mypayload = myBitfield.toByteArray();
 		byte[] payload = new byte[4];

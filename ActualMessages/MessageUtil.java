@@ -116,7 +116,15 @@ public class MessageUtil {
 	public static int getPieceSize() {
 		return pieceSize;
 	}
-
+	
+	public static byte[] setPayload(byte[] payload) {
+		if (payload.length == 0) {
+			int pay = (int) Math.ceil((double) MessageUtil.getFileSize() / MessageUtil.getPieceSize());
+			payload = new byte[pay];
+		}
+		return payload;
+	}
+	
 	public static BitSet loadPieces(int peerId) throws Exception {
 		Reader cReader = new FileReader(CommonProperties.CONFIG_FILE);
 		Properties cProp = CommonProperties.read(cReader);

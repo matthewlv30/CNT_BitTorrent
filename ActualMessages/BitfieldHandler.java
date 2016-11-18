@@ -13,7 +13,7 @@ public class BitfieldHandler extends MessageHandler {
 		try {
 			MessageUtil.loadCommonProperties();
 			int bitFieldSize = (int) Math.ceil((double) MessageUtil.getFileSize() / MessageUtil.getPieceSize()); // 306
-			myBitfield = new BitSet(bitFieldSize * 8); /////////////////////////////////////////////////////////////////////// fix this 
+			myBitfield = new BitSet(bitFieldSize * 8); /////////////////////////////////////////////////////////////////////////////// fix this 
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -42,7 +42,10 @@ public class BitfieldHandler extends MessageHandler {
 				// If that bit index for my bitfield is false, then send interested message
 				// Note: special operations are used on myBitField to obtain proper "byte" location
 				/////////////////////////////////////////////////////////////////////////////////////////////////////// FIX to false
-				if ((bit == 1) && (myBitfield.get(j + (i * 8)) == true)) {
+				if ((bit == 1) && (myBitfield.length() == 0)) {
+					return 2; // send Interested
+				}
+				else if ((bit == 1) && (myBitfield.get(j + (i * 8)) == false)) {
 					return 2; // send INTERESTED
 				}
 			}
