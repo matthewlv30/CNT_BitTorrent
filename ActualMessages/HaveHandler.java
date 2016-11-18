@@ -3,16 +3,15 @@ package ActualMessages;
 import java.net.Socket;
 import java.util.BitSet;
 
-
 /**
  * Class to handle "have" message
  */
 public class HaveHandler extends MessageHandler {
-		
+
 	/**
-	 * When you receive a "have" message, determine whether or not to send
-	 * an interested message. The payload of the "have" message contains a
-	 * piece index field
+	 * When you receive a "have" message, determine whether or not to send an
+	 * interested message. The payload of the "have" message contains a piece
+	 * index field
 	 * 
 	 * @param m:
 	 *            this is the message received
@@ -25,32 +24,43 @@ public class HaveHandler extends MessageHandler {
 		if (payload.length != 4) {
 			throw new RuntimeException("Have message does not have proper payload size");
 		} else {
+			// get the index of interest
 			index = MessageUtil.convertBytesToInt(payload);
+			byte[] myByte = myBitfield.toByteArray();
 
-			if (myBitfield.get(index) == true) {
-				return 3;
+			// update neightboor bitlist
+			BitSet b = PeersBitField.get(neighborID);
+			b.set(index * 8, (index * 8) + 8, true);
+			// compare if interested or not
+			if (myByte[index] < 0) {
+				return 3; // uninterested
 			} else {
-				return 2;
+				return 2; // interested
 			}
 		}
 	}
+
 	@Override
 	public ActualMessage creatingMessage() {
 		// Type of Meessage
 		final byte messageType = 4;
 		BitSet b = PeersBitField.get(neighborID);
 		byte[] negpayload = b.toByteArray();
+		if (negpayload.length == 0) {
+			int pay = (int) Math.ceil((double) MessageUtil.getFileSize() / MessageUtil.getPieceSize());
+			negpayload = new byte[pay];
+		}
+
 		byte[] mypayload = myBitfield.toByteArray();
 		byte[] payload = new byte[4];
-		for(int i = 0; i != mypayload.length; ++i) {
-			for(int j = 0; j != negpayload.length; ++j) {
-				if(mypayload[i] != negpayload[j]) {
-					payload = MessageUtil.convertIntToBytes(i);
-					negpayload[j] = mypayload[i];
-				}
+		int i = 0;
+		for (i = 0; i != mypayload.length; ++i) {
+			if (mypayload[i] != negpayload[i]) {
+				payload = MessageUtil.convertIntToBytes(i);
+				break;
 			}
 		}
-		
+		negpayload[i] = mypayload[i];
 		// Get the length of the message by payload + type
 		int payloadSize = payload.length + MessageUtil.convertByteToInt((byte) 1);
 		byte[] length = MessageUtil.convertIntToBytes(payloadSize);

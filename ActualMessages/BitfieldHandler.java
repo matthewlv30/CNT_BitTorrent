@@ -13,7 +13,7 @@ public class BitfieldHandler extends MessageHandler {
 		try {
 			MessageUtil.loadCommonProperties();
 			int bitFieldSize = (int) Math.ceil((double) MessageUtil.getFileSize() / MessageUtil.getPieceSize()); // 306
-			myBitfield = new BitSet(bitFieldSize);
+			myBitfield = new BitSet(bitFieldSize * 8); /////////////////////////////////////////////////////////////////////// fix this 
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -55,7 +55,7 @@ public class BitfieldHandler extends MessageHandler {
 		// Type of Meessage
 		final byte messageType = 5;
 		// Each index of a bit field indicates whether or not the piece is with the peer.
-		// int bitFieldSize = (int) Math.ceil((double) MessageUtil.getFileSize()
+		
 		try {
 			if (peerInfo.hasFile)
 				myBitfield = MessageUtil.loadPieces(peerInfo.getPeerId());
@@ -66,7 +66,12 @@ public class BitfieldHandler extends MessageHandler {
 			e.printStackTrace();
 		}
 		// setting up the payload with the list of pieces
-		byte payload[] = myBitfield.toByteArray();
+		
+		byte[] payload = myBitfield.toByteArray();
+		//if(payload.length == 0) {
+			//int pay = (int) Math.ceil((double) MessageUtil.getFileSize() / MessageUtil.getPieceSize());
+			//payload = new byte[pay];
+		//}
 		// Get the length of the message by payload + type
 		int payloadSize = payload.length + MessageUtil.convertByteToInt((byte) 1);
 		byte[] length = MessageUtil.convertIntToBytes(payloadSize);

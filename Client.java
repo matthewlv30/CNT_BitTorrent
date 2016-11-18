@@ -88,9 +88,10 @@ public class Client extends Thread{
 
 			
 			//Get Have Message
+			clonedHandler.setPeerIdNeighboor(peerServerID);
 			bitList = (ActualMessage) in.readObject();
 			System.out.println("Message recieved (client): " + bitList.getTypeField());
-			clonedHandler = (MessageHandler) HandlerCached.getHandler(type,myInfo);
+			clonedHandler = (MessageHandler) HandlerCached.getHandler(bitList.getTypeField(),myInfo);
 			clonedHandler.handleMessage(bitList, requestSocket);
 			//while (true) {
 				
