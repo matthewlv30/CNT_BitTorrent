@@ -1,55 +1,101 @@
 import java.net.*;
+
+import ActualMessages.ActualMessage;
+import ActualMessages.MessageHandler;
+import ActualMessages.MessageUtil;
+import fileHandlers.RemotePeerInfo;
+
 import java.io.*;
 
 public class Client extends Thread{
-	private Socket requestSocket; // socket connect to the server
+	//Communication Instance Variables
+	private Socket requestSocket; 	// socket connect to the server
 	private ObjectOutputStream out; // stream write to the socket
-	private ObjectInputStream in; // stream read from the socket
+	private ObjectInputStream in; 	// stream read from the socket
+	private Message mg;				// message stream	
 	
-	private int peerID;
-	private int peerServerID;
-	private String host;
-	private int port;
-	// private int peerIndex = 1;
-	private Message mg; // message stream
-
-	public Client(int peerID, String host, int port, int peerServerID) {
-		this.peerID = peerID;
+	//Info about the Client Variables 
+	private RemotePeerInfo myInfo;		// To get the file info for the configuration file and Info about the Client
+	private int peerServerID;       	// peerID of the Server that this client is coneected to 
+	
+	
+	/**
+	 * Note on handlers: handlers contains mappings from types to handler
+	 * objects, e.g. handlers.put(1, new ChokeHandler(this)); handlers HashMap
+	 * usage example: handlers.get(messageType).handleMessage(message, peer);
+	 */
+	// Integer: message type, MessageHandler: the message-handling implementation
+	//private static HashMap<Integer, MessageHandler> handlers = new HashMap<Integer, MessageHandler>();
+	// Socket: peer Socket, Boolean: 1 unchoked 0 choked
+	//private HashMap<Socket, Boolean> unchokedPeers = new HashMap<Socket, Boolean>();
+	// Socket: peer Socket, Boolean: 1 interested 0 uninterested
+	//private HashMap<Socket, Boolean> interestedPeers = new HashMap<Socket, Boolean>();
+	
+	public Client(RemotePeerInfo p, int peerServerID) {
 		this.peerServerID = peerServerID;
-		this.host = host;
-		this.port = port;
+		this.myInfo = p;
+		
+	}
+	
+	public RemotePeerInfo getPeerInfo() {
+		return this.myInfo;
 	}
 
 	public void run() {
 		try {
 			// create a socket to connect to the server
-			requestSocket = new Socket(host, port);
-			System.out.println("Connected to localhost");
+			requestSocket = new Socket(myInfo.getPeerAddress(), myInfo.getPort());
 
-			// initialize inputStream and outputStream
+			// initialize inputStream and outputStream and a Message object
 			out = new ObjectOutputStream(requestSocket.getOutputStream());
 			out.flush();
 			in = new ObjectInputStream(requestSocket.getInputStream());
-
-			// get Input from standard input
-			// BufferedReader bufferedReader = new BufferedReader(new
-			// InputStreamReader(System.in));
-			// read a sentence from the file input
-			// peerID = Integer.parseInt(bufferedReader.readLine());
-
+			mg = new Message(in, out);
+			
+			// Loading the Handlers
+			HandlerCached.loadCache();
+			
 			// SEND HANDSHAKE MESSAGE
 			System.out.println("************** Starting Handshake **************");
-			mg = new Message(in, out);
-			HandShake_Message hand_msg = new HandShake_Message(peerID);
+			HandShake_Message hand_msg = new HandShake_Message(myInfo.getPeerId());
 			mg.sendMessage(hand_msg);
 
-			// RECIEVE HANDSHAKE BACK
-			HandShake_check(in.readObject());
+			// RECIEVE HANDSHAKE BACK AND CHECK IF RIGHT MEESAGE
+			mg.HandShake_check(in.readObject(),peerServerID);
 
-			while (true) {
-				//System.out.println("************** BITFIELD **************");
-				//message_type(5);
-			}
+			
+			// Send Bitfiled Message with Pieces
+			System.out.println("************** BITFIELD **************");
+			MessageHandler clonedHandler = (MessageHandler) HandlerCached.getHandler(5,myInfo);
+			ActualMessage bitList = clonedHandler.creatingMessage();
+			System.out.println("Bitfield sent (client): " + bitList.getTypeField());
+			mg.sendMessage(bitList);
+			
+			//Recive Back BitField and Determine Interested or Not
+			bitList = (ActualMessage) in.readObject();
+			//Adding bitset to list of bitlists
+			clonedHandler.setPeerIdNeighboor(peerServerID);
+			clonedHandler.addPeerBitSet(peerServerID, MessageUtil.convertToBitSet(bitList.getPayloadField()));
+			//Get If Interested in Piece from server or not
+			int type  = clonedHandler.handleMessage(bitList, requestSocket);
+
+			//Send Interested or Not of the list of pieces recieved
+			System.out.println("************** INTERESTED OR NOT **************");
+			clonedHandler = (MessageHandler) HandlerCached.getHandler(type,myInfo);
+			bitList = clonedHandler.creatingMessage();
+			System.out.println("Interested(2)/Uninterested(3)(client): " + bitList.getTypeField());
+			mg.sendMessage(bitList);
+
+			
+			//Get Have Message
+			clonedHandler.setPeerIdNeighboor(peerServerID);
+			bitList = (ActualMessage) in.readObject();
+			System.out.println("Message recieved (client): " + bitList.getTypeField());
+			clonedHandler = (MessageHandler) HandlerCached.getHandler(bitList.getTypeField(),myInfo);
+			clonedHandler.handleMessage(bitList, requestSocket);
+			//while (true) {
+				
+			//}
 		} catch (ConnectException e) {
 			System.err.println("Connection refused. You need to initiate a server first.");
 		} catch (ClassNotFoundException e) {
@@ -67,22 +113,6 @@ public class Client extends Thread{
 			} catch (IOException ioException) {
 				ioException.printStackTrace();
 			}
-		}
-	}
-
-	public int getPeerID() {
-		return peerID;
-	}
-
-	public void HandShake_check(Object obj) {
-		// receive the message sent from the client
-		HandShake_Message hand_msg = (HandShake_Message) obj;
-		
-		final String header = "P2PFILESHARINGPROJ";
-		//Cheking if handshake is the Expected One
-		if (hand_msg.peerID == peerServerID && header.equals(hand_msg.header)) {
-			// show the message to the user
-			System.out.println("Receive HandShake message -> " + hand_msg.header + " from Server " + hand_msg.peerID);
 		}
 	}
 }

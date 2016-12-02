@@ -2,6 +2,9 @@ import java.io.FileReader;
 import java.io.Reader;
 import java.util.LinkedList;
 
+import fileHandlers.PeerInfo;
+import fileHandlers.RemotePeerInfo;
+
 
 public class peerProcess {
 
@@ -26,9 +29,8 @@ public class peerProcess {
 		// ==========================================================
 		// Start Server && Clients
 		Server s;
-
 		if (peerID == peersToConnect.get(0).getPeerId()) {
-			s = new Server(peersToConnect.get(0).getPort(),peerID, peersToConnect.get(0));
+			s = new Server(peersToConnect.get(0));
 			s.start();
 		} else {
 			//Start Server
@@ -37,16 +39,22 @@ public class peerProcess {
 			
 			// Client side: Have the client connect to servers before it
 			int i = 0;
+			
 			for (i = 0; i < peersToConnect.size(); i++) {
 				if (peersToConnect.get(i).getPeerId() != peerID) {
 					// create a socket to connect to the server
-					clientList[i] = new Client(peersToConnect.get(i).getPeerId(),"localhost",peersToConnect.get(i).getPort(), peersToConnect.get(i).getPeerId());
+					//RemotePeerInfo rm = new RemotePeerInfo(peerID, peersToConnect.get(i).getPeerAddress(), peersToConnect.get(i).getPort(), false);
+					RemotePeerInfo rm = new RemotePeerInfo(Integer.toString(peerID), "localhost", Integer.toString(peersToConnect.get(i).getPort()), false);
+					//RemotePeerInfo rm = new RemotePeerInfo(Integer.toString(peerID), "192.168.1.7", Integer.toString(peersToConnect.get(i).getPort()), false);
+					clientList[i] = new Client(rm, peersToConnect.get(i).getPeerId());
 					//clientList[i] = new Client(peerID,peersToConnect.get(i).getPeerAddress(),peersToConnect.get(i).getPort(), peersToConnect.get(i).getPeerId());
 				} else {
 					break;
 				}
 			}
-			s = new Server(peersToConnect.get(i).getPort(), peerID, peersToConnect.get(i));
+			//s = new Server(peersToConnect.get(i));
+			///////////////////////////////////////////////////////////////////////////////////////////////FIX THIS/////////////////////////////////////////////////
+			s = new Server(peersToConnect.get(0));
 			s.start();
 			for(int j = 0; j != clientList.length; ++j) {
 				if(clientList[j] == null) {

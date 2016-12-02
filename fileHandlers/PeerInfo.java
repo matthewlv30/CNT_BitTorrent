@@ -1,3 +1,4 @@
+package fileHandlers;
 /**
  * This class is for retrieving peer-specific information from the PeerInfo.cfg file
  *
