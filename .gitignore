@@ -27,3 +27,8 @@
 /HandlerCached.class
 /peer_1001/files/parts/*
 .DS_Store
+/MapUtil$1.class
+/MapUtil.class
+/Unchoked$OptimisticNeighborTimer.class
+/Unchoked$PreferredNeighborTimer.class
+/Unchoked.class

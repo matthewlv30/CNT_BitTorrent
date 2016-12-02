@@ -30,6 +30,7 @@ public class Driver {
 		fh.splitFile();
 		
 		System.out.println(fh.getBitmapSize());	
+		
 	}
 
 }

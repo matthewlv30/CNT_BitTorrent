@@ -4,13 +4,12 @@ import java.util.concurrent.ConcurrentHashMap;
 import ActualMessages.ActualMessage;
 import ActualMessages.MessageHandler;
 import ActualMessages.MessageUtil;
-import fileHandlers.CommonProperties;
 import fileHandlers.RemotePeerInfo;
 
-import java.util.BitSet;
+
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Properties;
+
 
 import java.io.*;
 
@@ -29,10 +28,10 @@ public class Server extends Thread {
 	private static ConcurrentHashMap<Integer, Socket> clientList = new ConcurrentHashMap<Integer, Socket>();
 
 	// Socket: peer Socket, Boolean: 1 unchoked 0 choked
-	 private HashMap<Socket, Boolean> unchokedPeers = new HashMap<Socket,Boolean>();
+	// private HashMap<Socket, Boolean> unchokedPeers = new HashMap<Socket,Boolean>();
 	 private HashMap<Socket, Boolean> interestedPeers = new HashMap<Socket,Boolean>();
 	
-	private BitSet myBitfield;
+	//private BitSet myBitfield;
 	/**
 	 * 
 	 * @param sPort
