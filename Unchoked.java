@@ -11,6 +11,8 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.ConcurrentHashMap;
 
+import fileHandlers.CommonProperties;
+
 /**
  * This class is for managing the choking and unchoking of peers. Its construction starts the timers for 
  * preferred neighbor and optimistically unchoked neighbor selection. It invokes the processes for these
