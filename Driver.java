@@ -31,7 +31,7 @@ public class Driver {
 		testMap.put("joe", 1.0);
 		// NOTE: there is an error when there is a duplicate chain at the end!!! Middle is fine!
 		
-		testMap = MapUtil.sortByValue( testMap );
+		//testMap = MapUtil.sortByValue( testMap );
 		 
         for (Map.Entry<String, Double> entry : testMap.entrySet()) {
         	System.out.println(entry.getKey() + ": " + entry.getValue());
