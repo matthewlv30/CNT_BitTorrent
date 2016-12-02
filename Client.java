@@ -93,6 +93,17 @@ public class Client extends Thread{
 			System.out.println("Message recieved (client): " + bitList.getTypeField());
 			clonedHandler = (MessageHandler) HandlerCached.getHandler(bitList.getTypeField(),myInfo);
 			clonedHandler.handleMessage(bitList, requestSocket);
+			
+			
+			
+			//Get Piece
+			bitList = (ActualMessage) in.readObject();
+			System.out.println("Message recieved (client): " + bitList.getTypeField());
+			clonedHandler = (MessageHandler) HandlerCached.getHandler(bitList.getTypeField(),myInfo);
+			FileOutputStream fos = new FileOutputStream("file");
+			fos.write(bitList.getPayloadField());
+			fos.close();
+			//clonedHandler.handleMessage(bitList, requestSocket);
 			//while (true) {
 				
 			//}
