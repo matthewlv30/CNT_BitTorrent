@@ -1,5 +1,7 @@
 package ActualMessages;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.net.Socket;
 import java.util.BitSet;
 import java.util.HashMap;
@@ -28,7 +30,7 @@ public abstract class MessageHandler implements Cloneable {
 	
 	
 	public abstract int handleMessage(ActualMessage m, Socket n);
-	public abstract ActualMessage creatingMessage();
+	public abstract ActualMessage creatingMessage() throws IOException;
 
 	public void setPeerInfo(RemotePeerInfo p) {
 		this.peerInfo = p;
