@@ -4,11 +4,22 @@ import java.util.concurrent.ConcurrentHashMap;
 import ActualMessages.ActualMessage;
 import ActualMessages.MessageHandler;
 import ActualMessages.MessageUtil;
+import fileHandlers.CommonProperties;
 import fileHandlers.RemotePeerInfo;
+
+import java.util.BitSet;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Properties;
 
 import java.io.*;
 
 public class Server extends Thread {
+	// Unchoked changes
+	private ConcurrentHashMap<Socket,Boolean> preferredNeighbors = new ConcurrentHashMap<Socket,Boolean>(); // The neighbors that we can receive piece requests from
+	private Socket optimisticallyUnchoked; // Neighbor that we can receive pice requests from
+	private HashMap<Socket, Double> neighborByteCount = new HashMap<Socket, Double>(); // Maps peerID to how many bytes have been downloaded from them
+	// End of Unchoked Changes
 
 	private static int peerIndex = 1; // index for peers
 
@@ -18,12 +29,10 @@ public class Server extends Thread {
 	private static ConcurrentHashMap<Integer, Socket> clientList = new ConcurrentHashMap<Integer, Socket>();
 
 	// Socket: peer Socket, Boolean: 1 unchoked 0 choked
-	// private HashMap<Socket, Boolean> unchokedPeers = new HashMap<Socket,Boolean>();
-
+	 private HashMap<Socket, Boolean> unchokedPeers = new HashMap<Socket,Boolean>();
+	 private HashMap<Socket, Boolean> interestedPeers = new HashMap<Socket,Boolean>();
 	
-	// private HashMap<Socket, Boolean> interestedPeers = new HashMap<Socket,Boolean>();
-	
-	//private BitSet myBitfield;
+	private BitSet myBitfield;
 	/**
 	 * 
 	 * @param sPort
@@ -56,6 +65,87 @@ public class Server extends Thread {
 		}
 	}
 	
+	// Unchoked Changes
+	
+	public void resetByteCount() {
+		neighborByteCount.clear();
+	}
+	
+	public boolean isPeerInterested(Socket peer) {
+		if (interestedPeers.containsKey(peer)) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	// This indicates whether this peer has the complete file or not
+	public boolean hasCompleteFile() {
+		// TODO: Implement this
+		return false;
+	}
+	
+	public Map<Socket, Double> getNeighborByteCount() {
+		return neighborByteCount;
+	}
+	
+	public ConcurrentHashMap<Socket,Boolean> getPreferredNeighbors() {
+		return preferredNeighbors;
+	}
+	
+	public HashMap<Socket, Boolean> getInterestedPeers() {
+		return interestedPeers;
+	}
+	
+	public void setOptimisticallyUnchoked(Socket p) {
+		// send choke message to old optimisticallyUnchoked if it's not in preferredNeighbors
+		// if it's in preferredNeighbors, then dont do anything but set
+		// else, set and send unchoke message
+		
+		if (!preferredNeighbors.containsKey(p)) {
+			// send choke message to current optimistically unchoked, since it's not preferred
+			optimisticallyUnchoked = p;
+		} else {
+			optimisticallyUnchoked = p;
+			// send unchoke message to this neighbor
+		}
+	}
+	
+	// This method is mainly invoked by the Unchoked object. Once this is invoked, the server will take care of choking/unchoking its neighbors according to the new configurations
+	public void setPreferredNeighbors(Socket[] _preferredNeighbors) {
+		// place each _preferredNeighbors into a map!
+		ConcurrentHashMap<Socket,Boolean> _preferredNeighborsMap = new ConcurrentHashMap<Socket,Boolean>();
+		for (int i = 0; i < _preferredNeighbors.length; i++) {
+			_preferredNeighborsMap.put(_preferredNeighbors[i], true);
+		}
+		
+		for (Map.Entry<Socket, Boolean> entry : preferredNeighbors.entrySet()) {
+			// If the new map does not contain this neighbor, and the neighbor is currently preferred, send a choke message
+			if (!(_preferredNeighborsMap.contains(entry)) && (entry.getValue() == true)) {
+				preferredNeighbors.put(entry.getKey(), false);
+				
+				// Optimistically unchoked neighbors do not get a choke message
+				if (entry.getKey() != optimisticallyUnchoked) {
+					// Tell Server to send choke message to this Socket (entry.getKey()).
+				}
+			}
+			
+			// Now we need to send unchoke messages to those that are NOT in the current map
+			if ((_preferredNeighborsMap.contains(entry)) && (entry.getValue() == false)) {
+				preferredNeighbors.put(entry.getKey(), true);
+				// Tell Server to send unchoke message to this Socket (entry.getKey())
+			}
+		}
+	}
+	
+	public Socket getOptimisticallyUnchoked() {
+		return optimisticallyUnchoked;
+	}
+	
+	public void OptimisticallyUnchoked(Socket _optimisticallyUnchoked) {
+		optimisticallyUnchoked = _optimisticallyUnchoked;
+	}
+	// End of Unchoked Changes
 	
 
 	/**
