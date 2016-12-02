@@ -84,6 +84,7 @@ public class Unchoked {
 			}
 			
 			optimisticallyUnchokedNeighbor = (Socket) entries[n];
+			myServer.setOptimisticallyUnchoked(optimisticallyUnchokedNeighbor);
 		}
 		
 	}
