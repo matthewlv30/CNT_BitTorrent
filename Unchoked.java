@@ -124,7 +124,6 @@ public class Unchoked {
 			}
 			
 			// Sort the map of downloading rates
-			MapUtil a = new MapUtil();
 			downloadingRates = MapUtil.sortByValue(downloadingRates);
 			
 			it = downloadingRates.entrySet().iterator(); // Iterator for iterating through all the possible peers
