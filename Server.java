@@ -215,6 +215,7 @@ public class Server extends Thread {
 					message.sendMessage(bitList);
 					
 					
+					
 					//Send Piece Message
 					System.out.println("************** PIECE **************");
 					clonedHandler = (MessageHandler) HandlerCached.getHandler(7,myServerInfo);
