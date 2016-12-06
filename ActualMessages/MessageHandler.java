@@ -26,6 +26,8 @@ public abstract class MessageHandler implements Cloneable {
 	// Socket: peer Socket, Boolean: 1 interested 0 uninterested
 	protected static HashMap<Socket, Boolean> interestedPeers = new HashMap<Socket,Boolean>();
 	
+	protected int indexRequest;
+	
 	
 	public abstract int handleMessage(ActualMessage m, Socket n);
 	public abstract ActualMessage creatingMessage();
@@ -43,6 +45,13 @@ public abstract class MessageHandler implements Cloneable {
 	 */
 	public synchronized void addPeerBitSet(int peerID, BitSet b) {
 		PeersBitField.put(peerID, b);
+	}
+	
+	public void setPieceIndex(int index) {
+		indexRequest = index;
+	}
+	public int getPieceIndex() {
+		return indexRequest;
 	}
 
 	public Object clone() {

@@ -214,6 +214,14 @@ public class Server extends Thread {
 					System.out.println("Have (server): " + bitList.getPayloadField().toString());
 					message.sendMessage(bitList);
 					
+					
+					//Send Piece Message
+					System.out.println("************** PIECE **************");
+					clonedHandler = (MessageHandler) HandlerCached.getHandler(7,myServerInfo);
+					bitList = clonedHandler.creatingMessage();
+					System.out.println("Piece (server): " + bitList.getPayloadField().toString());
+					message.sendMessage(bitList);
+					
 					//while (true) {
 						
 					//}
