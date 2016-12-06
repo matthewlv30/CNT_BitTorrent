@@ -55,7 +55,7 @@ public class HaveHandler extends MessageHandler {
 		byte[] payload = new byte[4];
 		int i = 0;
 		for (i = 0; i != mypayload.length; ++i) {
-			if (mypayload[i] > negpayload[i]) {
+			if (mypayload[i] < negpayload[i]) {
 				setPieceIndex(i); // setting the piece that the peer does not have
 				payload = MessageUtil.convertIntToBytes(i);
 				break;

@@ -108,6 +108,8 @@ public class Client extends Thread{
 			clonedHandler = (MessageHandler) HandlerCached.getHandler(bitList.getTypeField(),myInfo);
 			clonedHandler.handleMessage(bitList, requestSocket);
 			
+			
+			
 			//while (true) {
 				
 			//}

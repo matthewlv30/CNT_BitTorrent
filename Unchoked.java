@@ -1,10 +1,10 @@
 import java.io.FileReader;
 import java.io.Reader;
-import java.net.Socket;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.Random;
 import java.util.Timer;
@@ -46,18 +46,18 @@ public class Unchoked {
 	}
 
 	/**
-	 * Returns true if the peer associated with the Socket is optimistically unchoked or is a preferred neighbors
-	 * @param peer:	the peer Socket to be checked
+	 * Returns true if the peer associated with the Integer is optimistically unchoked or is a preferred neighbors
+	 * @param peer:	the peer Integer to be checked
 	 * @return 		true if unchoked, false if choked
 	 */
-	public boolean isUnchoked(Socket peer) {
+	public boolean isUnchoked(Integer peer) {
 		if (peer == myServer.getOptimisticallyUnchoked()) {
 			return true;
 		}
 		
-		ConcurrentHashMap<Socket,Boolean> preferredNeighbors = myServer.getPreferredNeighbors();
+		ConcurrentHashMap<Integer,Boolean> preferredNeighbors = myServer.getPreferredNeighbors();
 		
-		for (Map.Entry<Socket, Boolean> entry : preferredNeighbors.entrySet()) {
+		for (Map.Entry<Integer, Boolean> entry : preferredNeighbors.entrySet()) {
 			if ((entry.getKey() == peer) && (entry.getValue() == true)) {
 				return true;
 			}
@@ -77,8 +77,8 @@ public class Unchoked {
 		@Override
 		public void run() {
 			// Get the interested peers
-			HashMap<Socket, Boolean> peers = myServer.getInterestedPeers();
-			Socket optimisticallyUnchokedNeighbor = null;
+			HashMap<Integer, Boolean> peers = myServer.getInterestedPeers();
+			Integer optimisticallyUnchokedNeighbor = null;
 			
 			Object[] entries = peers.keySet().toArray();
 			Map<Integer, Boolean> randMap = new HashMap<Integer, Boolean>();
@@ -89,7 +89,7 @@ public class Unchoked {
 				n = rand.nextInt(entries.length);
 			}
 			
-			optimisticallyUnchokedNeighbor = (Socket) entries[n];
+			optimisticallyUnchokedNeighbor = (Integer) entries[n];
 			myServer.setOptimisticallyUnchoked(optimisticallyUnchokedNeighbor);
 		}
 		
@@ -99,13 +99,13 @@ public class Unchoked {
 
 		Server.Handler myServer; // Instance of the server so that the preferred neighbors can be set
 		
-		Socket preferredNeighbors[] = new Socket[Integer.parseInt(cProp.getProperty("NumberOfPreferredNeighbors"))]; // The preferred neighbors array, currently empty
-		LinkedList<Map.Entry<Socket, Double>> contenders = new LinkedList<Map.Entry<Socket, Double>>(); // The peers with duplicate downloading rates to choose from;
-		Map.Entry<Socket, Double> previous = null; // The previous peer looked at. This is useful for determining duplicate chains.
-		Map.Entry<Socket, Double> current = null;
-		Map<Socket, Double> downloadingRates = new HashMap<Socket, Double>(); // Empty map of Socket -> downloading rates
+		Integer preferredNeighbors[] = new Integer[Integer.parseInt(cProp.getProperty("NumberOfPreferredNeighbors"))]; // The preferred neighbors array, currently empty
+		LinkedList<Map.Entry<Integer, Double>> contenders = new LinkedList<Map.Entry<Integer, Double>>(); // The peers with duplicate downloading rates to choose from;
+		Map.Entry<Integer, Double> previous = null; // The previous peer looked at. This is useful for determining duplicate chains.
+		Map.Entry<Integer, Double> current = null;
+		Map<Integer, Double> downloadingRates = new HashMap<Integer, Double>(); // Empty map of Integer -> downloading rates
 		int count = 0; // indicates how many elements are currently in the preferredNeighbors array
-		Iterator<Map.Entry<Socket, Double>> it;
+		Iterator<Map.Entry<Integer, Double>> it;
 		
 		public PreferredNeighborTimer(Server.Handler _myServer) {
 			this.myServer = _myServer;
@@ -117,30 +117,30 @@ public class Unchoked {
 		public void run() {
 			// Retrieve the number of bytes each neighbor has provided us
 			System.out.println("Hello");
-			Map<Socket, Double> neighborByteCount = myServer.getNeighborByteCount();
+			Map<Integer, Double> neighborByteCount = myServer.getNeighborByteCount();
 			System.out.println(neighborByteCount);
-			// To calculate the downloading speed for each neighbor, divide bytes by unchokingInterval
-			for (Map.Entry<Socket, Double> entry : neighborByteCount.entrySet()) {
-				double byteCount = entry.getValue();
-				double downloadingSpeed = byteCount / Integer.parseInt(cProp.getProperty("UnchokingInterval"));
-				
-				// Store calculations in the map of downloading rates, if they are interested
-				if (myServer.isPeerInterested(entry.getKey())) {
-					downloadingRates.put(entry.getKey(), downloadingSpeed);
-				}
-			}
-			
-			// Sort the map of downloading rates
-			downloadingRates = MapUtil.sortByValue(downloadingRates);
-			if (downloadingRates.size() != 0) {
-				it = downloadingRates.entrySet().iterator(); // Iterator for iterating through all the possible peers
-				
-				if (myServer.hasCompleteFile()) {
-					randomlySelectNeighbors();
-				} else{
-					findPreferredNeighbors();
-				}
-			}
+//			// To calculate the downloading speed for each neighbor, divide bytes by unchokingInterval
+//			for (Entry<Integer, Double> entry : neighborByteCount.entrySet()) {
+//				double byteCount = entry.getValue();
+//				double downloadingSpeed = byteCount / Integer.parseInt(cProp.getProperty("UnchokingInterval"));
+//				
+//				// Store calculations in the map of downloading rates, if they are interested
+//				if (myServer.isPeerInterested(entry.getKey())) {
+//					downloadingRates.put(entry.getKey(), downloadingSpeed);
+//				}
+//			}
+//			
+//			// Sort the map of downloading rates
+//			downloadingRates = MapUtil.sortByValue(downloadingRates);
+//			if (downloadingRates.size() != 0) {
+//				it = downloadingRates.entrySet().iterator(); // Iterator for iterating through all the possible peers
+//				
+//				if (myServer.hasCompleteFile()) {
+//					randomlySelectNeighbors();
+//				} else{
+//					findPreferredNeighbors();
+//				}
+//			}
 		}
 		
 		private void randomlySelectNeighbors() {
@@ -153,7 +153,7 @@ public class Unchoked {
 				while (randMap.containsKey(n) && (randMap.get(n) == true)) {
 					n = rand.nextInt(entries.length);
 				}
-				preferredNeighbors[i] = (Socket) entries[n];
+				preferredNeighbors[i] = (Integer) entries[n];
 			}
 		}
 		
@@ -164,7 +164,7 @@ public class Unchoked {
 				// If there are still peers to look at
 				if (it.hasNext()) {
 					// Retrieve the peerID/rate pair
-					current = (Map.Entry<Socket, Double>)it.next();
+					current = (Map.Entry<Integer, Double>)it.next();
 
 					// If there is a previous peer to look at, we can look for duplicates
 					if (previous != null) {
@@ -173,7 +173,7 @@ public class Unchoked {
 					
 					previous = current;
 				} else {
-					preferredNeighbors[count] = (Socket)previous.getKey();
+					preferredNeighbors[count] = (Integer)previous.getKey();
 					count++;
 				}
 			}
@@ -203,10 +203,10 @@ public class Unchoked {
 				// Keep looking for other chaining duplicates and add those to the contenders list too
 				boolean c = true;
 				while (c == true) {
-					Map.Entry<Socket, Double> next;
+					Map.Entry<Integer, Double> next;
 					
 					if (it.hasNext()) {
-						next = (Map.Entry<Socket, Double>)it.next();
+						next = (Map.Entry<Integer, Double>)it.next();
 						
 						double dn = (Double)next.getValue();
 						if (dn == dc) {
@@ -227,7 +227,7 @@ public class Unchoked {
 				addDuplicates();
 			} else {
 				// If the previous and current are not duplicates, then you are free to add the previous to the peers
-				preferredNeighbors[count] = (Socket)previous.getKey();
+				preferredNeighbors[count] = (Integer)previous.getKey();
 				count++;
 			}
 		}
@@ -238,7 +238,7 @@ public class Unchoked {
 			
 			if (contenders.size() == peersNeeded) {
 				for (int j = 0; j < peersNeeded; j++) {
-					preferredNeighbors[count] = (Socket)contenders.get(j).getKey();
+					preferredNeighbors[count] = (Integer)contenders.get(j).getKey();
 					count++;
 ;				}
 			} else {
@@ -255,7 +255,7 @@ public class Unchoked {
 					while (randMap.containsKey(n) && (randMap.get(n) == true)) {
 						n = rand.nextInt(contenders.size());
 					}
-					preferredNeighbors[count] = (Socket)contenders.get(n).getKey();
+					preferredNeighbors[count] = (Integer)contenders.get(n).getKey();
 					count++;
 					contenders.remove(n);
 				}
