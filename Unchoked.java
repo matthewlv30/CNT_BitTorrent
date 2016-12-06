@@ -125,13 +125,14 @@ public class Unchoked {
 			
 			// Sort the map of downloading rates
 			downloadingRates = MapUtil.sortByValue(downloadingRates);
-			
-			it = downloadingRates.entrySet().iterator(); // Iterator for iterating through all the possible peers
-			
-			if (myServer.hasCompleteFile()) {
-				randomlySelectNeighbors();
-			} else{
-				findPreferredNeighbors();
+			if (downloadingRates.size() != 0) {
+				it = downloadingRates.entrySet().iterator(); // Iterator for iterating through all the possible peers
+				
+				if (myServer.hasCompleteFile()) {
+					randomlySelectNeighbors();
+				} else{
+					findPreferredNeighbors();
+				}
 			}
 		}
 		
