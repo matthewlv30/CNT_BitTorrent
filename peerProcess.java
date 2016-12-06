@@ -44,8 +44,8 @@ public class peerProcess {
 				if (peersToConnect.get(i).getPeerId() != peerID) {
 					// create a socket to connect to the server
 					//RemotePeerInfo rm = new RemotePeerInfo(peerID, peersToConnect.get(i).getPeerAddress(), peersToConnect.get(i).getPort(), false);
-					RemotePeerInfo rm = new RemotePeerInfo(Integer.toString(peerID), "localhost", Integer.toString(peersToConnect.get(i).getPort()), false);
-					//RemotePeerInfo rm = new RemotePeerInfo(Integer.toString(peerID), "192.168.1.7", Integer.toString(peersToConnect.get(i).getPort()), false);
+					//RemotePeerInfo rm = new RemotePeerInfo(Integer.toString(peerID), "localhost", Integer.toString(peersToConnect.get(i).getPort()), false);
+					RemotePeerInfo rm = new RemotePeerInfo(Integer.toString(peerID), "10.136.50.52", Integer.toString(peersToConnect.get(i).getPort()), false);
 					clientList[i] = new Client(rm, peersToConnect.get(i).getPeerId());
 					//clientList[i] = new Client(peerID,peersToConnect.get(i).getPeerAddress(),peersToConnect.get(i).getPort(), peersToConnect.get(i).getPeerId());
 				} else {

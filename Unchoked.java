@@ -21,9 +21,9 @@ import fileHandlers.CommonProperties;
  */
 public class Unchoked {
 	Properties cProp;
-	Server myServer;
+	Server.Handler myServer;
 	
-	public Unchoked(Server s) throws Exception {
+	public Unchoked(Server.Handler s) throws Exception {
 		// Read Configuration File
 		Reader cReader = new FileReader(CommonProperties.CONFIG_FILE);
         cProp = CommonProperties.read(cReader);
@@ -31,16 +31,20 @@ public class Unchoked {
         myServer = s;
         
         int unchokingInterval = 1000 * Integer.parseInt(cProp.getProperty("UnchokingInterval"));
-        int optimisticUnchokingInterval = 1000 * Integer.parseInt(cProp.getProperty("OptimisticUnchokingInterval"));
+        //int optimisticUnchokingInterval = 1000 * Integer.parseInt(cProp.getProperty("OptimisticUnchokingInterval"));
         
         // Start the timer for selecting preferred neighbors
         Timer pTimer = new Timer();
         pTimer.schedule(new PreferredNeighborTimer(myServer), 0, unchokingInterval);
         
-        Timer oTimer = new Timer();
-        oTimer.schedule(new OptimisticNeighborTimer(myServer), 0, optimisticUnchokingInterval);
+//        Timer oTimer = new Timer();
+//        oTimer.schedule(new OptimisticNeighborTimer(myServer), 0, optimisticUnchokingInterval);
 	}
 	
+	public Unchoked() {
+		// TODO Auto-generated constructor stub
+	}
+
 	/**
 	 * Returns true if the peer associated with the Socket is optimistically unchoked or is a preferred neighbors
 	 * @param peer:	the peer Socket to be checked
@@ -64,9 +68,9 @@ public class Unchoked {
 	
 	class OptimisticNeighborTimer extends TimerTask {
 
-		Server myServer; // Instance of the server so that the optimistically unchoked neighbor can be set
+		Server.Handler myServer; // Instance of the server so that the optimistically unchoked neighbor can be set
 		
-		public OptimisticNeighborTimer(Server _myServer) {
+		public OptimisticNeighborTimer(Server.Handler _myServer) {
 			this.myServer = _myServer;
 		}
 		
@@ -93,7 +97,7 @@ public class Unchoked {
 	
 	class PreferredNeighborTimer extends TimerTask {
 
-		Server myServer; // Instance of the server so that the preferred neighbors can be set
+		Server.Handler myServer; // Instance of the server so that the preferred neighbors can be set
 		
 		Socket preferredNeighbors[] = new Socket[Integer.parseInt(cProp.getProperty("NumberOfPreferredNeighbors"))]; // The preferred neighbors array, currently empty
 		LinkedList<Map.Entry<Socket, Double>> contenders = new LinkedList<Map.Entry<Socket, Double>>(); // The peers with duplicate downloading rates to choose from;
@@ -103,13 +107,16 @@ public class Unchoked {
 		int count = 0; // indicates how many elements are currently in the preferredNeighbors array
 		Iterator<Map.Entry<Socket, Double>> it;
 		
-		public PreferredNeighborTimer(Server _myServer) {
+		public PreferredNeighborTimer(Server.Handler _myServer) {
 			this.myServer = _myServer;
 		}
 		
+
+
 		@Override
 		public void run() {
 			// Retrieve the number of bytes each neighbor has provided us
+			System.out.println("Hello");
 			Map<Socket, Double> neighborByteCount = myServer.getNeighborByteCount();
 			
 			// To calculate the downloading speed for each neighbor, divide bytes by unchokingInterval
