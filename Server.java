@@ -215,10 +215,16 @@ public class Server extends Thread {
 					message.sendMessage(bitList);
 					
 					
+					// Recieve Request
+					bitList = (ActualMessage) in.readObject();
+					System.out.println("Message recieved (server): " + bitList.getTypeField()); 
+					clonedHandler = (MessageHandler) HandlerCached.getHandler(bitList.getTypeField(),myServerInfo);
+					int type = clonedHandler.handleMessage(bitList, connection);
+					
 					
 					//Send Piece Message
 					System.out.println("************** PIECE **************");
-					clonedHandler = (MessageHandler) HandlerCached.getHandler(7,myServerInfo);
+					clonedHandler = (MessageHandler) HandlerCached.getHandler(type,myServerInfo);
 					bitList = clonedHandler.creatingMessage();
 					System.out.println("Piece (server): " + bitList.getPayloadField().toString());
 					message.sendMessage(bitList);

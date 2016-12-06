@@ -8,7 +8,7 @@ import java.util.Random;
  * Class to handle "request" message
  */
 public class RequestHandler extends MessageHandler {
-
+	
 	private BitSet myBitfield;
 
 	/**
