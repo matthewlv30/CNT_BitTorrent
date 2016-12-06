@@ -26,6 +26,7 @@ public abstract class MessageHandler implements Cloneable {
 	// Socket: peer Socket, Boolean: 1 interested 0 uninterested
 	protected static HashMap<Socket, Boolean> interestedPeers = new HashMap<Socket,Boolean>();
 	
+	protected static Unchoked unchokedManager;
 	
 	
 	protected int indexRequest;
@@ -35,12 +36,16 @@ public abstract class MessageHandler implements Cloneable {
 	//Unchoke Starts 
 	private static HashMap<Integer, Double> neighborByteCount = new HashMap<Integer, Double>(); // Maps peerID to how many bytes have been downloaded from them
 	
-	
-	public HashMap<Integer, Double> getNeighborByteCount() {
+	public static void loadUnchoked() throws Exception {
+		if(unchokedManager == null) 
+		unchokedManager = new Unchoked();
+	}
+		
+	public static HashMap<Integer, Double> getNeighborByteCount() {
 		return neighborByteCount;
 	}
 	
-	public void resetByteCount() {
+	public static void resetByteCount() {
 		neighborByteCount.clear();
 	}
 	

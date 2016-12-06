@@ -54,7 +54,7 @@ public class Client extends Thread{
 			
 			// Loading the Handlers
 			HandlerCached.loadCache();
-			
+			MessageHandler.loadUnchoked();
 			// SEND HANDSHAKE MESSAGE
 			System.out.println("************** Starting Handshake **************");
 			HandShake_Message hand_msg = new HandShake_Message(myInfo.getPeerId());
@@ -121,6 +121,8 @@ public class Client extends Thread{
 			System.err.println("You are trying to connect to an unknown host!");
 		} catch (IOException ioException) {
 			ioException.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
 		} finally {
 			// Close connections
 			try {

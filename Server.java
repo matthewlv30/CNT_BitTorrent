@@ -103,7 +103,7 @@ public class Server extends Thread {
 					
 					// Loading the Handlers
 					HandlerCached.loadCache();
-					
+					MessageHandler.loadUnchoked();
 					// HandShake Message && Add to List
 					HandShake_Message hd = (HandShake_Message) in.readObject();
 					clientList.put(hd.peerID, connection);
@@ -116,7 +116,7 @@ public class Server extends Thread {
 					//Sending Servers bitlist  back
 					clonedHandler = (MessageHandler) HandlerCached.getHandler(bitList.getTypeField(),myServerInfo);
 					// initialize Input and Output streams
-					Unchoked un = new Unchoked(this);
+					
 					//Adding bitfield and setting PeerID of client neigtbor
 					clonedHandler.setPeerIdNeighboor(hd.peerID);
 					clonedHandler.addPeerBitSet(hd.peerID, MessageUtil.convertToBitSet(bitList.getPayloadField()));

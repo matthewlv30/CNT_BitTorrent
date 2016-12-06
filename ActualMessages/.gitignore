@@ -10,3 +10,6 @@
 /RequestHandler.class
 /PieceHandler.class
 /MessageUtil.class
+/Unchoked$OptimisticNeighborTimer.class
+/Unchoked$PreferredNeighborTimer.class
+/Unchoked.class

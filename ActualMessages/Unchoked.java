@@ -1,15 +1,15 @@
+package ActualMessages;
 import java.io.FileReader;
 import java.io.Reader;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
-import java.util.Map.Entry;
+
 import java.util.Properties;
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.concurrent.ConcurrentHashMap;
 
 import fileHandlers.CommonProperties;
 
@@ -21,83 +21,78 @@ import fileHandlers.CommonProperties;
  */
 public class Unchoked {
 	Properties cProp;
-	Server.Handler myServer;
 	
-	public Unchoked(Server.Handler s) throws Exception {
+	public Unchoked() throws Exception {
 		// Read Configuration File
 		Reader cReader = new FileReader(CommonProperties.CONFIG_FILE);
         cProp = CommonProperties.read(cReader);
         
-        myServer = s;
-        
+         
         int unchokingInterval = 1000 * Integer.parseInt(cProp.getProperty("UnchokingInterval"));
         //int optimisticUnchokingInterval = 1000 * Integer.parseInt(cProp.getProperty("OptimisticUnchokingInterval"));
         
         // Start the timer for selecting preferred neighbors
         Timer pTimer = new Timer();
-        pTimer.schedule(new PreferredNeighborTimer(myServer), 0, unchokingInterval);
+        pTimer.schedule(new PreferredNeighborTimer(), 0, unchokingInterval);
         
 //        Timer oTimer = new Timer();
 //        oTimer.schedule(new OptimisticNeighborTimer(myServer), 0, optimisticUnchokingInterval);
 	}
 	
-	public Unchoked() {
-		// TODO Auto-generated constructor stub
-	}
 
 	/**
 	 * Returns true if the peer associated with the Integer is optimistically unchoked or is a preferred neighbors
 	 * @param peer:	the peer Integer to be checked
 	 * @return 		true if unchoked, false if choked
 	 */
-	public boolean isUnchoked(Integer peer) {
-		if (peer == myServer.getOptimisticallyUnchoked()) {
-			return true;
-		}
-		
-		ConcurrentHashMap<Integer,Boolean> preferredNeighbors = myServer.getPreferredNeighbors();
-		
-		for (Map.Entry<Integer, Boolean> entry : preferredNeighbors.entrySet()) {
-			if ((entry.getKey() == peer) && (entry.getValue() == true)) {
-				return true;
-			}
-		}
-		
-		return false;
- 	}
+//	public boolean isUnchoked(Integer peer) {
+//		if (peer == myServer.getOptimisticallyUnchoked()) {
+//			return true;
+//		}
+//		
+//		ConcurrentHashMap<Integer,Boolean> preferredNeighbors = myServer.getPreferredNeighbors();
+//		
+//		for (Map.Entry<Integer, Boolean> entry : preferredNeighbors.entrySet()) {
+//			if ((entry.getKey() == peer) && (entry.getValue() == true)) {
+//				return true;
+//			}
+//		}
+//		
+//		return false;
+// 	}
 	
-	class OptimisticNeighborTimer extends TimerTask {
-
-		Server.Handler myServer; // Instance of the server so that the optimistically unchoked neighbor can be set
-		
-		public OptimisticNeighborTimer(Server.Handler _myServer) {
-			this.myServer = _myServer;
-		}
-		
-		@Override
-		public void run() {
-			// Get the interested peers
-			HashMap<Integer, Boolean> peers = myServer.getInterestedPeers();
-			Integer optimisticallyUnchokedNeighbor = null;
-			
-			Object[] entries = peers.keySet().toArray();
-			Map<Integer, Boolean> randMap = new HashMap<Integer, Boolean>();
-			
-			Random rand = new Random();
-			int n = rand.nextInt(entries.length);
-			while (randMap.containsKey(n) && (randMap.get(n) == true)) {
-				n = rand.nextInt(entries.length);
-			}
-			
-			optimisticallyUnchokedNeighbor = (Integer) entries[n];
-			myServer.setOptimisticallyUnchoked(optimisticallyUnchokedNeighbor);
-		}
-		
-	}
+//	class OptimisticNeighborTimer extends TimerTask {
+//
+//		Server.Handler myServer; // Instance of the server so that the optimistically unchoked neighbor can be set
+//		
+//		public OptimisticNeighborTimer(Server.Handler _myServer) {
+//			this.myServer = _myServer;
+//		}
+//		
+//		@Override
+//		public void run() {
+//			// Get the interested peers
+//			HashMap<Integer, Boolean> peers = myServer.getInterestedPeers();
+//			Integer optimisticallyUnchokedNeighbor = null;
+//			
+//			Object[] entries = peers.keySet().toArray();
+//			Map<Integer, Boolean> randMap = new HashMap<Integer, Boolean>();
+//			
+//			Random rand = new Random();
+//			int n = rand.nextInt(entries.length);
+//			while (randMap.containsKey(n) && (randMap.get(n) == true)) {
+//				n = rand.nextInt(entries.length);
+//			}
+//			
+//			optimisticallyUnchokedNeighbor = (Integer) entries[n];
+//			myServer.setOptimisticallyUnchoked(optimisticallyUnchokedNeighbor);
+//		}
+//		
+//	}
 	
 	class PreferredNeighborTimer extends TimerTask {
 
-		Server.Handler myServer; // Instance of the server so that the preferred neighbors can be set
+		
 		
 		Integer preferredNeighbors[] = new Integer[Integer.parseInt(cProp.getProperty("NumberOfPreferredNeighbors"))]; // The preferred neighbors array, currently empty
 		LinkedList<Map.Entry<Integer, Double>> contenders = new LinkedList<Map.Entry<Integer, Double>>(); // The peers with duplicate downloading rates to choose from;
@@ -107,17 +102,10 @@ public class Unchoked {
 		int count = 0; // indicates how many elements are currently in the preferredNeighbors array
 		Iterator<Map.Entry<Integer, Double>> it;
 		
-		public PreferredNeighborTimer(Server.Handler _myServer) {
-			this.myServer = _myServer;
-		}
-		
-
-
 		@Override
 		public void run() {
 			// Retrieve the number of bytes each neighbor has provided us
-			System.out.println("Hello");
-			Map<Integer, Double> neighborByteCount = myServer.getNeighborByteCount();
+			Map<Integer, Double> neighborByteCount = MessageHandler.getNeighborByteCount();
 			System.out.println(neighborByteCount);
 //			// To calculate the downloading speed for each neighbor, divide bytes by unchokingInterval
 //			for (Entry<Integer, Double> entry : neighborByteCount.entrySet()) {
@@ -179,7 +167,7 @@ public class Unchoked {
 			}
 			
 			// Set the preferred neighbors for the server object
-			myServer.setPreferredNeighbors(preferredNeighbors);
+			//MessageHandler.setPreferredNeighbors(preferredNeighbors);
 			//myServer.resetByteCount();
 			
 			// Reset the unchoked info for the next selection interval
