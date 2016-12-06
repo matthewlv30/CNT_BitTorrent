@@ -93,6 +93,21 @@ public class Client extends Thread{
 			System.out.println("Message recieved (client): " + bitList.getTypeField());
 			clonedHandler = (MessageHandler) HandlerCached.getHandler(bitList.getTypeField(),myInfo);
 			clonedHandler.handleMessage(bitList, requestSocket);
+			
+			//Send Request Message
+			System.out.println("************** REQUEST **************");
+			clonedHandler = (MessageHandler) HandlerCached.getHandler(6,myInfo);
+			bitList = clonedHandler.creatingMessage();
+			System.out.println("Request (client): " + bitList.getPayloadField().toString());
+			mg.sendMessage(bitList);
+			
+			
+			//Get Piece
+			bitList = (ActualMessage) in.readObject();
+			System.out.println("Message recieved (client): " + bitList.getTypeField());
+			clonedHandler = (MessageHandler) HandlerCached.getHandler(bitList.getTypeField(),myInfo);
+			clonedHandler.handleMessage(bitList, requestSocket);
+			
 			//while (true) {
 				
 			//}

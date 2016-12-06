@@ -4,10 +4,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import ActualMessages.ActualMessage;
 import ActualMessages.MessageHandler;
 import ActualMessages.MessageUtil;
-
 import fileHandlers.RemotePeerInfo;
-
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -24,8 +21,8 @@ public class Server extends Thread {
 	private static ConcurrentHashMap<Integer, Socket> clientList = new ConcurrentHashMap<Integer, Socket>();
 
 	// Socket: peer Socket, Boolean: 1 unchoked 0 choked
-	 //private HashMap<Socket, Boolean> unchokedPeers = new HashMap<Socket,Boolean>();
-
+	// private HashMap<Socket, Boolean> unchokedPeers = new HashMap<Socket,Boolean>();
+	 private HashMap<Socket, Boolean> interestedPeers = new HashMap<Socket,Boolean>();
 	
 	//private BitSet myBitfield;
 	/**
@@ -142,6 +139,21 @@ public class Server extends Thread {
 					clonedHandler = (MessageHandler) HandlerCached.getHandler(4,myServerInfo);
 					bitList = clonedHandler.creatingMessage();
 					System.out.println("Have (server): " + bitList.getPayloadField().toString());
+					message.sendMessage(bitList);
+					
+					
+					// Recieve Request
+					bitList = (ActualMessage) in.readObject();
+					System.out.println("Message recieved (server): " + bitList.getTypeField()); 
+					clonedHandler = (MessageHandler) HandlerCached.getHandler(bitList.getTypeField(),myServerInfo);
+					int type = clonedHandler.handleMessage(bitList, connection);
+					
+					
+					//Send Piece Message
+					System.out.println("************** PIECE **************");
+					clonedHandler = (MessageHandler) HandlerCached.getHandler(type,myServerInfo);
+					bitList = clonedHandler.creatingMessage();
+					System.out.println("Piece (server): " + bitList.getPayloadField().toString());
 					message.sendMessage(bitList);
 					
 					//while (true) {
