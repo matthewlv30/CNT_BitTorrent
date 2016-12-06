@@ -118,7 +118,7 @@ public class Unchoked {
 			// Retrieve the number of bytes each neighbor has provided us
 			System.out.println("Hello");
 			Map<Socket, Double> neighborByteCount = myServer.getNeighborByteCount();
-			
+			System.out.println(neighborByteCount);
 			// To calculate the downloading speed for each neighbor, divide bytes by unchokingInterval
 			for (Map.Entry<Socket, Double> entry : neighborByteCount.entrySet()) {
 				double byteCount = entry.getValue();
@@ -180,7 +180,7 @@ public class Unchoked {
 			
 			// Set the preferred neighbors for the server object
 			myServer.setPreferredNeighbors(preferredNeighbors);
-			myServer.resetByteCount();
+			//myServer.resetByteCount();
 			
 			// Reset the unchoked info for the next selection interval
 			previous = null;

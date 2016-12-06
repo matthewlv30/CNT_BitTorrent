@@ -27,6 +27,22 @@ public abstract class MessageHandler implements Cloneable {
 	protected static HashMap<Socket, Boolean> interestedPeers = new HashMap<Socket,Boolean>();
 	
 	
+	//Unchoke Starts 
+	private static HashMap<Socket, Double> neighborByteCount = new HashMap<Socket, Double>(); // Maps peerID to how many bytes have been downloaded from them
+	
+	
+	public HashMap<Socket, Double> getNeighborByteCount() {
+
+		neighborByteCount.put(new Socket(), (double) 0);
+		return neighborByteCount;
+	}
+	
+	public void resetByteCount() {
+		neighborByteCount.clear();
+	}
+	
+	//Unchoke Ends
+	
 	public abstract int handleMessage(ActualMessage m, Socket n);
 	public abstract ActualMessage creatingMessage();
 

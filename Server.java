@@ -76,6 +76,7 @@ public class Server extends Thread {
 		private Socket connection;
 		private ObjectInputStream in; // stream read from the socket
 		private ObjectOutputStream out; // stream write to the socket
+		private MessageHandler clonedHandler;
 
 		private RemotePeerInfo myServerInfo; // peerID of the corresponding server connection
 		
@@ -83,7 +84,6 @@ public class Server extends Thread {
 		// Unchoked changes
 		private ConcurrentHashMap<Socket,Boolean> preferredNeighbors = new ConcurrentHashMap<Socket,Boolean>(); // The neighbors that we can receive piece requests from
 		private Socket optimisticallyUnchoked; // Neighbor that we can receive pice requests from
-		private HashMap<Socket, Double> neighborByteCount = new HashMap<Socket, Double>(); // Maps peerID to how many bytes have been downloaded from them
 		// End of Unchoked Changes
 		private HashMap<Socket, Boolean> interestedPeers = new HashMap<Socket,Boolean>();
 		
@@ -95,8 +95,7 @@ public class Server extends Thread {
 
 		public void run() {
 			try {
-				// initialize Input and Output streams
-				//Unchoked un = new Unchoked(this);
+				
 				out = new ObjectOutputStream(connection.getOutputStream());
 				out.flush();
 				in = new ObjectInputStream(connection.getInputStream());
@@ -118,8 +117,9 @@ public class Server extends Thread {
 					ActualMessage bitList = (ActualMessage) in.readObject();	
 					
 					//Sending Servers bitlist  back
-					MessageHandler clonedHandler = (MessageHandler) HandlerCached.getHandler(bitList.getTypeField(),myServerInfo);
-					
+					clonedHandler = (MessageHandler) HandlerCached.getHandler(bitList.getTypeField(),myServerInfo);
+					// initialize Input and Output streams
+					Unchoked un = new Unchoked(this);
 					//Adding bitfield and setting PeerID of client neigtbor
 					clonedHandler.setPeerIdNeighboor(hd.peerID);
 					clonedHandler.addPeerBitSet(hd.peerID, MessageUtil.convertToBitSet(bitList.getPayloadField()));
@@ -152,6 +152,9 @@ public class Server extends Thread {
 				}
 			} catch (IOException ioException) {
 				System.out.println("Disconnect with Client " + peerIndex);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			} finally {
 				// Close connections
 				try {
@@ -166,9 +169,7 @@ public class Server extends Thread {
 		
 		// Unchoked Changes
 		
-		public void resetByteCount() {
-			neighborByteCount.clear();
-		}
+		
 		
 		public boolean isPeerInterested(Socket peer) {
 			if (interestedPeers.containsKey(peer)) {
@@ -185,7 +186,12 @@ public class Server extends Thread {
 		}
 		
 		public Map<Socket, Double> getNeighborByteCount() {
-			return neighborByteCount;
+			System.out.println("Hello [p");
+			return clonedHandler.getNeighborByteCount();
+		}
+		
+		public void resetByteCount() {
+			clonedHandler.resetByteCount();			
 		}
 		
 		public ConcurrentHashMap<Socket,Boolean> getPreferredNeighbors() {
@@ -245,6 +251,7 @@ public class Server extends Thread {
 			optimisticallyUnchoked = _optimisticallyUnchoked;
 		}
 		// End of Unchoked Changes
+
 
 	}
 }
