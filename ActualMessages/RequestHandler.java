@@ -9,8 +9,6 @@ import java.util.Random;
  */
 public class RequestHandler extends MessageHandler {
 	
-	private BitSet myBitfield;
-
 	/**
 	 * When you receive a "request" message, send a message with the requested
 	 * piece
