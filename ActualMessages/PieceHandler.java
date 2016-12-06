@@ -51,7 +51,7 @@ public class PieceHandler extends MessageHandler {
 
 		}
 
-		FileHandler f = new FileHandler(1002, c);
+		FileHandler f = new FileHandler(1001, c);
 
 		// Each index of a bit field indicates whether or not the piece is with
 		// the peer.
