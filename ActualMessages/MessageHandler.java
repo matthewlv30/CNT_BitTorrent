@@ -24,7 +24,7 @@ public abstract class MessageHandler implements Cloneable {
 	// HashMap that contains the bitfields of connected neightboors
 	protected static HashMap<Integer,BitSet> PeersBitField = new HashMap<Integer,BitSet>();
 	// Socket: peer Socket, Boolean: 1 interested 0 uninterested
-	protected static HashMap<Socket, Boolean> interestedPeers = new HashMap<Socket,Boolean>();
+	protected static HashMap<Integer, Boolean> interestedPeers = new HashMap<Integer,Boolean>();
 	
 	protected static Unchoked unchokedManager;
 	
@@ -40,7 +40,9 @@ public abstract class MessageHandler implements Cloneable {
 		if(unchokedManager == null) 
 		unchokedManager = new Unchoked();
 	}
-		
+	public static boolean isPeerInterested(Integer peerID) {
+		return interestedPeers.get(peerID);
+	}		
 	public static HashMap<Integer, Double> getNeighborByteCount() {
 		return neighborByteCount;
 	}

@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
-
+import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.Random;
 import java.util.Timer;
@@ -107,16 +107,16 @@ public class Unchoked {
 			// Retrieve the number of bytes each neighbor has provided us
 			Map<Integer, Double> neighborByteCount = MessageHandler.getNeighborByteCount();
 			System.out.println(neighborByteCount);
-//			// To calculate the downloading speed for each neighbor, divide bytes by unchokingInterval
-//			for (Entry<Integer, Double> entry : neighborByteCount.entrySet()) {
-//				double byteCount = entry.getValue();
-//				double downloadingSpeed = byteCount / Integer.parseInt(cProp.getProperty("UnchokingInterval"));
-//				
-//				// Store calculations in the map of downloading rates, if they are interested
-//				if (myServer.isPeerInterested(entry.getKey())) {
-//					downloadingRates.put(entry.getKey(), downloadingSpeed);
-//				}
-//			}
+			// To calculate the downloading speed for each neighbor, divide bytes by unchokingInterval
+			for (Entry<Integer, Double> entry : neighborByteCount.entrySet()) {
+				double byteCount = entry.getValue();
+				double downloadingSpeed = byteCount / Integer.parseInt(cProp.getProperty("UnchokingInterval"));
+				
+				// Store calculations in the map of downloading rates, if they are interested
+				if (MessageHandler.isPeerInterested(entry.getKey())) {
+					downloadingRates.put(entry.getKey(), downloadingSpeed);
+				}
+			}
 //			
 //			// Sort the map of downloading rates
 //			downloadingRates = MapUtil.sortByValue(downloadingRates);

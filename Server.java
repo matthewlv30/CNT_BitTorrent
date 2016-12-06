@@ -198,17 +198,7 @@ public class Server extends Thread {
 		}
 		
 		// Unchoked Changes
-		
-		
-		
-		public boolean isPeerInterested(Integer integer) {
-			if (interestedPeers.containsKey(integer)) {
-				return true;
-			} else {
-				return false;
-			}
-		}
-		
+	
 		// This indicates whether this peer has the complete file or not
 		public boolean hasCompleteFile() {
 			// TODO: Implement this
@@ -216,11 +206,11 @@ public class Server extends Thread {
 		}
 		
 		public HashMap<Integer, Double> getNeighborByteCount() {
-			return clonedHandler.getNeighborByteCount();
+			return MessageHandler.getNeighborByteCount();
 		}
 		
 		public void resetByteCount() {
-			clonedHandler.resetByteCount();			
+			MessageHandler.resetByteCount();			
 		}
 		
 		public ConcurrentHashMap<Integer,Boolean> getPreferredNeighbors() {

@@ -14,7 +14,8 @@ public class InterestedHandler extends MessageHandler {
 	 * @param n:  this is the Node that is interested in the current peer
 	 */
 	public int handleMessage(ActualMessage m, Socket n) {
-		interestedPeers.put(n, true); 
+		// Since neighboor peer interested add to map as true
+		interestedPeers.put(neighborID, true); 
 		return 0;
 	}
 
