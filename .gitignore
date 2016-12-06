@@ -29,3 +29,6 @@
 .DS_Store
 /MapUtil.class
 /MapUtil$1.class
+/Unchoked$OptimisticNeighborTimer.class
+/Unchoked$PreferredNeighborTimer.class
+/Unchoked.class
