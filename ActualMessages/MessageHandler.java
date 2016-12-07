@@ -31,6 +31,8 @@ public abstract class MessageHandler implements Cloneable {
 	private static ConcurrentHashMap<Integer, Boolean> preferredNeighbors = new ConcurrentHashMap<Integer, Boolean>();
 	// Neighbor that we can receive pice requests from
 	private static Integer optimisticallyUnchoked;
+	// Peers who have unchoked me. T: I'm unchoked for this peerID. F: I'm choked for this peerID.
+	private  static HashMap<Integer, Boolean> hasPeerUnchokedMe = new HashMap<Integer, Boolean>();
 
 	// To run unchoke
 	protected static Unchoked unchokedManager;
@@ -51,6 +53,10 @@ public abstract class MessageHandler implements Cloneable {
 		} else {
 			return interestedPeers.get(peerID);
 		}
+	}
+	
+	public static void setPeerWhoHasUnchokedMe(int peerID, boolean c) {
+		hasPeerUnchokedMe.put(peerID, c);
 	}
 	
 	public static HashMap<Integer, Boolean> getInterestedPeers() {
