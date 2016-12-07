@@ -10,6 +10,7 @@ import java.util.Properties;
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.ConcurrentHashMap;
 
 import fileHandlers.CommonProperties;
 import fileHandlers.FileHandler;
@@ -68,7 +69,7 @@ public class Unchoked {
 		@Override
 		public void run() {
 			// Get the interested peers
-			HashMap<Integer, Boolean> peers = MessageHandler.getInterestedPeers();
+			ConcurrentHashMap<Integer, Boolean> peers = MessageHandler.getInterestedPeers();
 			Integer optimisticallyUnchokedNeighbor = null;
 			
 			Object[] entries = peers.keySet().toArray();
@@ -100,7 +101,6 @@ public class Unchoked {
 		
 		@Override
 		public void run() {
-			System.out.println("Run!!");
 			// Retrieve the number of bytes each neighbor has provided us
 			Map<Integer, Double> neighborByteCount = MessageHandler.getNeighborByteCount();
 			
@@ -130,12 +130,13 @@ public class Unchoked {
 
 				FileHandler f = new FileHandler(MessageHandler.getPeerInfo().getPeerId(), c);
 				if ((MessageHandler.getPeerInfo().hasFile == true) || f.isFileCompleted()) {
-//					randomlySelectNeighbors();
+					randomlySelectNeighbors();
 				} else {
 					findPreferredNeighbors();
 				}
 				
 				// Set the preferred neighbors for the server object
+				System.out.println(preferredNeighbors);
 				MessageHandler.setPreferredNeighbors(preferredNeighbors);
 				MessageHandler.resetByteCount();
 			}
@@ -145,16 +146,23 @@ public class Unchoked {
 			Object[] entries = downloadingRates.keySet().toArray();
 			Map<Integer, Boolean> randMap = new HashMap<Integer, Boolean>();
 			
+			int countOfEntries = entries.length;
+			
 			Random rand = new Random();
 			for (int i = 0; i < preferredNeighbors.length; i++) {
 				// TODO: unique random!!!
+				if(countOfEntries != 0) {
 				int n = rand.nextInt(entries.length);
+				
 				while (randMap.containsKey(n) && (randMap.get(n) == true)) {
 					System.out.println("rand detected");
-					n = rand.nextInt(entries.length);
+					n = rand.nextInt(entries.length) ;
+					System.out.println(n);
 				}
 				randMap.put(n, true);
 				preferredNeighbors[i] = (Integer) entries[n];
+				countOfEntries--;
+				}
 			}
 			
 		}

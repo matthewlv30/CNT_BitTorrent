@@ -75,7 +75,7 @@ public class Server extends Thread {
 		private RemotePeerInfo myServerInfo; // peerID of the corresponding
 												// server connection
 		// keep List of previous choked neighboors
-		private HashMap<Integer, Boolean> isChoked = new HashMap<Integer, Boolean>();
+		private ConcurrentHashMap<Integer, Boolean> isChoked = new ConcurrentHashMap<Integer, Boolean>();
 
 		public Handler(Socket connection, RemotePeerInfo peerInfo) {
 			this.connection = connection;
@@ -138,21 +138,28 @@ public class Server extends Thread {
 					System.out.println("Message recieved (server): " + bitList.getTypeField());
 					clonedHandler = (MessageHandler) HandlerCached.getHandler(bitList.getTypeField(), myServerInfo);
 					int type = clonedHandler.handleMessage(bitList, connection);
-
-					boolean prevChoked = isChoked.get(myServerInfo.getPeerId()); // 0
-																					// or
-																					// 1
+					
+					boolean prevChoked;
 					ConcurrentHashMap<Integer, Boolean> currentPref = MessageHandler.getPreferredNeighbors();
-					if (currentPref.get(hd.peerID) != prevChoked) {
-						if (currentPref.get(hd.peerID) == false) {
-							// TODO: send choke message
-							isChoked.put(hd.peerID, false);
-						} else {
-							// TODO: send unchoke messsage
-							isChoked.put(hd.peerID, true);
+					//if isChoked is not null check the old one and change it and send choke or unchoke messsage
+					if (isChoked.get(myServerInfo.getPeerId()) != null) {
+						prevChoked = isChoked.get(myServerInfo.getPeerId()); // 0
+						
+						if (currentPref.get(hd.peerID) != prevChoked) {
+							if (currentPref.get(hd.peerID) == false) {
+								// TODO: send choke message
+								isChoked.put(hd.peerID, false);
+							} else {
+								// TODO: send unchoke messsage
+								isChoked.put(hd.peerID, true);
+							}
 						}
 					}
-
+					else {
+						// is previous null then add the current
+						isChoked.put(hd.peerID, currentPref.get(hd.peerID));
+					}
+																				
 					// Send Piece Message
 					System.out.println("************** PIECE **************");
 					clonedHandler = (MessageHandler) HandlerCached.getHandler(type, myServerInfo);

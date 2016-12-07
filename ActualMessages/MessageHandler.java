@@ -24,15 +24,15 @@ public abstract class MessageHandler implements Cloneable {
 	// This is neighbor ID
 	protected static int neighborID;
 	// HashMap that contains the bitfields of connected neightboors
-	protected static HashMap<Integer, BitSet> PeersBitField = new HashMap<Integer, BitSet>();
+	protected static ConcurrentHashMap<Integer, BitSet> PeersBitField = new ConcurrentHashMap<Integer, BitSet>();
 	// Socket: peer Socket, Boolean: 1 interested 0 uninterested
-	protected static HashMap<Integer, Boolean> interestedPeers = new HashMap<Integer, Boolean>();
+	protected static ConcurrentHashMap<Integer, Boolean> interestedPeers = new ConcurrentHashMap<Integer, Boolean>();
 	// The neighbors that we can receive piece requests from
 	private static ConcurrentHashMap<Integer, Boolean> preferredNeighbors = new ConcurrentHashMap<Integer, Boolean>();
 	// Neighbor that we can receive pice requests from
 	private static Integer optimisticallyUnchoked;
 	// Peers who have unchoked me. T: I'm unchoked for this peerID. F: I'm choked for this peerID.
-	private  static HashMap<Integer, Boolean> hasPeerUnchokedMe = new HashMap<Integer, Boolean>();
+	private  static ConcurrentHashMap<Integer, Boolean> hasPeerUnchokedMe = new ConcurrentHashMap<Integer, Boolean>();
 
 	// To run unchoke
 	protected static Unchoked unchokedManager;
@@ -59,7 +59,7 @@ public abstract class MessageHandler implements Cloneable {
 		hasPeerUnchokedMe.put(peerID, c);
 	}
 	
-	public static HashMap<Integer, Boolean> getInterestedPeers() {
+	public static ConcurrentHashMap<Integer, Boolean> getInterestedPeers() {
 		return interestedPeers;
 	}
 
@@ -86,6 +86,7 @@ public abstract class MessageHandler implements Cloneable {
 		// place each _preferredNeighbors into a map!
 		ConcurrentHashMap<Integer, Boolean> _preferredNeighborsMap = new ConcurrentHashMap<Integer, Boolean>();
 		for (int i = 0; i < _preferredNeighbors.length; i++) {
+			if(_preferredNeighbors[i] != null)
 			_preferredNeighborsMap.put(_preferredNeighbors[i], true);
 		}
 		for (Map.Entry<Integer, Boolean> entry : preferredNeighbors.entrySet()) {
