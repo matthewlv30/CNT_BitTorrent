@@ -85,7 +85,6 @@ public class Client extends Thread {
 			while (true) {
 				
 				//Send Interested or Not of the list of pieces recieved
-				System.out.println("************** INTERESTED OR NOT**************");
 				clonedHandler = (MessageHandler)
 				HandlerCached.getHandler(type,myInfo);
 				bitList = clonedHandler.creatingMessage();

@@ -90,7 +90,7 @@ public class Server extends Thread {
 				message = new Message(in, out);
 
 				try {
-
+					// TODO: synchronized or not 
 					// Loading the Handlers
 					HandlerCached.loadCache();
 					MessageHandler.loadUnchoked();
@@ -118,7 +118,7 @@ public class Server extends Thread {
 						
 						//Recieve Interested or Not from Client
 						bitList = (ActualMessage) in.readObject();
-						System.out.println("Message Interested (server): " +hd.peerID + bitList.getTypeField());
+						System.out.println("Message (server) peer : " +hd.peerID + " Interested(2)/Uninterested(3): "+ bitList.getTypeField());
 						// If interested or not signified in the Interested (HashMap)
 						clonedHandler = (MessageHandler) HandlerCached.getHandler(bitList.getTypeField(), myServerInfo);
 						clonedHandler.handleMessage(bitList, connection);

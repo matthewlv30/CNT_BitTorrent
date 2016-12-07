@@ -14,14 +14,14 @@ public class UninterestedHandler extends MessageHandler {
 	 * @param m: this is the message received
 	 * @param n: this is the Node that is not interested in the current peer
 	 */
-	public int handleMessage(ActualMessage m, Socket n) {
+	public synchronized int handleMessage(ActualMessage m, Socket n) {
 		// Since neighboor peer uninterested add to map as false
 		interestedPeers.put(neighborID, false);
 		return 0;
 	}
 
 	@Override
-	public ActualMessage creatingMessage() {
+	public synchronized ActualMessage creatingMessage() {
 		// Type of Meessage
 		final byte messageType = 3;
 		// setting up the payload as null since uninterested has no payload
