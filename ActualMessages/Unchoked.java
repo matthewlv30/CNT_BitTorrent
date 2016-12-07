@@ -117,7 +117,7 @@ public class Unchoked {
 //			
 //			// Sort the map of downloading rates
 			downloadingRates = MapUtil.sortByValue(downloadingRates);
-			System.out.println(neighborByteCount);
+			//System.out.println(neighborByteCount);
 			if (downloadingRates.size() != 0) {
 				it = downloadingRates.entrySet().iterator(); // Iterator for iterating through all the possible peers
 				Properties c = null;
@@ -136,7 +136,7 @@ public class Unchoked {
 				}
 				
 				// Set the preferred neighbors for the server object
-				System.out.println(preferredNeighbors);
+				//System.out.println(preferredNeighbors);
 				MessageHandler.setPreferredNeighbors(preferredNeighbors);
 				MessageHandler.resetByteCount();
 			}
@@ -154,9 +154,7 @@ public class Unchoked {
 				int n = rand.nextInt(entries.length);
 				
 				while (randMap.containsKey(n) && (randMap.get(n) == true)) {
-					System.out.println("rand detected");
 					n = rand.nextInt(entries.length) ;
-					System.out.println(n);
 				}
 				randMap.put(n, true);
 				preferredNeighbors[i] = (Integer) entries[n];
@@ -259,7 +257,6 @@ public class Unchoked {
 					
 					int n = rand.nextInt(contenders.size());
 					while (randMap.containsKey(n) && (randMap.get(n) == true)) {
-						System.out.println("duplicate detected");
 						n = rand.nextInt(contenders.size());
 					}
 					randMap.put(n, true);
