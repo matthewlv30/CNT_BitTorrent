@@ -60,85 +60,78 @@ public class Client extends Thread {
 			HandlerCached.loadCache();
 			MessageHandler.loadUnchoked();
 			MessageHandler.setPeerInfo(myInfo);
-			
+
 			// SEND HANDSHAKE MESSAGE
-			System.out.println("************** Starting Handshake**************");
 			HandShake_Message hand_msg = new HandShake_Message(myInfo.getPeerId());
 			mg.sendMessage(hand_msg);
-			
+
 			// RECIEVE HANDSHAKE BACK AND CHECK IF RIGHT MEESAGE
-			 mg.HandShake_check(in.readObject(),peerServerID);
-			 
-			 
+			mg.HandShake_check(in.readObject(), peerServerID);
+
 			// Send Bitfiled Message with Pieces
-			System.out.println("************** BITFIELD **************");
-			MessageHandler clonedHandler = (MessageHandler) HandlerCached.getHandler(5,myInfo);
+			MessageHandler clonedHandler = (MessageHandler) HandlerCached.getHandler(5, myInfo);
 			ActualMessage bitList = clonedHandler.creatingMessage();
-			System.out.println("Bitfield sent (client): " +bitList.getTypeField());
+			System.out.println("Bitfield sent (client): " + bitList.getPayloadField());
 			mg.sendMessage(bitList);
-			
-			//Recive Back BitField and Determine Interested or Not
+
+			// Recive Back BitField and Determine Interested or Not
 			bitList = (ActualMessage) in.readObject();
-			//Adding bitset to list of bitlists
+			// Adding bitset to list of bitlists
 			clonedHandler.setPeerIdNeighboor(peerServerID);
-			clonedHandler.addPeerBitSet(peerServerID,MessageUtil.convertToBitSet(bitList.getPayloadField()));
-			//Get If Interested in Piece from server or not
+			clonedHandler.addPeerBitSet(peerServerID, MessageUtil.convertToBitSet(bitList.getPayloadField()));
+			// Get If Interested in Piece from server or not
 			int type = clonedHandler.handleMessage(bitList, requestSocket);
-			
-			
-			//
-			// //Send Interested or Not of the list of pieces recieved
-			// System.out.println("************** INTERESTED OR NOT
-			// **************");
-			// clonedHandler = (MessageHandler)
-			// HandlerCached.getHandler(type,myInfo);
-			// bitList = clonedHandler.creatingMessage();
-			// System.out.println("Interested(2)/Uninterested(3)(client): " +
-			// bitList.getTypeField());
-			// mg.sendMessage(bitList);
-			//
-			//
-			// //Get Have Message
-			// clonedHandler.setPeerIdNeighboor(peerServerID);
-			// bitList = (ActualMessage) in.readObject();
-			// System.out.println("Message recieved (client): " +
-			// bitList.getTypeField());
-			// clonedHandler = (MessageHandler)
-			// HandlerCached.getHandler(bitList.getTypeField(),myInfo);
-			// clonedHandler.handleMessage(bitList, requestSocket);
-			//
-			// //Send Request Message
-			// System.out.println("************** REQUEST **************");
-			// clonedHandler = (MessageHandler)
-			// HandlerCached.getHandler(6,myInfo);
-			// bitList = clonedHandler.creatingMessage();
-			// System.out.println("Request (client): " +
-			// bitList.getPayloadField().toString());
-			// mg.sendMessage(bitList);
-			//
-			//
-			// //Get Choke or Unchoke Message
-			// clonedHandler.setPeerIdNeighboor(peerServerID);
-			// bitList = (ActualMessage) in.readObject();
-			// System.out.println("Message recieved (client): " +
-			// bitList.getTypeField());
-			// clonedHandler = (MessageHandler)
-			// HandlerCached.getHandler(bitList.getTypeField(),myInfo);
-			// clonedHandler.handleMessage(bitList, requestSocket);
-			//
-			//
-			//
-			// //Get Piece
-			// bitList = (ActualMessage) in.readObject();
-			// System.out.println("Message recieved (client): " +
-			// bitList.getTypeField());
-			// clonedHandler = (MessageHandler)
-			// HandlerCached.getHandler(bitList.getTypeField(),myInfo);
-			// clonedHandler.handleMessage(bitList, requestSocket);
 
-			// while (true) {
-
-			// }
+			while (true) {
+				
+				//Send Interested or Not of the list of pieces recieved
+				System.out.println("************** INTERESTED OR NOT**************");
+				clonedHandler = (MessageHandler)
+				HandlerCached.getHandler(type,myInfo);
+				bitList = clonedHandler.creatingMessage();
+				System.out.println("Interested(2)/Uninterested(3)(client): "+ bitList.getTypeField());
+				mg.sendMessage(bitList);
+				
+				
+				//Get Have Message
+				// clonedHandler.setPeerIdNeighboor(peerServerID);
+				// bitList = (ActualMessage) in.readObject();
+				// System.out.println("Message recieved (client): " +
+				// bitList.getTypeField());
+				// clonedHandler = (MessageHandler)
+				// HandlerCached.getHandler(bitList.getTypeField(),myInfo);
+				// clonedHandler.handleMessage(bitList, requestSocket);
+				//
+				// //Send Request Message
+				// System.out.println("************** REQUEST **************");
+				// clonedHandler = (MessageHandler)
+				// HandlerCached.getHandler(6,myInfo);
+				// bitList = clonedHandler.creatingMessage();
+				// System.out.println("Request (client): " +
+				// bitList.getPayloadField().toString());
+				// mg.sendMessage(bitList);
+				//
+				//
+				// //Get Choke or Unchoke Message
+				// clonedHandler.setPeerIdNeighboor(peerServerID);
+				// bitList = (ActualMessage) in.readObject();
+				// System.out.println("Message recieved (client): " +
+				// bitList.getTypeField());
+				// clonedHandler = (MessageHandler)
+				// HandlerCached.getHandler(bitList.getTypeField(),myInfo);
+				// clonedHandler.handleMessage(bitList, requestSocket);
+				//
+				//
+				//
+				// //Get Piece
+				// bitList = (ActualMessage) in.readObject();
+				// System.out.println("Message recieved (client): " +
+				// bitList.getTypeField());
+				// clonedHandler = (MessageHandler)
+				// HandlerCached.getHandler(bitList.getTypeField(),myInfo);
+				// clonedHandler.handleMessage(bitList, requestSocket);
+			}
+			
 		} catch (ConnectException e) {
 			System.err.println("Connection refused. You need to initiate a server first.");
 		} catch (ClassNotFoundException e) {
