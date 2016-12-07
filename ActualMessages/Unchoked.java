@@ -106,12 +106,12 @@ public class Unchoked {
 		public void run() {
 			// Retrieve the number of bytes each neighbor has provided us
 			Map<Integer, Double> neighborByteCount = MessageHandler.getNeighborByteCount();
-			System.out.println(neighborByteCount);
+			
 			// To calculate the downloading speed for each neighbor, divide bytes by unchokingInterval
 			for (Entry<Integer, Double> entry : neighborByteCount.entrySet()) {
 				double byteCount = entry.getValue();
 				double downloadingSpeed = byteCount / Integer.parseInt(cProp.getProperty("UnchokingInterval"));
-				System.out.println(downloadingSpeed);
+
 				// Store calculations in the map of downloading rates, if they are interested
 				if (MessageHandler.isPeerInterested(entry.getKey())) {
 					System.out.println("int");
@@ -121,16 +121,17 @@ public class Unchoked {
 			}
 //			
 //			// Sort the map of downloading rates
-//			downloadingRates = MapUtil.sortByValue(downloadingRates);
-//			if (downloadingRates.size() != 0) {
-//				it = downloadingRates.entrySet().iterator(); // Iterator for iterating through all the possible peers
-//				
-//				if (myServer.hasCompleteFile()) {
+			downloadingRates = MapUtil.sortByValue(downloadingRates);
+			if (downloadingRates.size() != 0) {
+				it = downloadingRates.entrySet().iterator(); // Iterator for iterating through all the possible peers
+				
+				if (MessageHandler.hasCompleteFile()) {
 //					randomlySelectNeighbors();
-//				} else{
+				} 
+//					else{
 //					findPreferredNeighbors();
 //				}
-//			}
+			}
 		}
 		
 		private void randomlySelectNeighbors() {

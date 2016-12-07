@@ -66,6 +66,7 @@ public abstract class MessageHandler implements Cloneable {
 	public void setPeerInfo(RemotePeerInfo p) {
 		this.peerInfo = p;
 	}
+	
 	public  void setPeerIdNeighboor(int p) {
 		neighborID = p;
 	}
