@@ -105,7 +105,7 @@ public abstract class MessageHandler implements Cloneable {
 		System.out.println(preferredNeighbors);
 	}
 
-	public ConcurrentHashMap<Integer, Boolean> getPreferredNeighbors() {
+	public static ConcurrentHashMap<Integer, Boolean> getPreferredNeighbors() {
 		return preferredNeighbors;
 	}
 

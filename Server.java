@@ -10,20 +10,22 @@ import java.util.HashMap;
 import java.io.*;
 
 public class Server extends Thread {
-	
 
 	private static int peerIndex = 1; // index for peers
 
-	private RemotePeerInfo myInfo; // To get the file info for the configuration file
+	private RemotePeerInfo myInfo; // To get the file info for the configuration
+									// file
 
 	// list of clients connected to server this server
 	private static ConcurrentHashMap<Integer, Socket> clientList = new ConcurrentHashMap<Integer, Socket>();
 
 	// Socket: peer Socket, Boolean: 1 unchoked 0 choked
-	// private HashMap<Socket, Boolean> unchokedPeers = new HashMap<Socket,Boolean>();
-	 //private HashMap<Integer, Boolean> interestedPeers = new HashMap<Integer,Boolean>();
-	
-	//private BitSet myBitfield;
+	// private HashMap<Socket, Boolean> unchokedPeers = new
+	// HashMap<Socket,Boolean>();
+	// private HashMap<Integer, Boolean> interestedPeers = new
+	// HashMap<Integer,Boolean>();
+
+	// private BitSet myBitfield;
 	/**
 	 * 
 	 * @param sPort
@@ -34,14 +36,14 @@ public class Server extends Thread {
 	Server(RemotePeerInfo p) {
 		this.myInfo = p;
 	}
-	
+
 	public void run() {
 		System.out.println("The server is running.");
 		ServerSocket listener = null;
 		try {
 			listener = new ServerSocket(myInfo.getPort());
 			while (true) {
-				
+
 				new Handler(listener.accept(), myInfo).start();
 				System.out.println("Client " + peerIndex + " is connected!");
 				peerIndex++;
@@ -59,9 +61,6 @@ public class Server extends Thread {
 			}
 		}
 	}
-	
-	
-	
 
 	/**
 	 * A handler thread class. Handlers are spawned from the listening loop and
@@ -74,10 +73,10 @@ public class Server extends Thread {
 		private ObjectOutputStream out; // stream write to the socket
 		private MessageHandler clonedHandler;
 
-		private RemotePeerInfo myServerInfo; // peerID of the corresponding server connection
-		
-		private HashMap<Integer, Boolean> interestedPeers = new HashMap<Integer, Boolean>();
-		
+		private RemotePeerInfo myServerInfo; // peerID of the corresponding
+												// server connection
+		// keep List of previous choked neighboors
+		private HashMap<Integer, Boolean> isChoked = new HashMap<Integer, Boolean>();
 
 		public Handler(Socket connection, RemotePeerInfo peerInfo) {
 			this.connection = connection;
@@ -86,7 +85,7 @@ public class Server extends Thread {
 
 		public void run() {
 			try {
-				
+
 				out = new ObjectOutputStream(connection.getOutputStream());
 				out.flush();
 				in = new ObjectInputStream(connection.getInputStream());
@@ -94,7 +93,7 @@ public class Server extends Thread {
 				message = new Message(in, out);
 
 				try {
-					
+
 					// Loading the Handlers
 					HandlerCached.loadCache();
 					MessageHandler.loadUnchoked();
@@ -104,74 +103,67 @@ public class Server extends Thread {
 					clientList.put(hd.peerID, connection);
 					message.HandShake(hd, myServerInfo.getPeerId());
 					MessageHandler.setNeighborLists(hd.peerID, 0);
-					
+
 					// Recieve Bitfield Message with list of Pieces
-					ActualMessage bitList = (ActualMessage) in.readObject();	
-					
-					//Sending Servers bitlist  back
-					clonedHandler = (MessageHandler) HandlerCached.getHandler(bitList.getTypeField(),myServerInfo);
+					ActualMessage bitList = (ActualMessage) in.readObject();
+
+					// Sending Servers bitlist back
+					clonedHandler = (MessageHandler) HandlerCached.getHandler(bitList.getTypeField(), myServerInfo);
 					// initialize Input and Output streams
-					
-					//Adding bitfield and setting PeerID of client neigtbor
+
+					// Adding bitfield and setting PeerID of client neigtbor
 					clonedHandler.setPeerIdNeighboor(hd.peerID);
 					clonedHandler.addPeerBitSet(hd.peerID, MessageUtil.convertToBitSet(bitList.getPayloadField()));
 					bitList = clonedHandler.creatingMessage();
 					System.out.println("Bitfield sent(server): " + hd.peerID + bitList.getTypeField());
 					message.sendMessage(bitList);
-					
-					
+
 					// Recieve Interested or Not from Client
 					bitList = (ActualMessage) in.readObject();
-					System.out.println("Message Interested (server): "+ hd.peerID + bitList.getTypeField());
-					// If interested or not signified in the Interested (HashMap) 
-					clonedHandler = (MessageHandler) HandlerCached.getHandler(bitList.getTypeField(),myServerInfo);
+					System.out.println("Message Interested (server): " + hd.peerID + bitList.getTypeField());
+					// If interested or not signified in the Interested
+					// (HashMap)
+					clonedHandler = (MessageHandler) HandlerCached.getHandler(bitList.getTypeField(), myServerInfo);
 					clonedHandler.handleMessage(bitList, connection);
-					
-					
-					//Send Have Message
+
+					// Send Have Message
 					System.out.println("************** HAVE **************");
 					clonedHandler.setPeerIdNeighboor(hd.peerID);
-					clonedHandler = (MessageHandler) HandlerCached.getHandler(4,myServerInfo);
+					clonedHandler = (MessageHandler) HandlerCached.getHandler(4, myServerInfo);
 					bitList = clonedHandler.creatingMessage();
 					System.out.println("Have (server): " + bitList.getPayloadField().toString());
 					message.sendMessage(bitList);
-					
+
 					// Recieve Request
 					bitList = (ActualMessage) in.readObject();
-					System.out.println("Message recieved (server): " + bitList.getTypeField()); 
-					clonedHandler = (MessageHandler) HandlerCached.getHandler(bitList.getTypeField(),myServerInfo);
+					System.out.println("Message recieved (server): " + bitList.getTypeField());
+					clonedHandler = (MessageHandler) HandlerCached.getHandler(bitList.getTypeField(), myServerInfo);
 					int type = clonedHandler.handleMessage(bitList, connection);
-					
-								
-//				 boolean isChoked = map.get(myServerInfo.getPeerId()); // 0 or 1
-//				 if ()
-					//getpre(1001) != isChoked {
-						//if getpre(1001) == 0
-							// send choke to 1001
-				 			// ischoke = 0
-						// else if 1
-							// send unchoke
-				 			//is cholke = 1
-					//}
-				 //boolean isChoked = map.get(myServerInfo.getPeerId()); // 0 or 1
-					//getpre(1001) != isChoked {
-						//if getpre(1001) == 0
-							// send choke to 1001
-				 			// ischoke = 0
-						// else if 1
-							// send unchoke
-				 			//is cholke = 1
-					//}
-					//Send Piece Message
+
+					boolean prevChoked = isChoked.get(myServerInfo.getPeerId()); // 0
+																					// or
+																					// 1
+					ConcurrentHashMap<Integer, Boolean> currentPref = MessageHandler.getPreferredNeighbors();
+					if (currentPref.get(hd.peerID) != prevChoked) {
+						if (currentPref.get(hd.peerID) == false) {
+							// TODO: send choke message
+							isChoked.put(hd.peerID, false);
+						} else {
+							// TODO: send unchoke messsage
+							isChoked.put(hd.peerID, true);
+						}
+					}
+
+					// Send Piece Message
 					System.out.println("************** PIECE **************");
-					clonedHandler = (MessageHandler) HandlerCached.getHandler(type,myServerInfo);
+					clonedHandler = (MessageHandler) HandlerCached.getHandler(type, myServerInfo);
 					bitList = clonedHandler.creatingMessage();
 					System.out.println("Piece (server): " + bitList.getPayloadField().toString());
 					message.sendMessage(bitList);
-					
-					//while (true) {
-						
-					//}
+
+					// while (true) {
+
+					// }
 				} catch (ClassNotFoundException classnot) {
 					System.err.println("Data received in unknown format");
 				}
@@ -191,32 +183,24 @@ public class Server extends Thread {
 				}
 			}
 		}
-		
+
 		// Unchoked Changes
-	
+
 		// This indicates whether this peer has the complete file or not
 		public boolean hasCompleteFile() {
 			// TODO: Implement this
 			return false;
 		}
-		
+
 		public HashMap<Integer, Double> getNeighborByteCount() {
 			return MessageHandler.getNeighborByteCount();
 		}
-		
-		public void resetByteCount() {
-			MessageHandler.resetByteCount();			
-		}
-		
-		
-		
-		public HashMap<Integer, Boolean> getInterestedPeers() {
-			return interestedPeers;
-		}
-		
-		
-		// End of Unchoked Changes
 
+		public void resetByteCount() {
+			MessageHandler.resetByteCount();
+		}
+
+		// End of Unchoked Changes
 
 	}
 }
