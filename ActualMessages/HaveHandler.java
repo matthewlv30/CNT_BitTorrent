@@ -26,6 +26,9 @@ public class HaveHandler extends MessageHandler {
 		} else {
 			// get the index of interest
 			index = MessageUtil.convertBytesToInt(payload);
+			//log the message
+			PeerLogger pl = new PeerLogger(peerInfo.getPeerId());
+			pl.haveMsg(neighborID, index);
 			byte[] myByte = myBitfield.toByteArray();
 			//check if the neigtboor list is empty
 			myByte = MessageUtil.setPayload(myByte);	

@@ -16,6 +16,8 @@ public class InterestedHandler extends MessageHandler {
 	public int handleMessage(ActualMessage m, Socket n) {
 		// Since neighboor peer interested add to map as true
 		interestedPeers.put(neighborID, true); 
+		PeerLogger pl = new PeerLogger(peerInfo.getPeerId());
+		pl.interestedMsg(neighborID);
 		return 0;
 	}
 

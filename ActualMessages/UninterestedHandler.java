@@ -17,6 +17,8 @@ public class UninterestedHandler extends MessageHandler {
 	public int handleMessage(ActualMessage m, Socket n) {
 		// Since neighboor peer uninterested add to map as false
 		interestedPeers.put(neighborID, false);
+		PeerLogger pl = new PeerLogger(peerInfo.getPeerId());
+		pl.notInterestedMsg(neighborID);
 		return 0;
 	}
 
