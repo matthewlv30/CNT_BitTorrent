@@ -19,7 +19,6 @@ public class RemotePeerInfo {
     }
 
     public RemotePeerInfo(String peerId, String peerAddress, String peerPort, boolean hasFile)  {
-    	System.out.println("RPI:" + peerId);
         this.peerId = peerId;
         this.peerAddress = peerAddress;
         this.peerPort = peerPort;
