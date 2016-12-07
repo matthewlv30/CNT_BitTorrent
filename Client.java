@@ -67,26 +67,25 @@ public class Client extends Thread {
 			mg.sendMessage(hand_msg);
 			
 			// RECIEVE HANDSHAKE BACK AND CHECK IF RIGHT MEESAGE
-			// mg.HandShake_check(in.readObject(),peerServerID);
-			//
-			//
-			// // Send Bitfiled Message with Pieces
-			// System.out.println("************** BITFIELD **************");
-			// MessageHandler clonedHandler = (MessageHandler)
-			// HandlerCached.getHandler(5,myInfo);
-			// ActualMessage bitList = clonedHandler.creatingMessage();
-			// System.out.println("Bitfield sent (client): " +
-			// bitList.getTypeField());
-			// mg.sendMessage(bitList);
-			//
-			// //Recive Back BitField and Determine Interested or Not
-			// bitList = (ActualMessage) in.readObject();
-			// //Adding bitset to list of bitlists
-			// clonedHandler.setPeerIdNeighboor(peerServerID);
-			// clonedHandler.addPeerBitSet(peerServerID,
-			// MessageUtil.convertToBitSet(bitList.getPayloadField()));
-			// //Get If Interested in Piece from server or not
-			// int type = clonedHandler.handleMessage(bitList, requestSocket);
+			 mg.HandShake_check(in.readObject(),peerServerID);
+			 
+			 
+			// Send Bitfiled Message with Pieces
+			System.out.println("************** BITFIELD **************");
+			MessageHandler clonedHandler = (MessageHandler) HandlerCached.getHandler(5,myInfo);
+			ActualMessage bitList = clonedHandler.creatingMessage();
+			System.out.println("Bitfield sent (client): " +bitList.getTypeField());
+			mg.sendMessage(bitList);
+			
+			//Recive Back BitField and Determine Interested or Not
+			bitList = (ActualMessage) in.readObject();
+			//Adding bitset to list of bitlists
+			clonedHandler.setPeerIdNeighboor(peerServerID);
+			clonedHandler.addPeerBitSet(peerServerID,MessageUtil.convertToBitSet(bitList.getPayloadField()));
+			//Get If Interested in Piece from server or not
+			int type = clonedHandler.handleMessage(bitList, requestSocket);
+			
+			
 			//
 			// //Send Interested or Not of the list of pieces recieved
 			// System.out.println("************** INTERESTED OR NOT

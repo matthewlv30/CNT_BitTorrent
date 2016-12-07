@@ -50,6 +50,7 @@ public class peerProcess {
 					break;
 				}
 			}
+			
 			s = new Server(peersToConnect.get(i));
 			s.start();
 			for(int j = 0; j != clientList.length; ++j) {

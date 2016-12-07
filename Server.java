@@ -104,24 +104,18 @@ public class Server extends Thread {
 					MessageHandler.setNeighborLists(hd.peerID, 0);
 
 					// Recieve Bitfield Message with list of Pieces
-					// ActualMessage bitList = (ActualMessage) in.readObject();
-					//
-					// // Sending Servers bitlist back
-					// clonedHandler = (MessageHandler)
-					// HandlerCached.getHandler(bitList.getTypeField(),
-					// myServerInfo);
-					// // initialize Input and Output streams
-					//
-					// // Adding bitfield and setting PeerID of client neigtbor
-					// clonedHandler.setPeerIdNeighboor(hd.peerID);
-					// clonedHandler.addPeerBitSet(hd.peerID,
-					// MessageUtil.convertToBitSet(bitList.getPayloadField()));
-					// bitList = clonedHandler.creatingMessage();
-					// System.out.println("Bitfield sent(server): " + hd.peerID
-					// + bitList.getTypeField());
-					// message.sendMessage(bitList);
-					//
-					// // Recieve Interested or Not from Client
+					ActualMessage bitList = (ActualMessage) in.readObject();
+					
+					// Sending Servers bitlist back
+					clonedHandler = (MessageHandler)HandlerCached.getHandler(bitList.getTypeField(),myServerInfo);				
+					// Adding bitfield and setting PeerID of client neigtbor
+					clonedHandler.setPeerIdNeighboor(hd.peerID);
+					clonedHandler.addPeerBitSet(hd.peerID,MessageUtil.convertToBitSet(bitList.getPayloadField()));
+					bitList = clonedHandler.creatingMessage();
+					System.out.println("Bitfield sent(server): " + hd.peerID+ bitList.getTypeField());
+					message.sendMessage(bitList);
+					
+					// Recieve Interested or Not from Client
 					// bitList = (ActualMessage) in.readObject();
 					// System.out.println("Message Interested (server): " +
 					// hd.peerID + bitList.getTypeField());
