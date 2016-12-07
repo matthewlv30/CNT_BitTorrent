@@ -136,7 +136,6 @@ public class Server extends Thread {
 					System.out.println("Have (server): " + bitList.getPayloadField().toString());
 					message.sendMessage(bitList);
 					
-					
 					// Recieve Request
 					bitList = (ActualMessage) in.readObject();
 					System.out.println("Message recieved (server): " + bitList.getTypeField()); 
@@ -144,7 +143,8 @@ public class Server extends Thread {
 					int type = clonedHandler.handleMessage(bitList, connection);
 					
 								
-				 //boolean isChoked = map.get(myServerInfo.getPeerId()); // 0 or 1
+//				 boolean isChoked = map.get(myServerInfo.getPeerId()); // 0 or 1
+//				 if ()
 					//getpre(1001) != isChoked {
 						//if getpre(1001) == 0
 							// send choke to 1001

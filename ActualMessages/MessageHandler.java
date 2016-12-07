@@ -109,7 +109,7 @@ public abstract class MessageHandler implements Cloneable {
 		return preferredNeighbors;
 	}
 
-	public void setOptimisticallyUnchoked(Integer p) {
+	public static void setOptimisticallyUnchoked(Integer p) {
 		// send choke message to old optimisticallyUnchoked if it's not in
 		// preferredNeighbors
 		// if it's in preferredNeighbors, then dont do anything but set
