@@ -83,7 +83,7 @@ public class Server extends Thread {
 
 		public void run() {
 			try {
-
+				// Getting input/outputs to send messages
 				out = new ObjectOutputStream(connection.getOutputStream());
 				out.flush();
 				in = new ObjectInputStream(connection.getInputStream());
@@ -96,6 +96,7 @@ public class Server extends Thread {
 					HandlerCached.loadCache();
 					MessageHandler.loadUnchoked();
 					MessageHandler.setPeerInfo(myServerInfo);
+
 					// HandShake Message && Add to List
 					HandShake_Message hd = (HandShake_Message) in.readObject();
 					clientList.put(hd.peerID, connection);
@@ -103,80 +104,104 @@ public class Server extends Thread {
 					MessageHandler.setNeighborLists(hd.peerID, 0);
 
 					// Recieve Bitfield Message with list of Pieces
-					ActualMessage bitList = (ActualMessage) in.readObject();
-
-					// Sending Servers bitlist back
-					clonedHandler = (MessageHandler) HandlerCached.getHandler(bitList.getTypeField(), myServerInfo);
-					// initialize Input and Output streams
-
-					// Adding bitfield and setting PeerID of client neigtbor
-					clonedHandler.setPeerIdNeighboor(hd.peerID);
-					clonedHandler.addPeerBitSet(hd.peerID, MessageUtil.convertToBitSet(bitList.getPayloadField()));
-					bitList = clonedHandler.creatingMessage();
-					System.out.println("Bitfield sent(server): " + hd.peerID + bitList.getTypeField());
-					message.sendMessage(bitList);
-
-					// Recieve Interested or Not from Client
-					bitList = (ActualMessage) in.readObject();
-					System.out.println("Message Interested (server): " + hd.peerID + bitList.getTypeField());
-					// If interested or not signified in the Interested
-					// (HashMap)
-					clonedHandler = (MessageHandler) HandlerCached.getHandler(bitList.getTypeField(), myServerInfo);
-					clonedHandler.handleMessage(bitList, connection);
-
-					// Send Have Message
-					System.out.println("************** HAVE **************");
-					clonedHandler.setPeerIdNeighboor(hd.peerID);
-					clonedHandler = (MessageHandler) HandlerCached.getHandler(4, myServerInfo);
-					bitList = clonedHandler.creatingMessage();
-					System.out.println("Have (server): " + bitList.getPayloadField().toString());
-					message.sendMessage(bitList);
-
-					// Recieve Request
-					bitList = (ActualMessage) in.readObject();
-					System.out.println("Message recieved (server): " + bitList.getTypeField());
-					clonedHandler = (MessageHandler) HandlerCached.getHandler(bitList.getTypeField(), myServerInfo);
-					int type = clonedHandler.handleMessage(bitList, connection);
-					
-					boolean prevChoked;
-					ConcurrentHashMap<Integer, Boolean> currentPref = MessageHandler.getPreferredNeighbors();
-					//if isChoked is not null check the old one and change it and send choke or unchoke messsage
-					if (isChoked.get(myServerInfo.getPeerId()) != null) {
-						prevChoked = isChoked.get(myServerInfo.getPeerId()); // 0
-						
-						if (currentPref.get(hd.peerID) != prevChoked) {
-							if (currentPref.get(hd.peerID) == false) {
-								//Sending choke message
-								System.out.println("************** CHOKE **************");
-								clonedHandler = (MessageHandler) HandlerCached.getHandler(0, myServerInfo);
-								bitList = clonedHandler.creatingMessage();
-								System.out.println("Choke (server): " + bitList.getPayloadField().toString());
-								message.sendMessage(bitList);
-								
-								isChoked.put(hd.peerID, true);
-							} else {
-								//Sending unchoke message
-								System.out.println("************** UNCHOKE **************");
-								clonedHandler = (MessageHandler) HandlerCached.getHandler(1, myServerInfo);
-								bitList = clonedHandler.creatingMessage();
-								System.out.println("UnChoke (server): " + bitList.getPayloadField().toString());
-								message.sendMessage(bitList);
-								
-								isChoked.put(hd.peerID, false);
-							}
-						}
-					}
-					else {
-						// is previous null then add the current
-						isChoked.put(hd.peerID, currentPref.get(hd.peerID));
-					}
-																				
-					// Send Piece Message
-					System.out.println("************** PIECE **************");
-					clonedHandler = (MessageHandler) HandlerCached.getHandler(type, myServerInfo);
-					bitList = clonedHandler.creatingMessage();
-					System.out.println("Piece (server): " + bitList.getPayloadField().toString());
-					message.sendMessage(bitList);
+					// ActualMessage bitList = (ActualMessage) in.readObject();
+					//
+					// // Sending Servers bitlist back
+					// clonedHandler = (MessageHandler)
+					// HandlerCached.getHandler(bitList.getTypeField(),
+					// myServerInfo);
+					// // initialize Input and Output streams
+					//
+					// // Adding bitfield and setting PeerID of client neigtbor
+					// clonedHandler.setPeerIdNeighboor(hd.peerID);
+					// clonedHandler.addPeerBitSet(hd.peerID,
+					// MessageUtil.convertToBitSet(bitList.getPayloadField()));
+					// bitList = clonedHandler.creatingMessage();
+					// System.out.println("Bitfield sent(server): " + hd.peerID
+					// + bitList.getTypeField());
+					// message.sendMessage(bitList);
+					//
+					// // Recieve Interested or Not from Client
+					// bitList = (ActualMessage) in.readObject();
+					// System.out.println("Message Interested (server): " +
+					// hd.peerID + bitList.getTypeField());
+					// // If interested or not signified in the Interested
+					// // (HashMap)
+					// clonedHandler = (MessageHandler)
+					// HandlerCached.getHandler(bitList.getTypeField(),
+					// myServerInfo);
+					// clonedHandler.handleMessage(bitList, connection);
+					//
+					// // Send Have Message
+					// System.out.println("************** HAVE **************");
+					// clonedHandler.setPeerIdNeighboor(hd.peerID);
+					// clonedHandler = (MessageHandler)
+					// HandlerCached.getHandler(4, myServerInfo);
+					// bitList = clonedHandler.creatingMessage();
+					// System.out.println("Have (server): " +
+					// bitList.getPayloadField().toString());
+					// message.sendMessage(bitList);
+					//
+					// // Recieve Request
+					// bitList = (ActualMessage) in.readObject();
+					// System.out.println("Message recieved (server): " +
+					// bitList.getTypeField());
+					// clonedHandler = (MessageHandler)
+					// HandlerCached.getHandler(bitList.getTypeField(),
+					// myServerInfo);
+					// int type = clonedHandler.handleMessage(bitList,
+					// connection);
+					//
+					// boolean prevChoked;
+					// ConcurrentHashMap<Integer, Boolean> currentPref =
+					// MessageHandler.getPreferredNeighbors();
+					// //if isChoked is not null check the old one and change it
+					// and send choke or unchoke messsage
+					// if (isChoked.get(myServerInfo.getPeerId()) != null) {
+					// prevChoked = isChoked.get(myServerInfo.getPeerId()); // 0
+					//
+					// if (currentPref.get(hd.peerID) != prevChoked) {
+					// if (currentPref.get(hd.peerID) == false) {
+					// //Sending choke message
+					// System.out.println("************** CHOKE
+					// **************");
+					// clonedHandler = (MessageHandler)
+					// HandlerCached.getHandler(0, myServerInfo);
+					// bitList = clonedHandler.creatingMessage();
+					// System.out.println("Choke (server): " +
+					// bitList.getPayloadField().toString());
+					// message.sendMessage(bitList);
+					//
+					// isChoked.put(hd.peerID, true);
+					// } else {
+					// //Sending unchoke message
+					// System.out.println("************** UNCHOKE
+					// **************");
+					// clonedHandler = (MessageHandler)
+					// HandlerCached.getHandler(1, myServerInfo);
+					// bitList = clonedHandler.creatingMessage();
+					// System.out.println("UnChoke (server): " +
+					// bitList.getPayloadField().toString());
+					// message.sendMessage(bitList);
+					//
+					// isChoked.put(hd.peerID, false);
+					// }
+					// }
+					// }
+					// else {
+					// // is previous null then add the current
+					// isChoked.put(hd.peerID, currentPref.get(hd.peerID));
+					// }
+					//
+					// // Send Piece Message
+					// System.out.println("************** PIECE
+					// **************");
+					// clonedHandler = (MessageHandler)
+					// HandlerCached.getHandler(type, myServerInfo);
+					// bitList = clonedHandler.creatingMessage();
+					// System.out.println("Piece (server): " +
+					// bitList.getPayloadField().toString());
+					// message.sendMessage(bitList);
 
 					// while (true) {
 
