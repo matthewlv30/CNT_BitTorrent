@@ -52,6 +52,10 @@ public abstract class MessageHandler implements Cloneable {
 			return interestedPeers.get(peerID);
 		}
 	}
+	
+	public static HashMap<Integer, Boolean> getInterestedPeers() {
+		return interestedPeers;
+	}
 
 	public static HashMap<Integer, Double> getNeighborByteCount() {
 		return neighborByteCount;
@@ -74,7 +78,6 @@ public abstract class MessageHandler implements Cloneable {
 	// according to the new configurations
 	public static void setPreferredNeighbors(Integer[] _preferredNeighbors) {
 		// place each _preferredNeighbors into a map!
-		System.out.println(_preferredNeighbors[0]);
 		ConcurrentHashMap<Integer, Boolean> _preferredNeighborsMap = new ConcurrentHashMap<Integer, Boolean>();
 		for (int i = 0; i < _preferredNeighbors.length; i++) {
 			_preferredNeighborsMap.put(_preferredNeighbors[i], true);
@@ -83,7 +86,6 @@ public abstract class MessageHandler implements Cloneable {
 			// If the new map does not contain this neighbor, and the neighbor
 			// is currently preferred, send a choke message
 			if (!(_preferredNeighborsMap.containsKey(entry.getKey())) && (entry.getValue() == true)) {
-				System.out.println("he");
 				preferredNeighbors.put(entry.getKey(), false);
 
 				// Optimistically unchoked neighbors do not get a choke message
@@ -136,7 +138,7 @@ public abstract class MessageHandler implements Cloneable {
 
 	public abstract ActualMessage creatingMessage();
 
-	public void setPeerInfo(RemotePeerInfo p) {
+	public static void setPeerInfo(RemotePeerInfo p) {
 		peerInfo = p;
 	}
 

@@ -33,6 +33,7 @@ public class Client extends Thread{
 	
 	public Client(RemotePeerInfo p, int peerServerID) {
 		this.peerServerID = peerServerID;
+		System.out.println("Client: " + p.getPeerId());
 		this.myInfo = p;
 		
 	}
@@ -55,6 +56,7 @@ public class Client extends Thread{
 			// Loading the Handlers
 			HandlerCached.loadCache();
 			MessageHandler.loadUnchoked();
+			MessageHandler.setPeerInfo(myInfo);
 			// SEND HANDSHAKE MESSAGE
 			System.out.println("************** Starting Handshake **************");
 			HandShake_Message hand_msg = new HandShake_Message(myInfo.getPeerId());
@@ -88,11 +90,11 @@ public class Client extends Thread{
 
 			
 			//Get Have Message
-			clonedHandler.setPeerIdNeighboor(peerServerID);
-			bitList = (ActualMessage) in.readObject();
-			System.out.println("Message recieved (client): " + bitList.getTypeField());
-			clonedHandler = (MessageHandler) HandlerCached.getHandler(bitList.getTypeField(),myInfo);
-			clonedHandler.handleMessage(bitList, requestSocket);
+			//clonedHandler.setPeerIdNeighboor(peerServerID);
+			//bitList = (ActualMessage) in.readObject();
+			//System.out.println("Message recieved (client): " + bitList.getTypeField());
+			//clonedHandler = (MessageHandler) HandlerCached.getHandler(bitList.getTypeField(),myInfo);
+			//clonedHandler.handleMessage(bitList, requestSocket);
 			
 			//Send Request Message
 			System.out.println("************** REQUEST **************");

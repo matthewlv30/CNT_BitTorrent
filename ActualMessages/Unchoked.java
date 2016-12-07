@@ -46,6 +46,7 @@ public class Unchoked {
 	 * @param peer:	the peer Integer to be checked
 	 * @return 		true if unchoked, false if choked
 	 */
+	// TODO: Implement isUnchoked!!!
 //	public boolean isUnchoked(Integer peer) {
 //		if (peer == myServer.getOptimisticallyUnchoked()) {
 //			return true;
@@ -62,34 +63,28 @@ public class Unchoked {
 //		return false;
 // 	}
 	
-//	class OptimisticNeighborTimer extends TimerTask {
-//
-//		Server.Handler myServer; // Instance of the server so that the optimistically unchoked neighbor can be set
-//		
-//		public OptimisticNeighborTimer(Server.Handler _myServer) {
-//			this.myServer = _myServer;
-//		}
-//		
-//		@Override
-//		public void run() {
-//			// Get the interested peers
-//			HashMap<Integer, Boolean> peers = myServer.getInterestedPeers();
-//			Integer optimisticallyUnchokedNeighbor = null;
-//			
-//			Object[] entries = peers.keySet().toArray();
-//			Map<Integer, Boolean> randMap = new HashMap<Integer, Boolean>();
-//			
-//			Random rand = new Random();
-//			int n = rand.nextInt(entries.length);
-//			while (randMap.containsKey(n) && (randMap.get(n) == true)) {
-//				n = rand.nextInt(entries.length);
-//			}
-//			
-//			optimisticallyUnchokedNeighbor = (Integer) entries[n];
-//			myServer.setOptimisticallyUnchoked(optimisticallyUnchokedNeighbor);
-//		}
-//		
-//	}
+	class OptimisticNeighborTimer extends TimerTask {
+		
+		@Override
+		public void run() {
+			// Get the interested peers
+			HashMap<Integer, Boolean> peers = MessageHandler.getInterestedPeers();
+			Integer optimisticallyUnchokedNeighbor = null;
+			
+			Object[] entries = peers.keySet().toArray();
+			Map<Integer, Boolean> randMap = new HashMap<Integer, Boolean>();
+			
+			Random rand = new Random();
+			int n = rand.nextInt(entries.length);
+			while (randMap.containsKey(n) && (randMap.get(n) == true)) {
+				n = rand.nextInt(entries.length);
+			}
+			
+			optimisticallyUnchokedNeighbor = (Integer) entries[n];
+			MessageHandler.setOptimisticallyUnchoked(optimisticallyUnchokedNeighbor);
+		}
+		
+	}
 	
 	class PreferredNeighborTimer extends TimerTask {
 
@@ -105,6 +100,7 @@ public class Unchoked {
 		
 		@Override
 		public void run() {
+			System.out.println("Run!!");
 			// Retrieve the number of bytes each neighbor has provided us
 			Map<Integer, Double> neighborByteCount = MessageHandler.getNeighborByteCount();
 			
@@ -121,6 +117,7 @@ public class Unchoked {
 //			
 //			// Sort the map of downloading rates
 			downloadingRates = MapUtil.sortByValue(downloadingRates);
+			System.out.println(neighborByteCount);
 			if (downloadingRates.size() != 0) {
 				it = downloadingRates.entrySet().iterator(); // Iterator for iterating through all the possible peers
 				Properties c = null;
@@ -132,8 +129,8 @@ public class Unchoked {
 				}
 
 				FileHandler f = new FileHandler(MessageHandler.getPeerInfo().getPeerId(), c);
-				if (MessageHandler.getPeerInfo().hasFile || f.isFileCompleted()) {
-					randomlySelectNeighbors();
+				if ((MessageHandler.getPeerInfo().hasFile == true) || f.isFileCompleted()) {
+//					randomlySelectNeighbors();
 				} else {
 					findPreferredNeighbors();
 				}
@@ -153,8 +150,10 @@ public class Unchoked {
 				// TODO: unique random!!!
 				int n = rand.nextInt(entries.length);
 				while (randMap.containsKey(n) && (randMap.get(n) == true)) {
+					System.out.println("rand detected");
 					n = rand.nextInt(entries.length);
 				}
+				randMap.put(n, true);
 				preferredNeighbors[i] = (Integer) entries[n];
 			}
 			
@@ -242,7 +241,7 @@ public class Unchoked {
 					count++;
 ;				}
 			} else {
-				// Problem with selecting the same neighbor already selected!
+				// Problem with selecting the same neighbor salready selected!
 				Random rand = new Random();
 				Map<Integer, Boolean> randMap = new HashMap<Integer, Boolean>();
 				
@@ -253,8 +252,10 @@ public class Unchoked {
 					
 					int n = rand.nextInt(contenders.size());
 					while (randMap.containsKey(n) && (randMap.get(n) == true)) {
+						System.out.println("duplicate detected");
 						n = rand.nextInt(contenders.size());
 					}
+					randMap.put(n, true);
 					preferredNeighbors[count] = (Integer)contenders.get(n).getKey();
 					count++;
 					contenders.remove(n);

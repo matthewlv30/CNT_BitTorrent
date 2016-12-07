@@ -98,7 +98,7 @@ public class Server extends Thread {
 					// Loading the Handlers
 					HandlerCached.loadCache();
 					MessageHandler.loadUnchoked();
-					
+					MessageHandler.setPeerInfo(myServerInfo);
 					// HandShake Message && Add to List
 					HandShake_Message hd = (HandShake_Message) in.readObject();
 					clientList.put(hd.peerID, connection);
@@ -116,13 +116,13 @@ public class Server extends Thread {
 					clonedHandler.setPeerIdNeighboor(hd.peerID);
 					clonedHandler.addPeerBitSet(hd.peerID, MessageUtil.convertToBitSet(bitList.getPayloadField()));
 					bitList = clonedHandler.creatingMessage();
-					System.out.println("Bitfield sent(server): " + bitList.getTypeField());
+					System.out.println("Bitfield sent(server): " + hd.peerID + bitList.getTypeField());
 					message.sendMessage(bitList);
 					
 					
 					// Recieve Interested or Not from Client
 					bitList = (ActualMessage) in.readObject();
-					System.out.println("Message recieved (server): " + bitList.getTypeField());
+					System.out.println("Message Interested (server): "+ hd.peerID + bitList.getTypeField());
 					// If interested or not signified in the Interested (HashMap) 
 					clonedHandler = (MessageHandler) HandlerCached.getHandler(bitList.getTypeField(),myServerInfo);
 					clonedHandler.handleMessage(bitList, connection);

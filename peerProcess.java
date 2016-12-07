@@ -52,9 +52,8 @@ public class peerProcess {
 					break;
 				}
 			}
-			//s = new Server(peersToConnect.get(i));
+			s = new Server(peersToConnect.get(i));
 			///////////////////////////////////////////////////////////////////////////////////////////////FIX THIS/////////////////////////////////////////////////
-			s = new Server(peersToConnect.get(0));
 			s.start();
 			for(int j = 0; j != clientList.length; ++j) {
 				if(clientList[j] == null) {
