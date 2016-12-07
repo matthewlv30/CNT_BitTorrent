@@ -57,9 +57,13 @@ public abstract class MessageHandler implements Cloneable {
 		return neighborByteCount;
 	}
 
-	public static void setNeighborByteCount(int peerID, double byteCount) {
+	public static void setNeighborLists(int peerID, double byteCount) {
+		//setting preferred neighbors
+		preferredNeighbors.put(peerID, false);
+		//setting neighbor byte count
 		neighborByteCount.put(peerID, byteCount);
 	}
+	
 
 	public static void resetByteCount() {
 		neighborByteCount.clear();
@@ -70,15 +74,16 @@ public abstract class MessageHandler implements Cloneable {
 	// according to the new configurations
 	public static void setPreferredNeighbors(Integer[] _preferredNeighbors) {
 		// place each _preferredNeighbors into a map!
+		System.out.println(_preferredNeighbors[0]);
 		ConcurrentHashMap<Integer, Boolean> _preferredNeighborsMap = new ConcurrentHashMap<Integer, Boolean>();
 		for (int i = 0; i < _preferredNeighbors.length; i++) {
 			_preferredNeighborsMap.put(_preferredNeighbors[i], true);
 		}
-
 		for (Map.Entry<Integer, Boolean> entry : preferredNeighbors.entrySet()) {
 			// If the new map does not contain this neighbor, and the neighbor
 			// is currently preferred, send a choke message
-			if (!(_preferredNeighborsMap.contains(entry)) && (entry.getValue() == true)) {
+			if (!(_preferredNeighborsMap.containsKey(entry.getKey())) && (entry.getValue() == true)) {
+				System.out.println("he");
 				preferredNeighbors.put(entry.getKey(), false);
 
 				// Optimistically unchoked neighbors do not get a choke message
@@ -90,10 +95,12 @@ public abstract class MessageHandler implements Cloneable {
 
 			// Now we need to send unchoke messages to those that are NOT in the
 			// current map
-			if ((_preferredNeighborsMap.contains(entry)) && (entry.getValue() == false)) {
+			
+			if ((_preferredNeighborsMap.containsKey(entry.getKey())) && (entry.getValue() == false)) {
 				preferredNeighbors.put(entry.getKey(), true);
 			}
 		}
+		System.out.println(preferredNeighbors);
 	}
 
 	public ConcurrentHashMap<Integer, Boolean> getPreferredNeighbors() {

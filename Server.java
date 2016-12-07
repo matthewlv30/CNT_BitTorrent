@@ -103,7 +103,7 @@ public class Server extends Thread {
 					HandShake_Message hd = (HandShake_Message) in.readObject();
 					clientList.put(hd.peerID, connection);
 					message.HandShake(hd, myServerInfo.getPeerId());
-					MessageHandler.setNeighborByteCount(hd.peerID, 0);
+					MessageHandler.setNeighborLists(hd.peerID, 0);
 					
 					// Recieve Bitfield Message with list of Pieces
 					ActualMessage bitList = (ActualMessage) in.readObject();	
