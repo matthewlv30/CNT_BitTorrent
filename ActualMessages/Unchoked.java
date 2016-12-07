@@ -150,7 +150,6 @@ public class Unchoked {
 			
 			Random rand = new Random();
 			for (int i = 0; i < preferredNeighbors.length; i++) {
-				// TODO: unique random!!!
 				if(countOfEntries != 0) {
 				int n = rand.nextInt(entries.length);
 				

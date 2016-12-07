@@ -5,7 +5,6 @@ import ActualMessages.ActualMessage;
 import ActualMessages.MessageHandler;
 import ActualMessages.MessageUtil;
 import fileHandlers.RemotePeerInfo;
-import java.util.HashMap;
 
 import java.io.*;
 
@@ -201,24 +200,5 @@ public class Server extends Thread {
 				}
 			}
 		}
-
-		// Unchoked Changes
-
-		// This indicates whether this peer has the complete file or not
-		public boolean hasCompleteFile() {
-			// TODO: Implement this
-			return false;
-		}
-
-		public HashMap<Integer, Double> getNeighborByteCount() {
-			return MessageHandler.getNeighborByteCount();
-		}
-
-		public void resetByteCount() {
-			MessageHandler.resetByteCount();
-		}
-
-		// End of Unchoked Changes
-
 	}
 }
