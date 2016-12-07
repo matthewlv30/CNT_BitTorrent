@@ -38,10 +38,6 @@ public class BitfieldHandler extends MessageHandler {
 			for (int j = 0; j < 8; j++) {
 				// Get the bit j at this byte i. If this bit is true AND
 				int bit = (payload[i] >> j) & 1;
-				// If the bit is 1, peer node n contains that piece
-				// If that bit index for my bitfield is false, then send interested message
-				// Note: special operations are used on myBitField to obtain proper "byte" location
-				/////////////////////////////////////////////////////////////////////////////////////////////////////// FIX to false
 				if ((bit == 1) && (myBitfield.length() == 0)) {
 					return 2; // send Interested
 				}
@@ -71,10 +67,6 @@ public class BitfieldHandler extends MessageHandler {
 		// setting up the payload with the list of pieces
 		
 		byte[] payload = myBitfield.toByteArray();
-		//if(payload.length == 0) {
-			//int pay = (int) Math.ceil((double) MessageUtil.getFileSize() / MessageUtil.getPieceSize());
-			//payload = new byte[pay];
-		//}
 		// Get the length of the message by payload + type
 		int payloadSize = payload.length + MessageUtil.convertByteToInt((byte) 1);
 		byte[] length = MessageUtil.convertIntToBytes(payloadSize);

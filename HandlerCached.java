@@ -23,7 +23,7 @@ public class HandlerCached {
 		System.out.println("Handler cached:" + p.getPeerId());
 		MessageHandler cachedHandler = handlers.get(id);
 		//Set PeerInfo of the class trying to access info 
-		cachedHandler.setPeerInfo(p);
+		MessageHandler.setPeerInfo(p);
 		return (MessageHandler) cachedHandler.clone();
 	}
 
