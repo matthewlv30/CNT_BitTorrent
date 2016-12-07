@@ -1,11 +1,13 @@
 import java.util.HashMap;
 
 import ActualMessages.BitfieldHandler;
+import ActualMessages.ChokeHandler;
 import ActualMessages.HaveHandler;
 import ActualMessages.InterestedHandler;
 import ActualMessages.MessageHandler;
 import ActualMessages.PieceHandler;
 import ActualMessages.RequestHandler;
+import ActualMessages.UnchokeHandler;
 import ActualMessages.UninterestedHandler;
 import fileHandlers.RemotePeerInfo;
 
@@ -29,8 +31,8 @@ public class HandlerCached {
 
 	// for each Handler run database query and create handler
 	public static void loadCache() {
-		//handlers.put(0, new ChokeHandler(unchokedPeers));
-		//handlers.put(1, new UnchokeHandler(unchokedPeers));
+		handlers.put(0, new ChokeHandler());
+		handlers.put(1, new UnchokeHandler());
 		handlers.put(2, new InterestedHandler());
 		handlers.put(3, new UninterestedHandler());
 		handlers.put(4, new HaveHandler());
