@@ -110,6 +110,10 @@ public abstract class MessageHandler implements Cloneable {
 			}
 		}
 		System.out.println(preferredNeighbors);
+		
+		//TODO: log the message - need to format preffered neighbord to string for logging
+		//PeerLogger pl = new PeerLogger(peerInfo.getPeerId());
+		//pl.changeOfOptimisticallyUnchokedNeighborsMsg(neighborID);
 	}
 
 	public static ConcurrentHashMap<Integer, Boolean> getPreferredNeighbors() {
@@ -130,6 +134,10 @@ public abstract class MessageHandler implements Cloneable {
 			optimisticallyUnchoked = p;
 			// send unchoke message to this neighbor
 		}
+		
+		//log the message
+		PeerLogger pl = new PeerLogger(peerInfo.getPeerId());
+		pl.changeOfOptimisticallyUnchokedNeighborsMsg(neighborID);
 	}
 
 	public Integer getOptimisticallyUnchoked() {

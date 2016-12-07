@@ -6,6 +6,7 @@ import java.util.logging.Handler;
 import java.util.logging.FileHandler;
 import java.util.logging.LogRecord;
 import java.util.logging.Formatter;
+import java.util.logging.LogManager;
 import java.util.Date;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -14,13 +15,22 @@ import java.text.SimpleDateFormat;
  * Class for logging all the messages from each peer
  */
 public class PeerLogger {
+	//TODO: FIX CONFIGURATION PROPERTIES SO NOT ALL LOGS GET THE SAME MESSAGE
+	//TODO: LOG WHEN DOWNLOAD IS COMPLETE
+	//private static final String CONF = "logger.properties";
     private static final Logger l = Logger.getLogger("CNT4007");
     private final String peerMsgHeader;
 
     public PeerLogger(int peerId) {
         this.peerMsgHeader = ": Peer [" + peerId + "]";
+        //String logger = "" + peerId + "";
+        //Logger l = Logger.getLogger(logger);
+        //InputStream in = null;
         try {
             Handler fh = new FileHandler ("log_peer_" + peerId + ".log");
+            //in = PeerLogger.class.getResourceAsStream(CONF);
+            //LogManager.getLogManager().readConfiguration(new FileInputStream("logger.properties"));
+            //LogManager.getLogManager().readConfiguration(in);
             l.setUseParentHandlers(false);
             l.addHandler(fh);
             fh.setFormatter(new CustomFormatter());
@@ -28,7 +38,7 @@ public class PeerLogger {
             System.out.println(e);
         } catch (IOException e) {
             System.out.println(e);
-        }
+        } 
     }
 
     /**
@@ -52,8 +62,8 @@ public class PeerLogger {
     /**
      * Log list of of optimistically unchoked neighbors
      */
-    public void changeOfOptimisticallyUnchokedNeighborsMsg(String preferredNeighbors) {
-        l.info(getPeerMsgHeader() + " has the optimistically unchoked neighbor " + formatPreferredNeighbors(preferredNeighbors));
+    public void changeOfOptimisticallyUnchokedNeighborsMsg(int peerId) {
+        l.info(getPeerMsgHeader() + " has the optimistically unchoked neighbor " + formatPeerId(peerId));
     }
 
     /**
