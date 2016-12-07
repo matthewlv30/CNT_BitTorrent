@@ -133,6 +133,7 @@ public class MessageUtil {
 		FileHandler fh = new FileHandler(peerId, cProp);
 		// split the file
 		fh.splitFile();
+		// return a list of the pieces
 		return fh.listPieces();
 	}
 }
