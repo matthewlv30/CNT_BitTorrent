@@ -109,7 +109,7 @@ public abstract class MessageHandler implements Cloneable {
 				preferredNeighbors.put(entry.getKey(), true);
 			}
 		}
-		System.out.println(preferredNeighbors);
+		//System.out.println(preferredNeighbors);
 	}
 
 	public static ConcurrentHashMap<Integer, Boolean> getPreferredNeighbors() {
@@ -166,6 +166,7 @@ public abstract class MessageHandler implements Cloneable {
 	 */
 	public synchronized void addPeerBitSet(int peerID, BitSet b) {
 		PeersBitField.put(peerID, b);
+		System.out.println(PeersBitField);
 	}
 
 	public void setPieceIndex(int index) {

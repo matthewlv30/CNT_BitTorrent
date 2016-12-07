@@ -112,7 +112,7 @@ public class Server extends Thread {
 					clonedHandler.setPeerIdNeighboor(hd.peerID);
 					clonedHandler.addPeerBitSet(hd.peerID,MessageUtil.convertToBitSet(bitList.getPayloadField()));
 					bitList = clonedHandler.creatingMessage();
-					System.out.println("Bitfield sent(server): " + hd.peerID+ bitList.getTypeField());
+					System.out.println("Bitfield sent(server): " + hd.peerID);
 					message.sendMessage(bitList);
 					
 					// Recieve Interested or Not from Client
