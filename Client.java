@@ -103,6 +103,15 @@ public class Client extends Thread{
 			mg.sendMessage(bitList);
 			
 			
+			//Get Choke or Unchoke Message
+			clonedHandler.setPeerIdNeighboor(peerServerID);
+			bitList = (ActualMessage) in.readObject();
+			System.out.println("Message recieved (client): " + bitList.getTypeField());
+			clonedHandler = (MessageHandler) HandlerCached.getHandler(bitList.getTypeField(),myInfo);
+			clonedHandler.handleMessage(bitList, requestSocket);
+			
+			
+			
 			//Get Piece
 			bitList = (ActualMessage) in.readObject();
 			System.out.println("Message recieved (client): " + bitList.getTypeField());

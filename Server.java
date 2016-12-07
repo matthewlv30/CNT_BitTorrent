@@ -147,11 +147,23 @@ public class Server extends Thread {
 						
 						if (currentPref.get(hd.peerID) != prevChoked) {
 							if (currentPref.get(hd.peerID) == false) {
-								// TODO: send choke message
-								isChoked.put(hd.peerID, false);
-							} else {
-								// TODO: send unchoke messsage
+								//Sending choke message
+								System.out.println("************** CHOKE **************");
+								clonedHandler = (MessageHandler) HandlerCached.getHandler(0, myServerInfo);
+								bitList = clonedHandler.creatingMessage();
+								System.out.println("Choke (server): " + bitList.getPayloadField().toString());
+								message.sendMessage(bitList);
+								
 								isChoked.put(hd.peerID, true);
+							} else {
+								//Sending unchoke message
+								System.out.println("************** UNCHOKE **************");
+								clonedHandler = (MessageHandler) HandlerCached.getHandler(1, myServerInfo);
+								bitList = clonedHandler.creatingMessage();
+								System.out.println("UnChoke (server): " + bitList.getPayloadField().toString());
+								message.sendMessage(bitList);
+								
+								isChoked.put(hd.peerID, false);
 							}
 						}
 					}
