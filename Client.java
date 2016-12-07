@@ -33,7 +33,6 @@ public class Client extends Thread{
 	
 	public Client(RemotePeerInfo p, int peerServerID) {
 		this.peerServerID = peerServerID;
-		System.out.println("Client: " + p.getPeerId());
 		this.myInfo = p;
 		
 	}

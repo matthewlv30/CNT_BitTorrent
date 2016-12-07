@@ -39,7 +39,6 @@ public class PeerInfo {
      * Info can be accessed through methods defined in the RemotePeerInfo class
      */
     public LinkedList<RemotePeerInfo> getPeerInfo () {
-    	System.out.println("Peer info: " + peerInfo.getFirst().getPeerId());
         return peerInfo;
     }
 }
