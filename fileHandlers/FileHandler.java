@@ -131,7 +131,7 @@ public class FileHandler {
     }
     
 
-    private boolean isFileCompleted() {
+    public boolean isFileCompleted() {
         for (int i = 0; i < bitsetSize; i++) {
             if (!receivedParts.get(i)) {
                 return false;

@@ -12,6 +12,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import fileHandlers.CommonProperties;
+import fileHandlers.FileHandler;
 
 /**
  * This class is for managing the choking and unchoking of peers. Its construction starts the timers for 
@@ -124,8 +125,16 @@ public class Unchoked {
 			downloadingRates = MapUtil.sortByValue(downloadingRates);
 			if (downloadingRates.size() != 0) {
 				it = downloadingRates.entrySet().iterator(); // Iterator for iterating through all the possible peers
-				
-				if (MessageHandler.hasCompleteFile()) {
+				Properties c = null;
+				try {
+					Reader cReader = new FileReader(CommonProperties.CONFIG_FILE);
+					c = CommonProperties.read(cReader);
+				} catch (Exception e) {
+
+				}
+
+				FileHandler f = new FileHandler(MessageHandler.getPeerInfo().getPeerId(), c);
+				if (MessageHandler.getPeerInfo().hasFile || f.isFileCompleted()) {
 //					randomlySelectNeighbors();
 				} 
 //					else{

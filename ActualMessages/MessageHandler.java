@@ -16,7 +16,7 @@ import fileHandlers.RemotePeerInfo;
  */
 public abstract class MessageHandler implements Cloneable {
 
-	protected RemotePeerInfo peerInfo;
+	protected static RemotePeerInfo peerInfo;
 	// Bitfiled the each peer contain which entails a list of pieces of the file
 	protected static BitSet myBitfield;
 	// This is neighbor ID
@@ -58,13 +58,18 @@ public abstract class MessageHandler implements Cloneable {
 		neighborByteCount.clear();
 	}
 	
+	
 	//Unchoke Ends
 	
 	public abstract int handleMessage(ActualMessage m, Socket n);
 	public abstract ActualMessage creatingMessage();
 
 	public void setPeerInfo(RemotePeerInfo p) {
-		this.peerInfo = p;
+		peerInfo = p;
+	}
+	
+	public static RemotePeerInfo getPeerInfo() {
+		return peerInfo; 
 	}
 	
 	public  void setPeerIdNeighboor(int p) {
