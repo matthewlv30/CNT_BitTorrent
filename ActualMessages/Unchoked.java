@@ -115,7 +115,7 @@ public class Unchoked {
 
 				// Store calculations in the map of downloading rates, if they are interested
 				if (MessageHandler.isPeerInterested(entry.getKey())) {
-					System.out.println("int");
+					System.out.println("PeerID: " + entry.getKey() + " Int");
 					downloadingRates.put(entry.getKey(), downloadingSpeed);
 					System.out.println(downloadingRates);
 				}
@@ -135,7 +135,7 @@ public class Unchoked {
 
 				FileHandler f = new FileHandler(MessageHandler.getPeerInfo().getPeerId(), c);
 				if (MessageHandler.getPeerInfo().hasFile || f.isFileCompleted()) {
-//					randomlySelectNeighbors();
+					randomlySelectNeighbors();
 				} 
 //					else{
 //					findPreferredNeighbors();
@@ -154,7 +154,10 @@ public class Unchoked {
 					n = rand.nextInt(entries.length);
 				}
 				preferredNeighbors[i] = (Integer) entries[n];
+				// TODO: unique random
+				System.out.println("Random: " + preferredNeighbors[i]);
 			}
+			
 		}
 		
 		// Start the process of finding preferred neighbors
@@ -179,8 +182,8 @@ public class Unchoked {
 			}
 			
 			// Set the preferred neighbors for the server object
-			//MessageHandler.setPreferredNeighbors(preferredNeighbors);
-			//myServer.resetByteCount();
+			MessageHandler.setPreferredNeighbors(preferredNeighbors);
+			MessageHandler.resetByteCount();
 			
 			// Reset the unchoked info for the next selection interval
 			previous = null;

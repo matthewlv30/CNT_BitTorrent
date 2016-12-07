@@ -6,7 +6,6 @@ import ActualMessages.MessageHandler;
 import ActualMessages.MessageUtil;
 import fileHandlers.RemotePeerInfo;
 import java.util.HashMap;
-import java.util.Map;
 
 import java.io.*;
 
@@ -77,11 +76,6 @@ public class Server extends Thread {
 
 		private RemotePeerInfo myServerInfo; // peerID of the corresponding server connection
 		
-		
-		// Unchoked changes
-		private ConcurrentHashMap<Integer, Boolean> preferredNeighbors = new ConcurrentHashMap<Integer, Boolean>(); // The neighbors that we can receive piece requests from
-		private Integer optimisticallyUnchoked; // Neighbor that we can receive pice requests from
-		// End of Unchoked Changes
 		private HashMap<Integer, Boolean> interestedPeers = new HashMap<Integer, Boolean>();
 		
 
@@ -214,61 +208,13 @@ public class Server extends Thread {
 			MessageHandler.resetByteCount();			
 		}
 		
-		public ConcurrentHashMap<Integer,Boolean> getPreferredNeighbors() {
-			return preferredNeighbors;
-		}
+		
 		
 		public HashMap<Integer, Boolean> getInterestedPeers() {
 			return interestedPeers;
 		}
 		
-		public void setOptimisticallyUnchoked(Integer p) {
-			// send choke message to old optimisticallyUnchoked if it's not in preferredNeighbors
-			// if it's in preferredNeighbors, then dont do anything but set
-			// else, set and send unchoke message
-			
-			if (!preferredNeighbors.containsKey(p)) {
-				// send choke message to current optimistically unchoked, since it's not preferred
-				optimisticallyUnchoked = p;
-			} else {
-				optimisticallyUnchoked = p;
-				// send unchoke message to this neighbor
-			}
-		}
 		
-		// This method is mainly invoked by the Unchoked object. Once this is invoked, the server will take care of choking/unchoking its neighbors according to the new configurations
-		public void setPreferredNeighbors(Integer[] _preferredNeighbors) {
-			// place each _preferredNeighbors into a map!
-			ConcurrentHashMap<Integer,Boolean> _preferredNeighborsMap = new ConcurrentHashMap<Integer,Boolean>();
-			for (int i = 0; i < _preferredNeighbors.length; i++) {
-				_preferredNeighborsMap.put(_preferredNeighbors[i], true);
-			}
-			
-			for (Map.Entry<Integer, Boolean> entry : preferredNeighbors.entrySet()) {
-				// If the new map does not contain this neighbor, and the neighbor is currently preferred, send a choke message
-				if (!(_preferredNeighborsMap.contains(entry)) && (entry.getValue() == true)) {
-					preferredNeighbors.put(entry.getKey(), false);
-					
-					// Optimistically unchoked neighbors do not get a choke message
-					if (entry.getKey() != optimisticallyUnchoked) {
-						// Tell Server to send choke message to this Integer (entry.getKey()).
-					}
-				}
-				
-				// Now we need to send unchoke messages to those that are NOT in the current map
-				if ((_preferredNeighborsMap.contains(entry)) && (entry.getValue() == false)) {
-					preferredNeighbors.put(entry.getKey(), true);
-				}
-			}
-		}
-		
-		public Integer getOptimisticallyUnchoked() {
-			return optimisticallyUnchoked;
-		}
-		
-		public void OptimisticallyUnchoked(Integer _optimisticallyUnchoked) {
-			optimisticallyUnchoked = _optimisticallyUnchoked;
-		}
 		// End of Unchoked Changes
 
 
