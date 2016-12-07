@@ -111,10 +111,10 @@ public class Unchoked {
 			for (Entry<Integer, Double> entry : neighborByteCount.entrySet()) {
 				double byteCount = entry.getValue();
 				double downloadingSpeed = byteCount / Integer.parseInt(cProp.getProperty("UnchokingInterval"));
-				System.out.println("HI");
 				System.out.println(downloadingSpeed);
 				// Store calculations in the map of downloading rates, if they are interested
 				if (MessageHandler.isPeerInterested(entry.getKey())) {
+					System.out.println("int");
 					downloadingRates.put(entry.getKey(), downloadingSpeed);
 					System.out.println(downloadingRates);
 				}

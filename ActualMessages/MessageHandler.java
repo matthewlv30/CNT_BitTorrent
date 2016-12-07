@@ -41,10 +41,17 @@ public abstract class MessageHandler implements Cloneable {
 		unchokedManager = new Unchoked();
 	}
 	public static boolean isPeerInterested(Integer peerID) {
-		return interestedPeers.get(peerID);
+		if (interestedPeers.get(peerID) == null) {
+			return false;
+		} else {
+			return interestedPeers.get(peerID);
+		}
 	}		
 	public static HashMap<Integer, Double> getNeighborByteCount() {
 		return neighborByteCount;
+	}
+	public static void setNeighborByteCount(int peerID, double byteCount) {
+		neighborByteCount.put(peerID, byteCount);
 	}
 	
 	public static void resetByteCount() {
