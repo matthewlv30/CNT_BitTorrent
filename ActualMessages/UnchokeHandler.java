@@ -1,13 +1,12 @@
 package ActualMessages;
 
 import java.net.Socket;
-import java.util.HashMap;
 
 /**
  * Class to handle unchoke message
  */
 public class UnchokeHandler extends MessageHandler {
-	
+
 	/**
 	 * When you receive an unchoke message, set isUnchoked to true
 	 * 
@@ -20,9 +19,18 @@ public class UnchokeHandler extends MessageHandler {
 		MessageHandler.setPeerWhoHasUnchokedMe(neighborID, true);
 		return 0;
 	}
+
 	@Override
 	public ActualMessage creatingMessage() {
-		// TODO implement creating unchoke message
-		return null;
+		// Type of Meessage
+		final byte messageType = 1;
+		// setting up the payload as null since interested has no payload
+		byte payload[] = new byte[0];
+		// Get the length of the message whihc is 1
+		int payloadSize = MessageUtil.convertByteToInt((byte) 1);
+		byte[] length = MessageUtil.convertIntToBytes(payloadSize);
+		// Create and return it so it can be sent
+		ActualMessage m = new ActualMessage(length, messageType, payload);
+		return m;
 	}
 }
