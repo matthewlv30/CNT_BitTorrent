@@ -88,7 +88,7 @@ public class Client extends Thread {
 				clonedHandler = (MessageHandler)
 				HandlerCached.getHandler(type,myInfo);
 				bitList = clonedHandler.creatingMessage();
-				System.out.println("Interested(2)/Uninterested(3)(client): "+ bitList.getTypeField());
+				//System.out.println("Interested(2)/Uninterested(3)(client): "+ bitList.getTypeField());
 				mg.sendMessage(bitList);
 				
 				

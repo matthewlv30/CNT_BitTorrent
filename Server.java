@@ -118,7 +118,7 @@ public class Server extends Thread {
 						
 						//Recieve Interested or Not from Client
 						bitList = (ActualMessage) in.readObject();
-						System.out.println("Message (server) peer : " +hd.peerID + " Interested(2)/Uninterested(3): "+ bitList.getTypeField());
+						//System.out.println("Message (server) peer : " +hd.peerID + " Interested(2)/Uninterested(3): "+ bitList.getTypeField());
 						// If interested or not signified in the Interested (HashMap)
 						clonedHandler = (MessageHandler) HandlerCached.getHandler(bitList.getTypeField(), myServerInfo);
 						clonedHandler.handleMessage(bitList, connection);
