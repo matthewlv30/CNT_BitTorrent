@@ -44,7 +44,6 @@ public class RequestHandler extends MessageHandler {
 		// Type of Meessage
 		final byte messageType = 6;
 		BitSet b = PeersBitField.get(neighborID);
-		System.out.println(PeersBitField);
 		byte[] negpayload = b.toByteArray();
 
 		// check if the neigtboor list is empty
@@ -53,7 +52,7 @@ public class RequestHandler extends MessageHandler {
 		mypayload = myBitfield.toByteArray();
 		byte[] payload = new byte[4];
 		// Usually this can be a field rather than a method variable
-		System.out.println(myBitfield);
+		
 		int i = 0;
 		int answer = 0;
 
@@ -69,13 +68,13 @@ public class RequestHandler extends MessageHandler {
 			if(mypayload.length == 0) {
 				this.setPieceIndex(answer);
 				payload = MessageUtil.convertIntToBytes(answer);
-				mypayload[answer] = negpayload[answer];
+				myBitfield.set(answer * 8, (answer * 8) + 8, true);
 				break;
 			}
 			else if (negpayload[answer] < mypayload[answer]) {
 				this.setPieceIndex(answer);
 				payload = MessageUtil.convertIntToBytes(answer);
-				mypayload[answer] = negpayload[answer];
+				myBitfield.set(answer * 8, (answer * 8) + 8, true);
 				break;
 			}
 		}
