@@ -92,10 +92,26 @@ public class Client extends Thread {
 					// Get Choke or Unchoke Message
 					clonedHandler.setPeerIdNeighboor(peerServerID);
 					bitList = (ActualMessage) in.readObject();
-
 					System.out.println("Message recieved (client): " + bitList.getTypeField());
 					clonedHandler = (MessageHandler) HandlerCached.getHandler(bitList.getTypeField(), myInfo);
 					clonedHandler.handleMessage(bitList, requestSocket);
+
+					if (bitList.getTypeField() == 0) {
+
+					} else if (bitList.getTypeField() == 1) {
+						// Send Request Message
+						System.out.println("************** REQUEST **************");
+						clonedHandler = (MessageHandler) HandlerCached.getHandler(6, myInfo);
+						bitList = clonedHandler.creatingMessage();
+						System.out.println("Request (client): " + bitList.getPayloadField().toString());
+						mg.sendMessage(bitList);
+						
+						//Get Piece
+						bitList = (ActualMessage) in.readObject();
+						System.out.println("Message recieved (client): " + bitList.getTypeField());
+						clonedHandler = (MessageHandler)HandlerCached.getHandler(bitList.getTypeField(),myInfo);
+						clonedHandler.handleMessage(bitList, requestSocket);
+					}
 				}
 				// Get Have Message
 				// clonedHandler.setPeerIdNeighboor(peerServerID);
@@ -105,23 +121,8 @@ public class Client extends Thread {
 				// clonedHandler = (MessageHandler)
 				// HandlerCached.getHandler(bitList.getTypeField(),myInfo);
 				// clonedHandler.handleMessage(bitList, requestSocket);
-				//
-				// //Send Request Message
-				// System.out.println("************** REQUEST **************");
-				// clonedHandler = (MessageHandler)
-				// HandlerCached.getHandler(6,myInfo);
-				// bitList = clonedHandler.creatingMessage();
-				// System.out.println("Request (client): " +
-				// bitList.getPayloadField().toString());
-				// mg.sendMessage(bitList);
-				//
-				// //Get Piece
-				// bitList = (ActualMessage) in.readObject();
-				// System.out.println("Message recieved (client): " +
-				// bitList.getTypeField());
-				// clonedHandler = (MessageHandler)
-				// HandlerCached.getHandler(bitList.getTypeField(),myInfo);
-				// clonedHandler.handleMessage(bitList, requestSocket);
+
+			
 			}
 
 		} catch (ConnectException e) {

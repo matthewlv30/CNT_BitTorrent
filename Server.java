@@ -118,20 +118,30 @@ public class Server extends Thread {
 					while (true) {
 
 						// if this peer id old is different from new
-						// System.out.println(MessageHandler.getPreferredNeighbors().get(hd.peerID));
 						if ((MessageHandler.getIsChoked().get(hd.peerID) == MessageHandler.getPreferredNeighbors()
 								.get(hd.peerID)) || (MessageHandler.getIsChoked().get(hd.peerID) == null)) {
 							if (MessageHandler.getPreferredNeighbors().get(hd.peerID) == true) {
 								// Sending unchoke message
-								System.out.println("Hello Un");
 								clonedHandler = (MessageHandler) HandlerCached.getHandler(1, myServerInfo);
 								bitList = clonedHandler.creatingMessage();
 								message.sendMessage(bitList);
 								MessageHandler.setIsChokedMap(hd.peerID, false);
 
+								// Recieve Request
+								bitList = (ActualMessage) in.readObject();
+								System.out.println("Message recieved (server): " + bitList.getTypeField());
+								clonedHandler = (MessageHandler) HandlerCached.getHandler(bitList.getTypeField(),myServerInfo);
+								int type = clonedHandler.handleMessage(bitList, connection);
+
+								// Send Piece Message
+								System.out.println("************** PIECE**************");
+								clonedHandler = (MessageHandler) HandlerCached.getHandler(type, myServerInfo);
+								bitList = clonedHandler.creatingMessage();
+								System.out.println("Piece (server): " + bitList.getPayloadField().toString());
+								message.sendMessage(bitList);
+
 							} else if (MessageHandler.getPreferredNeighbors().get(hd.peerID) == false) {
 								// Sending choke message
-								System.out.println("Hello Cho");
 								clonedHandler = (MessageHandler) HandlerCached.getHandler(0, myServerInfo);
 								bitList = clonedHandler.creatingMessage();
 								message.sendMessage(bitList);
@@ -151,27 +161,7 @@ public class Server extends Thread {
 						// bitList.getPayloadField().toString());
 						// message.sendMessage(bitList);
 						//
-						// // Recieve Request
-						// bitList = (ActualMessage) in.readObject();
-						// System.out.println("Message recieved (server): " +
-						// bitList.getTypeField());
-						// clonedHandler = (MessageHandler)
-						// HandlerCached.getHandler(bitList.getTypeField(),
-						// myServerInfo);
-						// int type = clonedHandler.handleMessage(bitList,
-						// connection);
-						//
 
-						//
-						// // Send Piece Message
-						// System.out.println("************** PIECE
-						// **************");
-						// clonedHandler = (MessageHandler)
-						// HandlerCached.getHandler(type, myServerInfo);
-						// bitList = clonedHandler.creatingMessage();
-						// System.out.println("Piece (server): " +
-						// bitList.getPayloadField().toString());
-						// message.sendMessage(bitList);
 					}
 
 				} catch (ClassNotFoundException classnot) {
