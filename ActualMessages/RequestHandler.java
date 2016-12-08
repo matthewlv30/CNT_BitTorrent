@@ -42,22 +42,21 @@ public class RequestHandler extends MessageHandler {
 		// Type of Meessage
 		final byte messageType = 6;
 		BitSet b = PeersBitField.get(neighborID);
-		
+		System.out.println(PeersBitField);
 		byte[] negpayload = b.toByteArray();
-		System.out.println(negpayload.toString());
+		
 		// check if the neigtboor list is empty
 		negpayload = MessageUtil.setPayload(negpayload);
-		
-		System.out.println(negpayload.toString());
-		
 		byte[] mypayload = myBitfield.toByteArray();
 		byte[] payload = new byte[4];
 		// Usually this can be a field rather than a method variable
+		System.out.println(myBitfield);
 		Random rn = new Random();
 		int i = 0;
 		int answer = 0;
-		System.out.println(mypayload);
+
 		int[] mypay2 = new int[payload.length];
+		System.out.println(mypayload.length);
 		for (i = 0; i != mypayload.length; ++i) {
 			// set a random index
 			answer = rn.nextInt(mypayload.length);
@@ -65,8 +64,6 @@ public class RequestHandler extends MessageHandler {
 				answer = rn.nextInt(mypayload.length);
 			}
 			mypay2[answer] = 1;
-			System.out.println(negpayload[answer]);
-			System.out.println(mypayload[answer]);
 			if (negpayload[answer] > mypayload[answer]) {
 				this.setPieceIndex(answer);
 				payload = MessageUtil.convertIntToBytes(answer);
