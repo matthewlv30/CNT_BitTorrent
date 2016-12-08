@@ -114,6 +114,7 @@ public class Server extends Thread {
 					while (true) {
 						if (bitList.getTypeField() == 2) {
 							// Recieve Interested or Not from Client
+							System.out.println("efewf");
 							bitList = (ActualMessage) in.readObject();
 							clonedHandler = (MessageHandler) HandlerCached.getHandler(bitList.getTypeField(),
 									myServerInfo);
@@ -121,7 +122,7 @@ public class Server extends Thread {
 
 						} else {
 							// if this peer id old is different from new
-							System.out.println(MessageHandler.getPreferredNeighbors().get(hd.peerID));
+							//System.out.println(MessageHandler.getPreferredNeighbors().get(hd.peerID));
 							if ((MessageHandler.getIsChoked().get(hd.peerID) == MessageHandler.getPreferredNeighbors()
 									.get(hd.peerID)) || (MessageHandler.getIsChoked().get(hd.peerID) == null)) {
 								if (MessageHandler.getPreferredNeighbors().get(hd.peerID) == true) {

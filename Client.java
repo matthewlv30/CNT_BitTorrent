@@ -83,6 +83,7 @@ public class Client extends Thread {
 
 			while (true) {
 				if (type == 2) {
+					System.out.println("asfegwruhiuwhfiweh");
 					// Send Interested or Not of the list of pieces recieved
 					clonedHandler = (MessageHandler) HandlerCached.getHandler(type, myInfo);
 					bitList = clonedHandler.creatingMessage();
