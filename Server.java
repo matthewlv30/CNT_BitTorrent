@@ -119,7 +119,8 @@ public class Server extends Thread {
 						clonedHandler.handleMessage(bitList, connection);
 
 						// if this peer id old is different from new
-						while (MessageHandler.getIsChoked().get(hd.peerID) != MessageHandler.getPreferredNeighbors().get(hd.peerID)) {
+						if ((MessageHandler.getIsChoked().get(hd.peerID) == MessageHandler.getPreferredNeighbors().get(hd.peerID)) || 
+							(MessageHandler.getIsChoked().get(hd.peerID) == null)) {
 							if (MessageHandler.getPreferredNeighbors().get(hd.peerID) == true) {
 								// Sending unchoke message
 								clonedHandler = (MessageHandler) HandlerCached.getHandler(1, myServerInfo);
@@ -136,7 +137,6 @@ public class Server extends Thread {
 							}
 
 						}
-						
 
 						// Send Have Message
 						// System.out.println("************** HAVE
