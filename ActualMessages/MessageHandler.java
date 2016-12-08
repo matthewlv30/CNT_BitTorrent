@@ -110,10 +110,9 @@ public abstract class MessageHandler implements Cloneable {
 			if ((_preferredNeighborsMap.containsKey(entry.getKey())) && (entry.getValue() == false)) {
 				preferredNeighbors.put(entry.getKey(), true);
 			}
-		}
-		//TODO: log the message - need to format preffered neighbord to string for logging
-		//PeerLogger pl = new PeerLogger(peerInfo.getPeerId());
-		//pl.changeOfOptimisticallyUnchokedNeighborsMsg(neighborID);
+		}	
+		PeerLogger pl = new PeerLogger(peerInfo.getPeerId());
+		pl.changeOfPreferredNeighborsMsg(preferredNeighbors.toString());
 		//System.out.println(preferredNeighbors);
 
 	}
