@@ -125,17 +125,19 @@ public class Server extends Thread {
 								clonedHandler = (MessageHandler) HandlerCached.getHandler(1, myServerInfo);
 								bitList = clonedHandler.creatingMessage();
 								message.sendMessage(bitList);
-
 								MessageHandler.setIsChokedMap(hd.peerID, false);
+								
 							} else if (MessageHandler.getPreferredNeighbors().get(myServerInfo.getPeerId()) == false) {
 								// Sending choke message
 								clonedHandler = (MessageHandler) HandlerCached.getHandler(0, myServerInfo);
 								bitList = clonedHandler.creatingMessage();
 								message.sendMessage(bitList);
-
 								MessageHandler.setIsChokedMap(hd.peerID, true);
 							}
 
+						}
+						else {
+							System.out.println("Blah");
 						}
 
 						// Send Have Message
