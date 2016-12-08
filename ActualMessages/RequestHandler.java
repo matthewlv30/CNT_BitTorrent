@@ -57,6 +57,7 @@ public class RequestHandler extends MessageHandler {
 		Random rn = new Random();
 		int i = 0;
 		int answer = 0;
+		System.out.println(mypayload);
 		int[] mypay2 = new int[payload.length];
 		for (i = 0; i != mypayload.length; ++i) {
 			// set a random index

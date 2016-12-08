@@ -136,7 +136,7 @@ public class Server extends Thread {
 							}
 
 						}
-						
+						Thread.sleep(10000);
 						if(MessageHandler.getIsChoked().get(hd.peerID) == false) {
 							// Recieve Request
 							bitList = (ActualMessage) in.readObject();

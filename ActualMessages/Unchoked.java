@@ -117,8 +117,7 @@ public class Unchoked {
 //			
 //			// Sort the map of downloading rates
 			downloadingRates = MapUtil.sortByValue(downloadingRates);
-			//TODO
-			System.out.println("Dowloading Rates & Interested List: "+downloadingRates);
+			
 			
 			if (downloadingRates.size() != 0) {
 				it = downloadingRates.entrySet().iterator(); // Iterator for iterating through all the possible peers
