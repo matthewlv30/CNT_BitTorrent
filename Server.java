@@ -147,7 +147,6 @@ public class Server extends Thread {
 							System.out.println("************** PIECE**************");
 							clonedHandler = (MessageHandler) HandlerCached.getHandler(type, myServerInfo);
 							bitList = clonedHandler.creatingMessage();
-							System.out.println("Piece (server): " + bitList.getPayloadField().toString());
 							message.sendMessage(bitList);
 							
 						}
