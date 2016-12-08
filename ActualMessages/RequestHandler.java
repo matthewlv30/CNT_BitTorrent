@@ -2,13 +2,15 @@ package ActualMessages;
 
 import java.net.Socket;
 import java.util.BitSet;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 
 /**
  * Class to handle "request" message
  */
 public class RequestHandler extends MessageHandler {
-	
+
 	/**
 	 * When you receive a "request" message, send a message with the requested
 	 * piece
@@ -44,7 +46,7 @@ public class RequestHandler extends MessageHandler {
 		BitSet b = PeersBitField.get(neighborID);
 		System.out.println(PeersBitField);
 		byte[] negpayload = b.toByteArray();
-		
+
 		// check if the neigtboor list is empty
 		negpayload = MessageUtil.setPayload(negpayload);
 		byte[] mypayload = myBitfield.toByteArray();
@@ -55,15 +57,16 @@ public class RequestHandler extends MessageHandler {
 		int i = 0;
 		int answer = 0;
 
-		int[] mypay2 = new int[payload.length];
+		Map<Integer, Boolean> randMap = new HashMap<Integer, Boolean>();
 		System.out.println(negpayload.length);
 		for (i = 0; i != negpayload.length; ++i) {
-			// set a random index
-			answer = rn.nextInt(negpayload.length);
-			while (mypay2[answer] == 1) {
-				answer = rn.nextInt(negpayload.length);
+			// set a random inde
+			Random rand = new Random();
+			int n = rand.nextInt(negpayload.length);
+			while (randMap.containsKey(n) && (randMap.get(n) == true)) {
+				n = rand.nextInt(negpayload.length);
 			}
-			mypay2[answer] = 1;
+			randMap.put(n, true);
 			System.out.println(negpayload[answer]);
 			if (negpayload[answer] > mypayload[answer]) {
 				this.setPieceIndex(answer);
