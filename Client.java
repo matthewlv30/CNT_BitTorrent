@@ -90,9 +90,9 @@ public class Client extends Thread {
 					type = 3;
 				} else {
 					// Get Choke or Unchoke Message
+					bitList = (ActualMessage) in.readObject();
 					if (bitList.getTypeField() == 1 || bitList.getTypeField() == 0) {
 						clonedHandler.setPeerIdNeighboor(peerServerID);
-						bitList = (ActualMessage) in.readObject();
 						System.out.println("Message recieved (client): " + bitList.getTypeField());
 						clonedHandler = (MessageHandler) HandlerCached.getHandler(bitList.getTypeField(), myInfo);
 						clonedHandler.handleMessage(bitList, requestSocket);

@@ -139,16 +139,19 @@ public class Server extends Thread {
 						Thread.sleep(10000);
 						if(MessageHandler.getIsChoked().get(hd.peerID) == false) {
 							// Recieve Request
+							
 							bitList = (ActualMessage) in.readObject();
 							clonedHandler = (MessageHandler) HandlerCached.getHandler(bitList.getTypeField(),myServerInfo);
 							int type = clonedHandler.handleMessage(bitList, connection);
-
+							
+						
 							// Send Piece Message
 							System.out.println("************** PIECE**************");
 							clonedHandler = (MessageHandler) HandlerCached.getHandler(type, myServerInfo);
 							bitList = clonedHandler.creatingMessage();
 							System.out.println("Piece (server): " + bitList.getPayloadField().toString());
 							message.sendMessage(bitList);
+							
 						}
 						else if (MessageHandler.getIsChoked().get(hd.peerID) == true) {
 							
