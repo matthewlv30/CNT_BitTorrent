@@ -49,16 +49,15 @@ public class RequestHandler extends MessageHandler {
 
 		// check if the neigtboor list is empty
 		negpayload = MessageUtil.setPayload(negpayload);
-		byte[] mypayload = myBitfield.toByteArray();
+		byte[] mypayload = new byte[negpayload.length];
+		mypayload = myBitfield.toByteArray();
 		byte[] payload = new byte[4];
 		// Usually this can be a field rather than a method variable
 		System.out.println(myBitfield);
-		Random rn = new Random();
 		int i = 0;
 		int answer = 0;
 
 		Map<Integer, Boolean> randMap = new HashMap<Integer, Boolean>();
-		System.out.println(negpayload.length);
 		for (i = 0; i != negpayload.length; ++i) {
 			// set a random inde
 			Random rand = new Random();
@@ -67,15 +66,18 @@ public class RequestHandler extends MessageHandler {
 				n = rand.nextInt(negpayload.length);
 			}
 			randMap.put(n, true);
-			System.out.println(answer);
-			System.out.println(negpayload[answer]);
-			System.out.println(mypayload[answer]);
-//			if (negpayload[answer] < mypayload[answer]) {
-//				this.setPieceIndex(answer);
-//				payload = MessageUtil.convertIntToBytes(answer);
-//				mypayload[answer] = negpayload[answer];
-//				break;
-//			}
+			if(mypayload.length == 0) {
+				this.setPieceIndex(answer);
+				payload = MessageUtil.convertIntToBytes(answer);
+				mypayload[answer] = negpayload[answer];
+				break;
+			}
+			else if (negpayload[answer] < mypayload[answer]) {
+				this.setPieceIndex(answer);
+				payload = MessageUtil.convertIntToBytes(answer);
+				mypayload[answer] = negpayload[answer];
+				break;
+			}
 		}
 
 		// Get the length of the message by payload + type
