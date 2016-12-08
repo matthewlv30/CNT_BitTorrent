@@ -49,7 +49,8 @@ public class RequestHandler extends MessageHandler {
 
 		// check if the neigtboor list is empty
 		negpayload = MessageUtil.setPayload(negpayload);
-		byte[] mypayload = myBitfield.toByteArray();
+		byte[] mypayload = new byte[negpayload.length];
+		mypayload = myBitfield.toByteArray();
 		byte[] payload = new byte[4];
 		// Usually this can be a field rather than a method variable
 		System.out.println(myBitfield);
