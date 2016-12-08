@@ -56,15 +56,15 @@ public class RequestHandler extends MessageHandler {
 		int answer = 0;
 
 		int[] mypay2 = new int[payload.length];
-		System.out.println(mypayload.length);
-		for (i = 0; i != mypayload.length; ++i) {
+		System.out.println(negpayload.length);
+		for (i = 0; i != negpayload.length; ++i) {
 			// set a random index
-			answer = rn.nextInt(mypayload.length);
+			answer = rn.nextInt(negpayload.length);
 			while (mypay2[answer] == 1) {
-				answer = rn.nextInt(mypayload.length);
+				answer = rn.nextInt(negpayload.length);
 			}
 			mypay2[answer] = 1;
-			if (negpayload[answer] > mypayload[answer]) {
+			if (negpayload[answer] < mypayload[answer]) {
 				this.setPieceIndex(answer);
 				payload = MessageUtil.convertIntToBytes(answer);
 				mypayload[answer] = negpayload[answer];
