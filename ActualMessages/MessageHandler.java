@@ -57,6 +57,7 @@ public abstract class MessageHandler implements Cloneable {
 	
 	public static void setPeerWhoHasUnchokedMe(int peerID, boolean c) {
 		hasPeerUnchokedMe.put(peerID, c);
+		System.out.println("Peers who have unchoked me:" + hasPeerUnchokedMe);
 	}
 	
 	public static ConcurrentHashMap<Integer, Boolean> getInterestedPeers() {
