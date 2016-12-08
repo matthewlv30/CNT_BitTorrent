@@ -72,8 +72,6 @@ public class Server extends Thread {
 
 		private RemotePeerInfo myServerInfo; // peerID of the corresponding
 												// server connection
-		// keep List of previous choked neighboors
-		private ConcurrentHashMap<Integer, Boolean> isChoked = new ConcurrentHashMap<Integer, Boolean>();
 
 		public Handler(Socket connection, RemotePeerInfo peerInfo) {
 			this.connection = connection;
@@ -120,48 +118,26 @@ public class Server extends Thread {
 						clonedHandler = (MessageHandler) HandlerCached.getHandler(bitList.getTypeField(), myServerInfo);
 						clonedHandler.handleMessage(bitList, connection);
 
-						boolean prevChoked;
-						ConcurrentHashMap<Integer, Boolean> currentPref = MessageHandler.getPreferredNeighbors();
-						// if isChoked is not null check the old one and change
-						// it and send choke or unchoke messsage
-						if (isChoked.get(myServerInfo.getPeerId()) != null) {
-							prevChoked = isChoked.get(myServerInfo.getPeerId());
-
-							if (currentPref.get(hd.peerID) != prevChoked) {
-								if (currentPref.get(hd.peerID) == false) {
-									// Sending choke message
-									clonedHandler = (MessageHandler) HandlerCached.getHandler(0, myServerInfo);
-									bitList = clonedHandler.creatingMessage();
-									message.sendMessage(bitList);
-
-									isChoked.put(hd.peerID, true);
-								} else {
-									// Sending unchoke message
-									clonedHandler = (MessageHandler) HandlerCached.getHandler(1, myServerInfo);
-									bitList = clonedHandler.creatingMessage();
-									message.sendMessage(bitList);
-
-									isChoked.put(hd.peerID, false);
-								}
-							}
-						} else {
-							// is previous null then add the current
-							isChoked.put(hd.peerID, currentPref.get(hd.peerID));
-							if (currentPref.get(hd.peerID)) {
+						// if this peer id old is different from new
+						if (MessageHandler.getIsChoked().get(myServerInfo.getPeerId()) != MessageHandler.getPreferredNeighbors().get(myServerInfo.getPeerId())) {
+							if (MessageHandler.getPreferredNeighbors().get(myServerInfo.getPeerId()) == true) {
 								// Sending unchoke message
 								clonedHandler = (MessageHandler) HandlerCached.getHandler(1, myServerInfo);
 								bitList = clonedHandler.creatingMessage();
 								message.sendMessage(bitList);
-							} else {
+
+								MessageHandler.setIsChokedMap(hd.peerID, false);
+							} else if (MessageHandler.getPreferredNeighbors().get(myServerInfo.getPeerId()) == false) {
 								// Sending choke message
 								clonedHandler = (MessageHandler) HandlerCached.getHandler(0, myServerInfo);
 								bitList = clonedHandler.creatingMessage();
 								message.sendMessage(bitList);
+
+								MessageHandler.setIsChokedMap(hd.peerID, true);
 							}
+
 						}
 
-						
-						
 						// Send Have Message
 						// System.out.println("************** HAVE
 						// **************");

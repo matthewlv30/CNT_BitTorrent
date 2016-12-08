@@ -29,6 +29,7 @@ public abstract class MessageHandler implements Cloneable {
 	protected static ConcurrentHashMap<Integer, Boolean> interestedPeers = new ConcurrentHashMap<Integer, Boolean>();
 	// The neighbors that we can receive piece requests from
 	private static ConcurrentHashMap<Integer, Boolean> preferredNeighbors = new ConcurrentHashMap<Integer, Boolean>();
+	private static ConcurrentHashMap<Integer, Boolean> isChoked = new ConcurrentHashMap<Integer, Boolean>();
 	// Neighbor that we can receive pice requests from
 	private static Integer optimisticallyUnchoked;
 	// Peers who have unchoked me. T: I'm unchoked for this peerID. F: I'm choked for this peerID.
@@ -115,6 +116,14 @@ public abstract class MessageHandler implements Cloneable {
 
 	public static ConcurrentHashMap<Integer, Boolean> getPreferredNeighbors() {
 		return preferredNeighbors;
+	}
+	
+	public static ConcurrentHashMap<Integer, Boolean> getIsChoked() {
+		return isChoked;
+	}
+	
+	public static void setIsChokedMap(int a, boolean b) {
+		isChoked.put(a, b);
 	}
 
 	public static void setOptimisticallyUnchoked(Integer p) {
