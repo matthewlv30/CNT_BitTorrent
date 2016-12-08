@@ -129,7 +129,6 @@ public class Server extends Thread {
 
 								// Recieve Request
 								bitList = (ActualMessage) in.readObject();
-								System.out.println("Message recieved (server): " + bitList.getTypeField());
 								clonedHandler = (MessageHandler) HandlerCached.getHandler(bitList.getTypeField(),myServerInfo);
 								int type = clonedHandler.handleMessage(bitList, connection);
 
