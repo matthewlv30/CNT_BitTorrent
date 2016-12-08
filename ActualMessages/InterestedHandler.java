@@ -13,14 +13,14 @@ public class InterestedHandler extends MessageHandler {
 	 * @param m:  this is the message received
 	 * @param n:  this is the Node that is interested in the current peer
 	 */
-	public synchronized int handleMessage(ActualMessage m, Socket n) {
+	public  int handleMessage(ActualMessage m, Socket n) {
 		// Since neighboor peer interested add to map as true
 		interestedPeers.put(neighborID, true); 
 		return 0;
 	}
 
 	@Override
-	public synchronized ActualMessage creatingMessage() {
+	public  ActualMessage creatingMessage() {
 		// Type of Meessage
 		final byte messageType = 2;
 		// setting up the payload as null since interested has no payload
