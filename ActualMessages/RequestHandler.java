@@ -64,7 +64,8 @@ public class RequestHandler extends MessageHandler {
 				answer = rn.nextInt(negpayload.length);
 			}
 			mypay2[answer] = 1;
-			if (negpayload[answer] < mypayload[answer]) {
+			System.out.println(negpayload[answer]);
+			if (negpayload[answer] > mypayload[answer]) {
 				this.setPieceIndex(answer);
 				payload = MessageUtil.convertIntToBytes(answer);
 				mypayload[answer] = negpayload[answer];
