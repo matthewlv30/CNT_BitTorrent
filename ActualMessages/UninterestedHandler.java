@@ -19,7 +19,6 @@ public class UninterestedHandler extends MessageHandler {
 		interestedPeers.put(neighborID, false);
 		PeerLogger pl = peerInfo.getLogger();
 		pl.notInterestedMsg(neighborID);
-		System.out.println(pl);
 		return 0;
 	}
 
