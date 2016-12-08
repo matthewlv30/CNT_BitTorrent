@@ -136,10 +136,8 @@ public class Server extends Thread {
 							}
 
 						}
-						Thread.sleep(10000);
 						if(MessageHandler.getIsChoked().get(hd.peerID) == false) {
 							// Recieve Request
-							
 							bitList = (ActualMessage) in.readObject();
 							clonedHandler = (MessageHandler) HandlerCached.getHandler(bitList.getTypeField(),myServerInfo);
 							int type = clonedHandler.handleMessage(bitList, connection);

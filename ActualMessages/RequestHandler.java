@@ -44,12 +44,11 @@ public class RequestHandler extends MessageHandler {
 		BitSet b = PeersBitField.get(neighborID);
 		
 		byte[] negpayload = b.toByteArray();
-		System.out.println("Hello");
-		System.out.println(negpayload);
+		System.out.println(negpayload.toString());
 		// check if the neigtboor list is empty
 		negpayload = MessageUtil.setPayload(negpayload);
 		
-		System.out.println(negpayload);
+		System.out.println(negpayload.toString());
 		
 		byte[] mypayload = myBitfield.toByteArray();
 		byte[] payload = new byte[4];
