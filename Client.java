@@ -87,6 +87,7 @@ public class Client extends Thread {
 					clonedHandler = (MessageHandler) HandlerCached.getHandler(type, myInfo);
 					bitList = clonedHandler.creatingMessage();
 					mg.sendMessage(bitList);
+					type = 3;
 				} else {
 					// Get Choke or Unchoke Message
 					clonedHandler.setPeerIdNeighboor(peerServerID);
