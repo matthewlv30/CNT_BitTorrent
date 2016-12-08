@@ -2,13 +2,15 @@ package ActualMessages;
 
 import java.net.Socket;
 import java.util.BitSet;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 
 /**
  * Class to handle "request" message
  */
 public class RequestHandler extends MessageHandler {
-	
+
 	/**
 	 * When you receive a "request" message, send a message with the requested
 	 * piece
@@ -42,37 +44,38 @@ public class RequestHandler extends MessageHandler {
 		// Type of Meessage
 		final byte messageType = 6;
 		BitSet b = PeersBitField.get(neighborID);
-		
+		System.out.println(PeersBitField);
 		byte[] negpayload = b.toByteArray();
-		
-		System.out.println(negpayload);
+
 		// check if the neigtboor list is empty
 		negpayload = MessageUtil.setPayload(negpayload);
-		
-		System.out.println(negpayload);
-		
 		byte[] mypayload = myBitfield.toByteArray();
 		byte[] payload = new byte[4];
 		// Usually this can be a field rather than a method variable
+		System.out.println(myBitfield);
 		Random rn = new Random();
 		int i = 0;
 		int answer = 0;
-		int[] mypay2 = new int[payload.length];
-		for (i = 0; i != mypayload.length; ++i) {
-			// set a random index
-			answer = rn.nextInt(mypayload.length);
-			while (mypay2[answer] == 1) {
-				answer = rn.nextInt(mypayload.length);
+
+		Map<Integer, Boolean> randMap = new HashMap<Integer, Boolean>();
+		System.out.println(negpayload.length);
+		for (i = 0; i != negpayload.length; ++i) {
+			// set a random inde
+			Random rand = new Random();
+			int n = rand.nextInt(negpayload.length);
+			while (randMap.containsKey(n) && (randMap.get(n) == true)) {
+				n = rand.nextInt(negpayload.length);
 			}
-			mypay2[answer] = 1;
+			randMap.put(n, true);
+			System.out.println(answer);
 			System.out.println(negpayload[answer]);
 			System.out.println(mypayload[answer]);
-			if (negpayload[answer] > mypayload[answer]) {
-				this.setPieceIndex(answer);
-				payload = MessageUtil.convertIntToBytes(answer);
-				mypayload[answer] = negpayload[answer];
-				break;
-			}
+//			if (negpayload[answer] < mypayload[answer]) {
+//				this.setPieceIndex(answer);
+//				payload = MessageUtil.convertIntToBytes(answer);
+//				mypayload[answer] = negpayload[answer];
+//				break;
+//			}
 		}
 
 		// Get the length of the message by payload + type

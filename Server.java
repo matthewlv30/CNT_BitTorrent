@@ -126,19 +126,7 @@ public class Server extends Thread {
 								bitList = clonedHandler.creatingMessage();
 								message.sendMessage(bitList);
 								MessageHandler.setIsChokedMap(hd.peerID, false);
-
-								// Recieve Request
-								bitList = (ActualMessage) in.readObject();
-								clonedHandler = (MessageHandler) HandlerCached.getHandler(bitList.getTypeField(),myServerInfo);
-								int type = clonedHandler.handleMessage(bitList, connection);
-
-								// Send Piece Message
-								System.out.println("************** PIECE**************");
-								clonedHandler = (MessageHandler) HandlerCached.getHandler(type, myServerInfo);
-								bitList = clonedHandler.creatingMessage();
-								System.out.println("Piece (server): " + bitList.getPayloadField().toString());
-								message.sendMessage(bitList);
-
+								
 							} else if (MessageHandler.getPreferredNeighbors().get(hd.peerID) == false) {
 								// Sending choke message
 								clonedHandler = (MessageHandler) HandlerCached.getHandler(0, myServerInfo);
@@ -147,6 +135,24 @@ public class Server extends Thread {
 								MessageHandler.setIsChokedMap(hd.peerID, true);
 							}
 
+						}
+						if(MessageHandler.getIsChoked().get(hd.peerID) == false) {
+							// Recieve Request
+							bitList = (ActualMessage) in.readObject();
+							clonedHandler = (MessageHandler) HandlerCached.getHandler(bitList.getTypeField(),myServerInfo);
+							int type = clonedHandler.handleMessage(bitList, connection);
+							
+						
+							// Send Piece Message
+							System.out.println("************** PIECE**************");
+							clonedHandler = (MessageHandler) HandlerCached.getHandler(type, myServerInfo);
+							bitList = clonedHandler.creatingMessage();
+							System.out.println("Piece (server): " + bitList.getPayloadField().toString());
+							message.sendMessage(bitList);
+							
+						}
+						else if (MessageHandler.getIsChoked().get(hd.peerID) == true) {
+							
 						}
 
 						// Send Have Message
