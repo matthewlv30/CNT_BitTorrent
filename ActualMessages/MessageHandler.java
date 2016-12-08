@@ -110,8 +110,11 @@ public abstract class MessageHandler implements Cloneable {
 			if ((_preferredNeighborsMap.containsKey(entry.getKey())) && (entry.getValue() == false)) {
 				preferredNeighbors.put(entry.getKey(), true);
 			}
-		}
+		}	
+		PeerLogger pl = new PeerLogger(peerInfo.getPeerId());
+		pl.changeOfPreferredNeighborsMsg(preferredNeighbors.toString());
 		//System.out.println(preferredNeighbors);
+
 	}
 
 	public static ConcurrentHashMap<Integer, Boolean> getPreferredNeighbors() {
@@ -140,6 +143,10 @@ public abstract class MessageHandler implements Cloneable {
 			optimisticallyUnchoked = p;
 			// send unchoke message to this neighbor
 		}
+		
+		//log the message
+		PeerLogger pl = new PeerLogger(peerInfo.getPeerId());
+		pl.changeOfOptimisticallyUnchokedNeighborsMsg(neighborID);
 	}
 
 	public Integer getOptimisticallyUnchoked() {

@@ -9,8 +9,6 @@
 /MessageUtil.class
 /Peer.class
 /PeerInfo.class
-/PeerLogger$CustomFormatter.class
-/PeerLogger.class
 /RemotePeerInfo.class
 /Server$BitfieldHandler.class
 /Server$ChokeHandler.class
@@ -32,3 +30,6 @@
 /Unchoked$OptimisticNeighborTimer.class
 /Unchoked$PreferredNeighborTimer.class
 /Unchoked.class
+/PeerLogger$CustomFormatter.class
+/PeerLogger.class
+/*.log

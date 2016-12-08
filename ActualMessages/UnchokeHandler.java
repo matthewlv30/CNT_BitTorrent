@@ -17,6 +17,8 @@ public class UnchokeHandler extends MessageHandler {
 	 */
 	public int handleMessage(ActualMessage m, Socket n) {
 		MessageHandler.setPeerWhoHasUnchokedMe(neighborID, true);
+		PeerLogger pl = new PeerLogger(peerInfo.getPeerId());
+		pl.unchokeMsg(neighborID);
 		return 0;
 	}
 

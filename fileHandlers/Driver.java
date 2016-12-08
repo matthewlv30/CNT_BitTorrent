@@ -4,6 +4,8 @@ import java.io.FileReader;
 import java.util.LinkedList;
 import java.util.Properties;
 
+import ActualMessages.PeerLogger;
+
 public class Driver {
 
 	public static void main(String[] args) throws Exception {
@@ -31,6 +33,18 @@ public class Driver {
 		
 		System.out.println(fh.getBitmapSize());	
 		
+		int peerServerID = 1001;
+		int myId = 1002;
+		
+		//log connection - one for peerId and peerServerId
+		//PeerLogger peerLogger = new PeerLogger(myInfo.getPeerId());
+		PeerLogger peerLogger = new PeerLogger(myId);
+		PeerLogger connectingPeerLogger = new PeerLogger(peerServerID);
+		peerLogger.tcpConnectionMsg(peerServerID, false);
+		connectingPeerLogger.chokingMsg(myId);
+		//connectingPeerLogger.tcpConnectionMsg(myInfo.getPeerId(), false);
+		connectingPeerLogger.tcpConnectionMsg(myId, true);
+		peerLogger.chokingMsg(peerServerID);
 	}
 
 }

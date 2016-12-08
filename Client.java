@@ -4,6 +4,7 @@ import ActualMessages.ActualMessage;
 import ActualMessages.MessageHandler;
 import ActualMessages.MessageUtil;
 import fileHandlers.RemotePeerInfo;
+import ActualMessages.PeerLogger;
 
 import java.io.*;
 
@@ -11,15 +12,19 @@ public class Client extends Thread {
 	// Communication Instance Variables
 	private Socket requestSocket; // socket connect to the server
 	private ObjectOutputStream out; // stream write to the socket
-	private ObjectInputStream in; // stream read from the socket
-	private Message mg; // message stream
 
-	// Info about the Client Variables
-	private RemotePeerInfo myInfo; // To get the file info for the configuration
-									// file and Info about the Client
-	private int peerServerID; // peerID of the Server that this client is
-								// coneected to
-
+	private ObjectInputStream in; 	// stream read from the socket
+	private Message mg;				// message stream	
+	
+	//Info about the Client Variables 
+	private RemotePeerInfo myInfo;		// To get the file info for the configuration file and Info about the Client
+	private int peerServerID;       	// peerID of the Server that this client is coneected to 
+	
+	//create logger to log messages
+	private PeerLogger peerLogger;
+	private PeerLogger connectingPeerLogger;
+	
+	
 	/**
 	 * Note on handlers: handlers contains mappings from types to handler
 	 * objects, e.g. handlers.put(1, new ChokeHandler(this)); handlers HashMap
@@ -55,7 +60,13 @@ public class Client extends Thread {
 			out.flush();
 			in = new ObjectInputStream(requestSocket.getInputStream());
 			mg = new Message(in, out);
-
+			
+			//log connection - one for peerId and peerServerId
+			peerLogger = new PeerLogger(myInfo.getPeerId());
+			connectingPeerLogger = new PeerLogger(peerServerID);
+			peerLogger.tcpConnectionMsg(peerServerID, false);
+			connectingPeerLogger.tcpConnectionMsg(myInfo.getPeerId(), false);
+			
 			// Loading the Handlers
 			HandlerCached.loadCache();
 			MessageHandler.loadUnchoked();

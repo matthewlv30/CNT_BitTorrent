@@ -49,6 +49,10 @@ public class PieceHandler extends MessageHandler {
 			// else insert new count
 			byteCount.put(negID, (double) sizeOfPiece);
 		}
+		
+		//log the message
+		PeerLogger pl = new PeerLogger(peerInfo.getPeerId());
+		pl.downloadingPieceMsg(neighborID, getPieceIndex(), f.getNumberOfReceivedParts());
 		return 0;
 	}
 
