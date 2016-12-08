@@ -8,7 +8,7 @@ import java.net.Socket;
 public class ChokeHandler extends MessageHandler {
 	/**
 	 * When you receive a choke message, set isUnchoked to false
-	 * 
+	 *
 	 * @param m:
 	 *            this is the message received
 	 * @param n:
@@ -16,8 +16,9 @@ public class ChokeHandler extends MessageHandler {
 	 */
 	public int handleMessage(ActualMessage m, Socket n) {
 		MessageHandler.setPeerWhoHasUnchokedMe(neighborID, false);
-		PeerLogger pl = new PeerLogger(peerInfo.getPeerId());
+        PeerLogger pl = peerInfo.getLogger();
 		pl.chokingMsg(neighborID);
+        System.out.print(pl);
 		return 0;
 	}
 

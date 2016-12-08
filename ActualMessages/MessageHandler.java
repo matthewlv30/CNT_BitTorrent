@@ -10,7 +10,7 @@ import fileHandlers.RemotePeerInfo;
 
 /**
  * This interface declares the behavior of peers after receiving a message.
- * 
+ *
  */
 /**
  * The message handler classes are implemented as inner classes so they can
@@ -55,12 +55,12 @@ public abstract class MessageHandler implements Cloneable {
 			return interestedPeers.get(peerID);
 		}
 	}
-	
+
 	public static void setPeerWhoHasUnchokedMe(int peerID, boolean c) {
 		hasPeerUnchokedMe.put(peerID, c);
 		System.out.println("Peers who have unchoked me:" + hasPeerUnchokedMe);
 	}
-	
+
 	public static ConcurrentHashMap<Integer, Boolean> getInterestedPeers() {
 		return interestedPeers;
 	}
@@ -75,7 +75,7 @@ public abstract class MessageHandler implements Cloneable {
 		//setting neighbor byte count
 		neighborByteCount.put(peerID, byteCount);
 	}
-	
+
 
 	public static void resetByteCount() {
 		neighborByteCount.clear();
@@ -106,13 +106,14 @@ public abstract class MessageHandler implements Cloneable {
 
 			// Now we need to send unchoke messages to those that are NOT in the
 			// current map
-			
+
 			if ((_preferredNeighborsMap.containsKey(entry.getKey())) && (entry.getValue() == false)) {
 				preferredNeighbors.put(entry.getKey(), true);
 			}
-		}	
-		PeerLogger pl = new PeerLogger(peerInfo.getPeerId());
+		}
+		PeerLogger pl = peerInfo.getLogger();
 		pl.changeOfPreferredNeighborsMsg(preferredNeighbors.toString());
+        System.out.print(pl);
 		//System.out.println(preferredNeighbors);
 
 	}
@@ -120,11 +121,11 @@ public abstract class MessageHandler implements Cloneable {
 	public static ConcurrentHashMap<Integer, Boolean> getPreferredNeighbors() {
 		return preferredNeighbors;
 	}
-	
+
 	public static ConcurrentHashMap<Integer, Boolean> getIsChoked() {
 		return isChoked;
 	}
-	
+
 	public static void setIsChokedMap(int a, boolean b) {
 		isChoked.put(a, b);
 	}
@@ -143,10 +144,11 @@ public abstract class MessageHandler implements Cloneable {
 			optimisticallyUnchoked = p;
 			// send unchoke message to this neighbor
 		}
-		
+
 		//log the message
 		PeerLogger pl = new PeerLogger(peerInfo.getPeerId());
 		pl.changeOfOptimisticallyUnchokedNeighborsMsg(neighborID);
+        System.out.print(pl);
 	}
 
 	public Integer getOptimisticallyUnchoked() {
@@ -175,7 +177,7 @@ public abstract class MessageHandler implements Cloneable {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param peerID
 	 *            adding specific peer to the list
 	 * @param b

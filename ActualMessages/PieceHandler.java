@@ -51,8 +51,9 @@ public class PieceHandler extends MessageHandler {
 		}
 		
 		//log the message
-		PeerLogger pl = new PeerLogger(peerInfo.getPeerId());
+		PeerLogger pl = peerInfo.getLogger();
 		pl.downloadingPieceMsg(neighborID, getPieceIndex(), f.getNumberOfReceivedParts());
+		System.out.print(pl);
 		return 0;
 	}
 
