@@ -43,17 +43,15 @@ public class peerProcess {
 			for (i = 0; i < peersToConnect.size(); i++) {
 				if (peersToConnect.get(i).getPeerId() != peerID) {
 					// create a socket to connect to the server
-					//RemotePeerInfo rm = new RemotePeerInfo(peerID, peersToConnect.get(i).getPeerAddress(), peersToConnect.get(i).getPort(), false);
-					//RemotePeerInfo rm = new RemotePeerInfo(Integer.toString(peerID), "localhost", Integer.toString(peersToConnect.get(i).getPort()), false);
-					RemotePeerInfo rm = new RemotePeerInfo(Integer.toString(peerID), "10.136.51.66", Integer.toString(peersToConnect.get(i).getPort()), false);
+					RemotePeerInfo rm = new RemotePeerInfo(Integer.toString(peerID), peersToConnect.get(i).getPeerAddress(), Integer.toString(peersToConnect.get(i).getPort()), false);
+					//RemotePeerInfo rm = new RemotePeerInfo(Integer.toString(peerID), "10.136.51.66", Integer.toString(peersToConnect.get(i).getPort()), false);
 					clientList[i] = new Client(rm, peersToConnect.get(i).getPeerId());
-					//clientList[i] = new Client(peerID,peersToConnect.get(i).getPeerAddress(),peersToConnect.get(i).getPort(), peersToConnect.get(i).getPeerId());
 				} else {
 					break;
 				}
 			}
+			
 			s = new Server(peersToConnect.get(i));
-			///////////////////////////////////////////////////////////////////////////////////////////////FIX THIS/////////////////////////////////////////////////
 			s.start();
 			for(int j = 0; j != clientList.length; ++j) {
 				if(clientList[j] == null) {

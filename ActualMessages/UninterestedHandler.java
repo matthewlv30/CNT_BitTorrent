@@ -14,7 +14,7 @@ public class UninterestedHandler extends MessageHandler {
 	 * @param m: this is the message received
 	 * @param n: this is the Node that is not interested in the current peer
 	 */
-	public int handleMessage(ActualMessage m, Socket n) {
+	public  int handleMessage(ActualMessage m, Socket n) {
 		// Since neighboor peer uninterested add to map as false
 		interestedPeers.put(neighborID, false);
 		PeerLogger pl = new PeerLogger(peerInfo.getPeerId());

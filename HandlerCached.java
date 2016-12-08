@@ -22,7 +22,6 @@ public class HandlerCached {
 	private static HashMap<Integer, MessageHandler> handlers = new HashMap<Integer, MessageHandler>();
 
 	public static MessageHandler getHandler(int id, RemotePeerInfo p) {
-		System.out.println("Handler cached:" + p.getPeerId());
 		MessageHandler cachedHandler = handlers.get(id);
 		//Set PeerInfo of the class trying to access info 
 		MessageHandler.setPeerInfo(p);

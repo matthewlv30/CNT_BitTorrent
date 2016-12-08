@@ -31,7 +31,7 @@ public class BitfieldHandler extends MessageHandler {
 	 * @param m: this is the message received
 	 * @param n: this is the Node sending the message
 	 */
-	public int handleMessage(ActualMessage m, Socket n) {
+	public synchronized int handleMessage(ActualMessage m, Socket n) {
 		byte payload[] = m.getPayloadField();
 		// First byte of the payload corresponds to piece indices 0-7, second bit is 8-15 etc.
 		for (int i = 0; i < payload.length; i++) {
@@ -50,7 +50,7 @@ public class BitfieldHandler extends MessageHandler {
 	}
 
 	@Override
-	public ActualMessage creatingMessage() {
+	public synchronized ActualMessage creatingMessage() {
 		// Type of Meessage
 		final byte messageType = 5;
 		// Each index of a bit field indicates whether or not the piece is with the peer.

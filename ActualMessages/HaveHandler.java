@@ -61,10 +61,10 @@ public class HaveHandler extends MessageHandler {
 			if (mypayload[i] < negpayload[i]) {
 				setPieceIndex(i); // setting the piece that the peer does not have
 				payload = MessageUtil.convertIntToBytes(i);
+				negpayload[i] = mypayload[i];
 				break;
 			}
 		}
-		negpayload[i] = mypayload[i];
 		// Get the length of the message by payload + type
 		int payloadSize = payload.length + MessageUtil.convertByteToInt((byte) 1);
 		byte[] length = MessageUtil.convertIntToBytes(payloadSize);

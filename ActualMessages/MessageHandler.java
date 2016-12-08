@@ -29,6 +29,7 @@ public abstract class MessageHandler implements Cloneable {
 	protected static ConcurrentHashMap<Integer, Boolean> interestedPeers = new ConcurrentHashMap<Integer, Boolean>();
 	// The neighbors that we can receive piece requests from
 	private static ConcurrentHashMap<Integer, Boolean> preferredNeighbors = new ConcurrentHashMap<Integer, Boolean>();
+	private static ConcurrentHashMap<Integer, Boolean> isChoked = new ConcurrentHashMap<Integer, Boolean>();
 	// Neighbor that we can receive pice requests from
 	private static Integer optimisticallyUnchoked;
 	// Peers who have unchoked me. T: I'm unchoked for this peerID. F: I'm choked for this peerID.
@@ -57,6 +58,7 @@ public abstract class MessageHandler implements Cloneable {
 	
 	public static void setPeerWhoHasUnchokedMe(int peerID, boolean c) {
 		hasPeerUnchokedMe.put(peerID, c);
+		System.out.println("Peers who have unchoked me:" + hasPeerUnchokedMe);
 	}
 	
 	public static ConcurrentHashMap<Integer, Boolean> getInterestedPeers() {
@@ -109,15 +111,23 @@ public abstract class MessageHandler implements Cloneable {
 				preferredNeighbors.put(entry.getKey(), true);
 			}
 		}
-		System.out.println(preferredNeighbors);
-		
 		//TODO: log the message - need to format preffered neighbord to string for logging
 		//PeerLogger pl = new PeerLogger(peerInfo.getPeerId());
 		//pl.changeOfOptimisticallyUnchokedNeighborsMsg(neighborID);
+		//System.out.println(preferredNeighbors);
+
 	}
 
 	public static ConcurrentHashMap<Integer, Boolean> getPreferredNeighbors() {
 		return preferredNeighbors;
+	}
+	
+	public static ConcurrentHashMap<Integer, Boolean> getIsChoked() {
+		return isChoked;
+	}
+	
+	public static void setIsChokedMap(int a, boolean b) {
+		isChoked.put(a, b);
 	}
 
 	public static void setOptimisticallyUnchoked(Integer p) {
@@ -149,7 +159,7 @@ public abstract class MessageHandler implements Cloneable {
 	}
 	// Unchoke Ends
 
-	public abstract int handleMessage(ActualMessage m, Socket n);
+	 public  abstract  int handleMessage(ActualMessage m, Socket n);
 
 	public abstract ActualMessage creatingMessage();
 
@@ -174,6 +184,7 @@ public abstract class MessageHandler implements Cloneable {
 	 */
 	public synchronized void addPeerBitSet(int peerID, BitSet b) {
 		PeersBitField.put(peerID, b);
+		System.out.println(PeersBitField);
 	}
 
 	public void setPieceIndex(int index) {
