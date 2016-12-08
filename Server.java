@@ -119,15 +119,15 @@ public class Server extends Thread {
 						clonedHandler.handleMessage(bitList, connection);
 
 						// if this peer id old is different from new
-						if (MessageHandler.getIsChoked().get(myServerInfo.getPeerId()) != MessageHandler.getPreferredNeighbors().get(myServerInfo.getPeerId())) {
-							if (MessageHandler.getPreferredNeighbors().get(myServerInfo.getPeerId()) == true) {
+						while (MessageHandler.getIsChoked().get(hd.peerID) != MessageHandler.getPreferredNeighbors().get(hd.peerID)) {
+							if (MessageHandler.getPreferredNeighbors().get(hd.peerID) == true) {
 								// Sending unchoke message
 								clonedHandler = (MessageHandler) HandlerCached.getHandler(1, myServerInfo);
 								bitList = clonedHandler.creatingMessage();
 								message.sendMessage(bitList);
 								MessageHandler.setIsChokedMap(hd.peerID, false);
 								
-							} else if (MessageHandler.getPreferredNeighbors().get(myServerInfo.getPeerId()) == false) {
+							} else if (MessageHandler.getPreferredNeighbors().get(hd.peerID) == false) {
 								// Sending choke message
 								clonedHandler = (MessageHandler) HandlerCached.getHandler(0, myServerInfo);
 								bitList = clonedHandler.creatingMessage();
@@ -136,9 +136,7 @@ public class Server extends Thread {
 							}
 
 						}
-						else {
-							System.out.println("Blah");
-						}
+						
 
 						// Send Have Message
 						// System.out.println("************** HAVE
