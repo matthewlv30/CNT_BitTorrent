@@ -117,7 +117,8 @@ public class Unchoked {
 //			
 //			// Sort the map of downloading rates
 			downloadingRates = MapUtil.sortByValue(downloadingRates);
-			System.out.println(downloadingRates);
+			//TODO
+			System.out.println("Dowloading Rates & Interested List: "+downloadingRates);
 			
 			if (downloadingRates.size() != 0) {
 				it = downloadingRates.entrySet().iterator(); // Iterator for iterating through all the possible peers
@@ -137,7 +138,7 @@ public class Unchoked {
 				}
 				
 				// Set the preferred neighbors for the server object
-				//System.out.println(preferredNeighbors);
+				System.out.println("List Prefered Neighbors 1002: " + preferredNeighbors[0] + " 1003: " + preferredNeighbors[1] );
 				MessageHandler.setPreferredNeighbors(preferredNeighbors);
 				MessageHandler.resetByteCount();
 			}
