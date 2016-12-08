@@ -26,6 +26,7 @@ public class RequestHandler extends MessageHandler {
 		} else {
 			// get the index of interest
 			index = MessageUtil.convertBytesToInt(payload);
+			this.setPieceIndex(index);
 			byte[] myByte = myBitfield.toByteArray();
 			// check if the neigtboor list is empty
 			myByte = MessageUtil.setPayload(myByte);
