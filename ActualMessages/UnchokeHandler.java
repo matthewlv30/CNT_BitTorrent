@@ -9,7 +9,7 @@ public class UnchokeHandler extends MessageHandler {
 
 	/**
 	 * When you receive an unchoke message, set isUnchoked to true
-	 * 
+	 *
 	 * @param m:
 	 *            this is the message received
 	 * @param n:
@@ -17,8 +17,10 @@ public class UnchokeHandler extends MessageHandler {
 	 */
 	public int handleMessage(ActualMessage m, Socket n) {
 		MessageHandler.setPeerWhoHasUnchokedMe(neighborID, true);
-		PeerLogger pl = new PeerLogger(peerInfo.getPeerId());
+		//PeerLogger pl = new PeerLogger(peerInfo.getPeerId());
+        PeerLogger pl = peerInfo.getLogger();
 		pl.unchokeMsg(neighborID);
+        System.out.print(pl);
 		return 0;
 	}
 

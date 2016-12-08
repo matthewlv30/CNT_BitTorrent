@@ -12,7 +12,7 @@ public class HaveHandler extends MessageHandler {
 	 * When you receive a "have" message, determine whether or not to send an
 	 * interested message. The payload of the "have" message contains a piece
 	 * index field
-	 * 
+	 *
 	 * @param m:
 	 *            this is the message received
 	 * @param n:
@@ -27,11 +27,12 @@ public class HaveHandler extends MessageHandler {
 			// get the index of interest
 			index = MessageUtil.convertBytesToInt(payload);
 			//log the message
-			PeerLogger pl = new PeerLogger(peerInfo.getPeerId());
+			PeerLogger pl = peerInfo.getLogger();
 			pl.haveMsg(neighborID, index);
+            System.out.println(pl);
 			byte[] myByte = myBitfield.toByteArray();
 			//check if the neigtboor list is empty
-			myByte = MessageUtil.setPayload(myByte);	
+			myByte = MessageUtil.setPayload(myByte);
 			// update neightboor bitlist
 			BitSet b = PeersBitField.get(neighborID);
 			b.set(index * 8, (index * 8) + 8, true);
@@ -52,8 +53,8 @@ public class HaveHandler extends MessageHandler {
 		BitSet b = PeersBitField.get(neighborID);
 		byte[] negpayload = b.toByteArray();
 		//check if the neigtboor list is empty
-		negpayload = MessageUtil.setPayload(negpayload);		
-		
+		negpayload = MessageUtil.setPayload(negpayload);
+
 		byte[] mypayload = myBitfield.toByteArray();
 		byte[] payload = new byte[4];
 		int i = 0;

@@ -21,8 +21,8 @@ public class Client extends Thread {
 	private int peerServerID;       	// peerID of the Server that this client is coneected to 
 	
 	//create logger to log messages
-	private PeerLogger peerLogger;
-	private PeerLogger connectingPeerLogger;
+	protected PeerLogger peerLogger;
+	protected PeerLogger connectingPeerLogger;
 	
 	
 	/**
@@ -62,7 +62,7 @@ public class Client extends Thread {
 			mg = new Message(in, out);
 			
 			//log connection - one for peerId and peerServerId
-			peerLogger = new PeerLogger(myInfo.getPeerId());
+			peerLogger = myInfo.getLogger();
 			connectingPeerLogger = new PeerLogger(peerServerID);
 			peerLogger.tcpConnectionMsg(peerServerID, false);
 			connectingPeerLogger.tcpConnectionMsg(myInfo.getPeerId(), false);

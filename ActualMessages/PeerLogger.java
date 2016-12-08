@@ -15,9 +15,6 @@ import java.text.SimpleDateFormat;
  * Class for logging all the messages from each peer
  */
 public class PeerLogger {
-	//TODO: FIX CONFIGURATION PROPERTIES SO NOT ALL LOGS GET THE SAME MESSAGE
-	//TODO: LOG WHEN DOWNLOAD IS COMPLETE
-	//private static final String CONF = "logger.properties";
     private static final Logger l = Logger.getLogger("CNT4007");
     private final String peerMsgHeader;
 
@@ -38,7 +35,7 @@ public class PeerLogger {
             System.out.println(e);
         } catch (IOException e) {
             System.out.println(e);
-        } 
+        }
     }
 
     /**
