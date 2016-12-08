@@ -67,12 +67,14 @@ public class RequestHandler extends MessageHandler {
 				n = rand.nextInt(negpayload.length);
 			}
 			randMap.put(n, true);
-			if (negpayload[answer] < mypayload[answer]) {
-				this.setPieceIndex(answer);
-				payload = MessageUtil.convertIntToBytes(answer);
-				mypayload[answer] = negpayload[answer];
-				break;
-			}
+			System.out.println(negpayload[answer]);
+			System.out.println(mypayload[answer]);
+//			if (negpayload[answer] < mypayload[answer]) {
+//				this.setPieceIndex(answer);
+//				payload = MessageUtil.convertIntToBytes(answer);
+//				mypayload[answer] = negpayload[answer];
+//				break;
+//			}
 		}
 
 		// Get the length of the message by payload + type
