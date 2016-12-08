@@ -67,7 +67,8 @@ public class RequestHandler extends MessageHandler {
 				n = rand.nextInt(negpayload.length);
 			}
 			randMap.put(n, true);
-//			System.out.println(negpayload[answer]);
+			System.out.println(answer);
+			System.out.println(negpayload[answer]);
 			System.out.println(mypayload[answer]);
 //			if (negpayload[answer] < mypayload[answer]) {
 //				this.setPieceIndex(answer);
