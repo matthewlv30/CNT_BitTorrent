@@ -71,7 +71,6 @@ public class Client extends Thread {
 			// Send Bitfiled Message with Pieces
 			MessageHandler clonedHandler = (MessageHandler) HandlerCached.getHandler(5, myInfo);
 			ActualMessage bitList = clonedHandler.creatingMessage();
-			System.out.println("Bitfield sent (client): " + bitList.getPayloadField());
 			mg.sendMessage(bitList);
 
 			// Recive Back BitField and Determine Interested or Not
@@ -83,16 +82,20 @@ public class Client extends Thread {
 			int type = clonedHandler.handleMessage(bitList, requestSocket);
 
 			while (true) {
-				
-				//Send Interested or Not of the list of pieces recieved
-				clonedHandler = (MessageHandler)
-				HandlerCached.getHandler(type,myInfo);
+
+				// Send Interested or Not of the list of pieces recieved
+				clonedHandler = (MessageHandler) HandlerCached.getHandler(type, myInfo);
 				bitList = clonedHandler.creatingMessage();
-				//System.out.println("Interested(2)/Uninterested(3)(client): "+ bitList.getTypeField());
 				mg.sendMessage(bitList);
-				
-				
-				//Get Have Message
+
+				// Get Choke or Unchoke Message
+				clonedHandler.setPeerIdNeighboor(peerServerID);
+				bitList = (ActualMessage) in.readObject();
+				System.out.println("Message recieved (client): " + bitList.getTypeField());
+				clonedHandler = (MessageHandler) HandlerCached.getHandler(bitList.getTypeField(), myInfo);
+				clonedHandler.handleMessage(bitList, requestSocket);
+
+				// Get Have Message
 				// clonedHandler.setPeerIdNeighboor(peerServerID);
 				// bitList = (ActualMessage) in.readObject();
 				// System.out.println("Message recieved (client): " +
@@ -110,18 +113,6 @@ public class Client extends Thread {
 				// bitList.getPayloadField().toString());
 				// mg.sendMessage(bitList);
 				//
-				//
-				// //Get Choke or Unchoke Message
-				// clonedHandler.setPeerIdNeighboor(peerServerID);
-				// bitList = (ActualMessage) in.readObject();
-				// System.out.println("Message recieved (client): " +
-				// bitList.getTypeField());
-				// clonedHandler = (MessageHandler)
-				// HandlerCached.getHandler(bitList.getTypeField(),myInfo);
-				// clonedHandler.handleMessage(bitList, requestSocket);
-				//
-				//
-				//
 				// //Get Piece
 				// bitList = (ActualMessage) in.readObject();
 				// System.out.println("Message recieved (client): " +
@@ -130,7 +121,7 @@ public class Client extends Thread {
 				// HandlerCached.getHandler(bitList.getTypeField(),myInfo);
 				// clonedHandler.handleMessage(bitList, requestSocket);
 			}
-			
+
 		} catch (ConnectException e) {
 			System.err.println("Connection refused. You need to initiate a server first.");
 		} catch (ClassNotFoundException e) {
