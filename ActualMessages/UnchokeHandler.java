@@ -20,7 +20,6 @@ public class UnchokeHandler extends MessageHandler {
 		//PeerLogger pl = new PeerLogger(peerInfo.getPeerId());
         PeerLogger pl = peerInfo.getLogger();
 		pl.unchokeMsg(neighborID);
-        System.out.print(pl);
 		return 0;
 	}
 

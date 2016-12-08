@@ -113,8 +113,6 @@ public abstract class MessageHandler implements Cloneable {
 		}
 		PeerLogger pl = peerInfo.getLogger();
 		pl.changeOfPreferredNeighborsMsg(preferredNeighbors.toString());
-        System.out.print(pl);
-		//System.out.println(preferredNeighbors);
 
 	}
 
@@ -148,7 +146,6 @@ public abstract class MessageHandler implements Cloneable {
 		//log the message
 		PeerLogger pl = new PeerLogger(peerInfo.getPeerId());
 		pl.changeOfOptimisticallyUnchokedNeighborsMsg(neighborID);
-        System.out.print(pl);
 	}
 
 	public Integer getOptimisticallyUnchoked() {
